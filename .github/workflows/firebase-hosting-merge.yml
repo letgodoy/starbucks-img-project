@@ -10,16 +10,32 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: install yarn
-      - run: npm install yarn
+      - name: actions/checkout
+        uses: actions/checkout@v2
+
+      - name: actions/setup-node
+        uses: actions/setup-node@v1.4.1
+        with:
+          node-version: "16.x"
+          cache: yarn
+
       - name: install packages
-      - run: yarn install
-      - name: test
-      - run: yarn test
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
+
+      - name: tests
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: test
+
       - name: build
-      - run: yarn build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build
+          
+      - name: firebase deploy
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STARBUCKS_119C1 }}'
