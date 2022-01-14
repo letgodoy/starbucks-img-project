@@ -24,8 +24,8 @@ jobs:
       - name: install packages
         run: npm install
 
-      - name: tests
-        run: npm run test --passWithNoTests
+      # - name: tests
+      #   run: npm run test --passWithNoTests
 
       - name: build
         run: npm run build
