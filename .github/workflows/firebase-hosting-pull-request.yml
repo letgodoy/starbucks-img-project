@@ -8,9 +8,31 @@ jobs:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: npm test && npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: actions/checkout
+        uses: actions/checkout@v2
+
+      - name: actions/setup-node
+        uses: actions/setup-node@v1.4.1
+        with:
+          node-version: "16.x"
+
+      - name: install packages
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
+
+      - name: tests
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: test
+
+      - name: build
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build
+          
+      - name: firebase deploy
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STARBUCKS_119C1 }}'
