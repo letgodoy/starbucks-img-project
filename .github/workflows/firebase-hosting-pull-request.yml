@@ -7,24 +7,28 @@ jobs:
   build_and_preview:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
     steps:
       - name: actions/checkout
         uses: actions/checkout@v2
 
-      - name: install packages
-        uses: borales/actions-yarn@v2.0.0
+      - name: Set up Node.js ⚙️
+        uses: actions/setup-node@v2
         with:
-          cmd: install
+          node-version: '16.x'
+
+      - name: install packages
+        run: npm install
 
       - name: tests
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: test
+        run: npm run test --passWithNoTests
 
       - name: build
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: build
+        run: npm run build
           
       - name: firebase deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
