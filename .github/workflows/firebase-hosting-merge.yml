@@ -24,22 +24,15 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '16.x'
-          cache: 'yarn'
 
       - name: install packages
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: install
+        run: npm install
 
       - name: tests
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: test
+        run: npm run test
 
       - name: build
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: build
+        run: npm run build
           
       - name: firebase deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
