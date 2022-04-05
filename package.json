@@ -9,10 +9,12 @@
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
     "@testing-library/user-event": "latest",
+    "firebase": "^9.6.3",
     "react": "latest",
     "react-dom": "latest",
     "react-scripts": "latest",
-    "styled-components": "latest"
+    "styled-components": "latest",
+    "wouter": "^2.8.0-alpha.2"
   },
   "scripts": {
     "tsc": "./node_modules/.bin/tsc",
@@ -35,6 +37,7 @@
   },
   "devDependencies": {
     "@craco/craco": "latest",
+    "@mui/types": "^7.1.1",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
