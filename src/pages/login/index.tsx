@@ -1,15 +1,22 @@
-import React from "react"
-import { Box, Button, Checkbox, Grid, Link, TextInput, Typography } from "@elements";
+import { Box, Button, Grid, Link, TextInput, Typography } from "@elements";
+import React from "react";
+import { ICredentials, useLogIn } from "@dataAccess";
+import { extractString } from "@utils";
 
 export const Login = () => {
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const { mutateAsync, isLoading } = useLogIn();
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+
+        const credentials: ICredentials = {
+            email: extractString(data.get('email') as string),
+            password: extractString(data.get('password') as string),
+        }
+
+        await mutateAsync(credentials)
     }
 
     return <Grid container sx={{ height: '100vh' }}>
@@ -27,10 +34,10 @@ export const Login = () => {
                 backgroundPosition: 'center',
             }}
         />
-        <Grid item xs={12} sm={8} md={5} 
-        // component={Paper} 
-        // elevation={6} 
-        square>
+        <Grid item xs={12} sm={8} md={5}
+            // component={Paper} 
+            // elevation={6} 
+            square>
             <Box
                 sx={{
                     my: 8,

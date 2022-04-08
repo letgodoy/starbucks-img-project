@@ -1,0 +1,26 @@
+{
+  "editor.codeActionsOnSave": ["source.organizeImports"],
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "files.associations": {
+    "**/_data/**/*.json": "plaintext"
+  },
+  "explorer.openEditors.visible": 0,
+  "prettier.trailingComma": "es5",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "cSpell.language": "pt,pt-BR,en-US,en",
+  "cSpell.enabled": true,
+  "cSpell.words": [
+  ],
+  "path-intellisense.mappings": {
+    "@components": ["src/components/index.ts"],
+    "@dataAccess": ["src/dataAccess/index.ts"],
+    "@pages": ["src/pages/index.ts"],
+    "@utils": ["src/utils/index.ts"],
+  },
+  "javascript.preferences.importModuleSpecifier": "project-relative",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.importModuleSpecifier": "project-relative",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "prettier.prettierPath": "./node_modules/prettier"
+}
