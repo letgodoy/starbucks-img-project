@@ -1,7 +1,8 @@
 import { Box, Button, Grid, Link, TextInput, Typography } from "@elements";
-import React from "react";
-import { ICredentials, useLogIn } from "@dataAccess";
+import React, { ReactNode } from "react";
+import { useLogIn } from "@dataAccess";
 import { extractString } from "@utils";
+import { ICredentials } from "@types";
 
 export const Login = () => {
 

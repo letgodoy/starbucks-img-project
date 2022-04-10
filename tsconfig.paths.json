@@ -6,7 +6,8 @@
       "@dataAccess": ["./src/dataAccess"],
       "@elements": ["./src/elements"],
       "@utils": ["./src/utils"],
-      "@pages": ["./src/pages"]
+      "@pages": ["./src/pages"],
+      "@types": ["./src/types"]
     }
   }
 }

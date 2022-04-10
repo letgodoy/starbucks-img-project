@@ -2,11 +2,9 @@ import { signInWithEmailAndPassword } from "@firebase/auth";
 import { auth } from "@utils";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useMutation } from "react-query";
+import { ICredentials } from "@types";
 
-export interface ICredentials {
-  email: string;
-  password: string;
-}
+
 
 const logIn = async ({ email, password }: ICredentials) =>
   await signInWithEmailAndPassword(auth, email, password);

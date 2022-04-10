@@ -1,14 +1,9 @@
+import { ICreateUser } from "@types";
 import { auth } from "@utils";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useMutation } from "react-query";
-import { ICredentials } from "../authentication";
 
-export interface IUser extends ICredentials {
-  name: string;
-  store: string;
-}
-
-const createUser = async (user: IUser) => {
+const createUser = async (user: ICreateUser) => {
   const { email, password } = user;
   return await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
