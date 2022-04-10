@@ -1,13 +1,27 @@
-import { signInWithEmailAndPassword } from "@firebase/auth";
+import {
+  confirmPasswordReset,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "@firebase/auth";
+import { ICredentials } from "@types";
 import { auth } from "@utils";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useMutation } from "react-query";
-import { ICredentials } from "@types";
-
-
 
 const logIn = async ({ email, password }: ICredentials) =>
-  await signInWithEmailAndPassword(auth, email, password);
+  await signInWithEmailAndPassword(auth, email, password).catch(function (
+    error
+  ) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    if (errorCode === "auth/wrong-password") {
+      alert("Wrong password.");
+    } else {
+      alert(errorMessage);
+    }
+    console.log(error);
+  });
 // .then((userCredential) => {
 //   // Signed in
 //   const user = userCredential.user;
@@ -26,17 +40,37 @@ const logOut = async () => await signOut(auth);
 //   // An error happened.
 // });
 
-// onAuthStateChanged(auth, (user) => {
-//   if (user) {
-//     // User is signed in, see docs for a list of available properties
-//     // https://firebase.google.com/docs/reference/js/firebase.User
-//     const uid = user.uid;
-//     // ...
-//   } else {
-//     // User is signed out
-//     // ...
-//   }
-// });
+const checkAuth = async () =>
+  await onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // renova token tb
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/firebase.User
+      const uid = user.uid;
+      // ...
+    } else {
+      // User is signed out
+      // ...
+    }
+  });
+
+const changePassword = async ({
+  code,
+  newPassword,
+}: {
+  code: string;
+  newPassword: string;
+}) => await confirmPasswordReset(auth, code, newPassword);
+
+const sendEmailPassword = async ({email}: {email: string}) =>
+  await sendPasswordResetEmail(auth, email)
+    .then(async function () {
+      // Password reset email sent.
+      // await confirmPasswordReset(auth, 'user@example.com', code); ????????/
+    })
+    .catch(function (error) {
+      // Error occurred. Inspect error.code.
+    });
 
 export function useLogIn() {
   return useMutation(logIn);
