@@ -1,12 +1,15 @@
-import { Box, Button, Grid, Link, TextInput, Typography } from "@elements";
-import React, { ReactNode } from "react";
+import { AuthContext } from "@components";
 import { useLogIn } from "@dataAccess";
-import { extractString } from "@utils";
+import { Box, Button, Grid, Link, TextInput, Typography } from "@elements";
 import { ICredentials } from "@types";
+import { extractString } from "@utils";
+import React, { useContext } from "react";
 
 export const Login = () => {
 
     const { mutateAsync, isLoading } = useLogIn();
+
+    const { setToken } = useContext(AuthContext)
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -17,7 +20,16 @@ export const Login = () => {
             password: extractString(data.get('password') as string),
         }
 
-        await mutateAsync(credentials)
+        mutateAsync(credentials).then(res => {
+
+            const { stsTokenManager } = res
+
+            setToken(stsTokenManager.accessToken)
+
+        })
+
+
+
     }
 
     return <Grid container sx={{ height: '100vh' }}>

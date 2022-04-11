@@ -8,29 +8,32 @@ import { auth } from "@utils";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useMutation } from "react-query";
 
-const logIn = async ({ email, password }: ICredentials) =>
-  await signInWithEmailAndPassword(auth, email, password).catch(function (
-    error
-  ) {
-    // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    if (errorCode === "auth/wrong-password") {
-      alert("Wrong password.");
-    } else {
-      alert(errorMessage);
-    }
-    console.log(error);
-  });
-// .then((userCredential) => {
-//   // Signed in
-//   const user = userCredential.user;
-//   // ...
-// })
-// .catch((error) => {
-//   const errorCode = error.code;
-//   const errorMessage = error.message;
-// });
+const logIn = async ({ email, password }: ICredentials) => {
+  return await signInWithEmailAndPassword(auth, email, password)
+    .then((res) => {
+      return res.user as any;
+    })
+    .catch((error) => {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      if (errorCode === "auth/wrong-password") {
+        alert("Wrong password.");
+      } else {
+        alert(errorMessage);
+      }
+      console.log(error);
+    });
+  // .then((userCredential) => {
+  //   // Signed in
+  //   const user = userCredential.user;
+  //   // ...
+  // })
+  // .catch((error) => {
+  //   const errorCode = error.code;
+  //   const errorMessage = error.message;
+  // });
+};
 
 const logOut = async () => await signOut(auth);
 // .then(() => {
@@ -62,7 +65,7 @@ const changePassword = async ({
   newPassword: string;
 }) => await confirmPasswordReset(auth, code, newPassword);
 
-const sendEmailPassword = async ({email}: {email: string}) =>
+const sendEmailPassword = async ({ email }: { email: string }) =>
   await sendPasswordResetEmail(auth, email)
     .then(async function () {
       // Password reset email sent.

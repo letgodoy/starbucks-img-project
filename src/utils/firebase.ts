@@ -19,7 +19,7 @@ const auth = getAuth();
 const db = getFirestore();
 const analytics = getAnalytics(app);
 
-if (process.env.DEV) {
+if (process.env.REACT_APP_DEV) {
   connectAuthEmulator(auth, "http://localhost:9099");
   connectFirestoreEmulator(db, "localhost", 8080);
 }
