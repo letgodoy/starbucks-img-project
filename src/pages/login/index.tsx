@@ -4,8 +4,10 @@ import { Box, Button, Grid, Link, TextInput, Typography } from "@elements";
 import { ICredentials } from "@types";
 import { extractString } from "@utils";
 import React, { useContext } from "react";
+import { useLocation } from "wouter";
 
 export const Login = () => {
+    const [location, setLocation] = useLocation();
 
     const { mutateAsync, isLoading } = useLogIn();
 
@@ -22,9 +24,16 @@ export const Login = () => {
 
         mutateAsync(credentials).then(res => {
 
+            console.log(res)
+
             const { stsTokenManager } = res
 
-            setToken(stsTokenManager.accessToken)
+            setToken(stsTokenManager)
+
+            // find user
+            // set context user
+
+            setLocation("/brand")
 
         })
 
@@ -48,9 +57,9 @@ export const Login = () => {
             }}
         />
         <Grid item xs={12} sm={8} md={5}
-            // component={Paper} 
-            // elevation={6} 
-            square>
+        // component={Paper} 
+        // elevation={6} 
+        >
             <Box
                 sx={{
                     my: 8,

@@ -5,9 +5,16 @@ export interface ICredentials {
   password: string;
 }
 
+export interface ITokens {
+  accessToken: string,
+  expirationTime: string,
+  refreshToken: string,
+  isExpired: boolean
+}
+
 export interface IAuthContext {
-  state: IUser;
-  token: string;
-  setToken: React.Dispatch<React.SetStateAction<string>>;
-  setState: React.Dispatch<React.SetStateAction<IUser>>;
+  user: IUser;
+  token: ITokens;
+  setToken: React.Dispatch<React.SetStateAction<ITokens>>;
+  setUser: React.Dispatch<React.SetStateAction<IUser>>;
 };

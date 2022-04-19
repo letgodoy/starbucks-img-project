@@ -1,12 +1,15 @@
+import { AuthContext } from "@components";
 import {
   confirmPasswordReset,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "@firebase/auth";
-import { ICredentials } from "@types";
+import { ICredentials, RoutesList } from "@types";
 import { auth } from "@utils";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useContext } from "react";
 import { useMutation } from "react-query";
+import { useLocation } from "wouter";
 
 const logIn = async ({ email, password }: ICredentials) => {
   return await signInWithEmailAndPassword(auth, email, password)
@@ -75,10 +78,52 @@ const sendEmailPassword = async ({ email }: { email: string }) =>
       // Error occurred. Inspect error.code.
     });
 
+// firebase.auth().currentUser.sendEmailVerification()
+//     .then(function() {
+//       // Verification email sent.
+//     })
+//     .catch(function(error) {
+//       // Error occurred. Inspect error.code.
+//     });
+
+export const requireAuth = ({ isPublic, component }: RoutesList) => {
+  const [location, setLocation] = useLocation();
+  const authContext = useContext(AuthContext);
+
+  if (
+    location === "/login" &&
+    authContext.token.accessToken &&
+    !authContext.token.isExpired &&
+    authContext.user.role !== ""
+  ) {
+    setLocation("/brand");
+  }
+
+  if (isPublic === false && authContext.token.accessToken === ""){
+    setLocation("/login");
+  }
+
+  if (isPublic) {
+    return component;
+  }
+
+  if (
+    authContext.token.accessToken &&
+    !authContext.token.isExpired 
+    // authContext.user.role !== ""
+  ) {
+    return component;
+  }
+};
+
 export function useLogIn() {
   return useMutation(logIn);
 }
 
 export function useLogOut() {
   return useMutation(logOut);
+}
+
+export function useForgetPassword() {
+  return useMutation(sendEmailPassword);
 }

@@ -6,9 +6,10 @@ export interface ICreateUser extends ICredentials, IUser {
 
 export interface IUser {
   name: string;
-  lastName: string;
   email: string;
   avatar: string;
   role: string;
   store: string;
+  phone: string;
+  cargo: string;
 };

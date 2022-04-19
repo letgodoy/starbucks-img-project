@@ -1,21 +1,24 @@
-import { FC, ReactElement, ReactNode } from 'react';
-import { Error404, Login } from "../pages";
-
-export interface RoutesList {
-  path: string;
-  component: any;
-  isPublic?: boolean;
-}
+import { Brand, CadastroUser, Error404, Login } from "@pages";
+import { RoutesList } from "@types";
 
 export const routes: RoutesList[] = [
   {
     path: "/",
     component: Error404,
-    isPublic: true
+    isPublic: true,
   },
   {
     path: "/login",
     component: Login,
-    isPublic: true
+    isPublic: true,
+  },
+  {
+    path: "/brand",
+    component: Brand,
+  },
+  {
+    path: "/cadastrousuario",
+    component: CadastroUser,
+    isPublic: true,
   },
 ];
