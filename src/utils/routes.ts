@@ -1,4 +1,4 @@
-import { Brand, CadastroUser, Error404, Login } from "@pages";
+import { Marcas, CadastroUser, Error404, Login, CadastroMarca } from "@pages";
 import { RoutesList } from "@types";
 
 export const routes: RoutesList[] = [
@@ -13,12 +13,18 @@ export const routes: RoutesList[] = [
     isPublic: true,
   },
   {
-    path: "/brand",
-    component: Brand,
+    path: "/marcas",
+    component: Marcas,
+    isPublic: true
   },
   {
     path: "/cadastrousuario",
     component: CadastroUser,
+    isPublic: true,
+  },
+  {
+    path: "/cadastromarcas",
+    component: CadastroMarca,
     isPublic: true,
   },
 ];

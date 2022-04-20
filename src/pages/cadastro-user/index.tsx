@@ -27,6 +27,7 @@ export const CadastroUser = () => {
     }
 
     mutateAsync(user).then(res => {
+      console.log(res)
       alert("xussexo")
     }).catch(error => alert("erro: " + error))
   }

@@ -1,7 +1,7 @@
 import { AuthContext } from "@components";
-import { useLogIn } from "@dataAccess";
+import { useGetUserByID, useLogIn } from "@dataAccess";
 import { Box, Button, Grid, Link, TextInput, Typography } from "@elements";
-import { ICredentials } from "@types";
+import { ICredentials, IUser } from "@types";
 import { extractString } from "@utils";
 import React, { useContext } from "react";
 import { useLocation } from "wouter";
@@ -11,7 +11,9 @@ export const Login = () => {
 
     const { mutateAsync, isLoading } = useLogIn();
 
-    const { setToken } = useContext(AuthContext)
+    const { isLoading: isLoadingUser, mutateAsync: mutateAsyncUser } = useGetUserByID();
+
+    const { setToken, setUser } = useContext(AuthContext)
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -24,16 +26,17 @@ export const Login = () => {
 
         mutateAsync(credentials).then(res => {
 
-            console.log(res)
+            console.log(res.uid)
 
             const { stsTokenManager } = res
 
             setToken(stsTokenManager)
 
-            // find user
-            // set context user
+            mutateAsyncUser(res.uid).then(user => {
+                return setUser(user as IUser);
+            })
 
-            setLocation("/brand")
+            setLocation("/marcas")
 
         })
 

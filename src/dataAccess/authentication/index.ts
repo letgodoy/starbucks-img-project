@@ -96,10 +96,10 @@ export const requireAuth = ({ isPublic, component }: RoutesList) => {
     !authContext.token.isExpired &&
     authContext.user.role !== ""
   ) {
-    setLocation("/brand");
+    setLocation("/marcas");
   }
 
-  if (isPublic === false && authContext.token.accessToken === ""){
+  if (isPublic === false && authContext.token.accessToken === "") {
     setLocation("/login");
   }
 
@@ -109,7 +109,7 @@ export const requireAuth = ({ isPublic, component }: RoutesList) => {
 
   if (
     authContext.token.accessToken &&
-    !authContext.token.isExpired 
+    !authContext.token.isExpired
     // authContext.user.role !== ""
   ) {
     return component;
