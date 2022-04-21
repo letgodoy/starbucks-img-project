@@ -1,14 +1,14 @@
-import { IBrand } from "@types";
+import { IStore } from "@types";
 import { db } from "@utils";
 import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import { useMutation, useQuery } from "react-query";
 
-const collectionName = "brands";
+const collectionName = "stores";
 
-const createBrand = async (marca: IBrand) => {
-  const target = doc(db, collectionName, marca.name);
+const createStore = async (store: IStore) => {
+  const target = doc(db, collectionName, store.cnpj);
 
-  setDoc(target, marca)
+  setDoc(target, store)
     .then((res) => {
       console.log("Document written with ID: ", res);
       alert("Document written with ID: " + res);
@@ -20,7 +20,7 @@ const createBrand = async (marca: IBrand) => {
     });
 };
 
-const findBrandByID = async (id: string) => {
+const findStoreByID = async (id: string) => {
   const docRef = doc(db, collectionName, id);
   const docSnap = await getDoc(docRef);
 
@@ -33,20 +33,20 @@ const findBrandByID = async (id: string) => {
   }
 };
 
-const findBrands = async () => {
+const findStores = async () => {
   const querySnapshot = await getDocs(collection(db, collectionName));
 
   return querySnapshot.docs.map((res) => res.data());
 };
 
-export function useCreateBrand() {
-  return useMutation(createBrand);
+export function useCreateStore() {
+  return useMutation(createStore);
 }
 
-export function useGetBrandByID() {
-  return useMutation(findBrandByID);
+export function useGetStoreByID() {
+  return useMutation(findStoreByID);
 }
 
-export function useGetBrands() {
-  return useQuery("findBrands", () => findBrands());
+export function useGetStores() {
+  return useQuery("findStores", () => findStores());
 }

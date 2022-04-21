@@ -1,4 +1,13 @@
-import { Marcas, CadastroUser, Error404, Login, CadastroMarca } from "@pages";
+import {
+  Marcas,
+  CadastroUser,
+  Error404,
+  Login,
+  CadastroMarca,
+  CadastroLoja,
+  Dashboard,
+  CadastroAgencia,
+} from "@pages";
 import { RoutesList } from "@types";
 
 export const routes: RoutesList[] = [
@@ -15,7 +24,7 @@ export const routes: RoutesList[] = [
   {
     path: "/marcas",
     component: Marcas,
-    isPublic: true
+    isPublic: true,
   },
   {
     path: "/cadastrousuario",
@@ -25,6 +34,21 @@ export const routes: RoutesList[] = [
   {
     path: "/cadastromarcas",
     component: CadastroMarca,
+    isPublic: true,
+  },
+  {
+    path: "/cadastrolojas",
+    component: CadastroLoja,
+    isPublic: true,
+  },
+  {
+    path: "/cadastroagencia",
+    component: CadastroAgencia,
+    isPublic: true,
+  },
+  {
+    path: "/home",
+    component: Dashboard,
     isPublic: true,
   },
 ];
