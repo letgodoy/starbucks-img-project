@@ -6,9 +6,8 @@ export interface IPiece {
   createdBy: string;
   approvedBy?: string;
   type: string;
-}
-
-export interface ICreatePiece extends IPiece {
   marca: string;
   campaign: string;
+  mainImg: string;
+  images: Array<string>;
 }

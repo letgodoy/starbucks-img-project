@@ -1,16 +1,14 @@
-import { ICreatePiece } from "@types";
+import { IPiece } from "@types";
 import { db } from "@utils";
-import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 import { useMutation, useQuery } from "react-query";
 
-const collectionName = "brands";
+const collectionName = "pieces";
 
-const createPiece = async (campanha: ICreatePiece) => {
-  const target = doc(db, collectionName, campanha.marca);
+const createPiece = async (piece: IPiece) => {
+  const target = collection(db, collectionName);
 
-  await updateDoc(target, {
-    campaigns: arrayUnion(campanha),
-  })
+  await addDoc(target, piece)
     .then((res) => {
       console.log("Document add", res);
       alert("Document add");
