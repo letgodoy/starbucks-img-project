@@ -4,17 +4,43 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "@firebase/auth";
-import { ICredentials, RoutesList } from "@types";
+import { IAgency, ICredentials, IStore, IUser, RoutesList } from "@types";
 import { auth } from "@utils";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useContext } from "react";
 import { useMutation } from "react-query";
 import { useLocation } from "wouter";
+import { findAgencyByID } from "../agencia";
+import { findStoreByID } from "../loja";
+import { findUserByID } from "../user";
 
 const logIn = async ({ email, password }: ICredentials) => {
+  const { user, setUser, setToken, setAgency, setStore } =
+    useContext(AuthContext);
+
   return await signInWithEmailAndPassword(auth, email, password)
-    .then((res) => {
-      return res.user as any;
+    .then(async (res) => {
+      const { stsTokenManager } = res.user as any;
+
+      setToken(stsTokenManager);
+
+      await findUserByID(res.user.uid).then((userFind) => {
+        setUser(userFind as IUser);
+      });
+
+      if (user.agency) {
+        await findAgencyByID(user.agency).then((agency) => {
+          setAgency(agency as IAgency);
+        });
+      }
+
+      if (user.store) {
+        await findStoreByID(user.store).then((store) => {
+          setStore(store as IStore);
+        });
+      }
+
+      alert("welcome " + user.name);
     })
     .catch((error) => {
       // Handle Errors here.

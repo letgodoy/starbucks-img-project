@@ -14,12 +14,16 @@ export const CadastroLoja = () => {
 
     const store: IStore = {
       name: extractString(data.get('name') as string),
-      avatar: "auhauha"
+      cnpj: extractString(data.get('name') as string),
+      address: extractString(data.get('name') as string),
+      manager: extractString(data.get('name') as string),
+      managerPhone: extractString(data.get('name') as string),
+      managerEmail: extractString(data.get('name') as string),
     }
 
     mutateAsync(store).then(res => {
       console.log(res)
-      alert("xussexo")
+      alert("sucesso")
     }).catch(error => alert("erro: " + error))
   }
 

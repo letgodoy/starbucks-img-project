@@ -1,25 +1,44 @@
-import { useCreateStore } from "@dataAccess";
+import { useCreateCampaign } from "@dataAccess";
 import { Box, Button, Grid, TextInput, Typography } from "@elements";
-import { IStore } from "@types";
+import { ICreateCampaign } from "@types";
 import { extractString } from "@utils";
 import React from "react";
 
-export const CadastroImg = () => {
+export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
 
-  const { mutateAsync, isLoading } = useCreateStore()
+  const { marca } = params;
+
+  const { mutateAsync, isLoading } = useCreateCampaign();
+
+  // const { user, agency } = useContext(AuthContext)
+
+  const user = {
+    uid: "",
+    name: "",
+  }
+
+  const agency = {
+    cnpj: "",
+    name: "",
+  }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const store: IStore = {
+    const campaign: ICreateCampaign = {
       name: extractString(data.get('name') as string),
-      avatar: "auhauha"
+      createdAt: new Date().toISOString(),
+      createdBy: user.uid,
+      createdByName: user.name,
+      createdByAgency: agency.cnpj,
+      createdByAgencyName: agency.name,
+      marca
     }
 
-    mutateAsync(store).then(res => {
+    mutateAsync(campaign).then(res => {
       console.log(res)
-      alert("xussexo")
+      alert("sucesso")
     }).catch(error => alert("erro: " + error))
   }
 

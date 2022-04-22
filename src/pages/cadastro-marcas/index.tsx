@@ -1,9 +1,9 @@
+import { AuthContext } from "@components";
 import { useCreateBrand } from "@dataAccess";
-import { Box, Button, Grid, Link, TextInput, Typography } from "@elements";
+import { Box, Button, Grid, TextInput, Typography } from "@elements";
 import { IBrand } from "@types";
 import { extractString } from "@utils";
 import React, { useContext } from "react";
-import { AuthContext } from "@components";
 
 export const CadastroMarca = () => {
 
@@ -22,7 +22,7 @@ export const CadastroMarca = () => {
 
     mutateAsync(brand).then(res => {
       console.log(res)
-      alert("xussexo")
+      alert("sucesso")
     }).catch(error => alert("erro: " + error))
   }
 
@@ -52,7 +52,7 @@ export const CadastroMarca = () => {
             autoComplete="name"
             autoFocus
           />
-          
+
           <Button
             type="submit"
             fullWidth

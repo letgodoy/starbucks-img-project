@@ -20,7 +20,7 @@ const createStore = async (store: IStore) => {
     });
 };
 
-const findStoreByID = async (id: string) => {
+export const findStoreByID = async (id: string) => {
   const docRef = doc(db, collectionName, id);
   const docSnap = await getDoc(docRef);
 

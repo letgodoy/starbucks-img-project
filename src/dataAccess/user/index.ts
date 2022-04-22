@@ -37,7 +37,7 @@ const createUser = async (user: ICreateUser) => {
     });
 };
 
-const findUserByID = async (id: string) => {
+export const findUserByID = async (id: string) => {
   const docRef = doc(db, collectionName, id);
   const docSnap = await getDoc(docRef);
 

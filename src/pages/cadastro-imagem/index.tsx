@@ -1,25 +1,29 @@
-import { useCreateStore } from "@dataAccess";
+import { useCreateAgency } from "@dataAccess";
 import { Box, Button, Grid, TextInput, Typography } from "@elements";
-import { IStore } from "@types";
+import { IAgency } from "@types";
 import { extractString } from "@utils";
 import React from "react";
 
-export const CadastroLoja = () => {
+export const CadastroImagem = () => {
 
-  const { mutateAsync, isLoading } = useCreateStore()
+  const { mutateAsync, isLoading } = useCreateAgency()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const store: IStore = {
+    const agency: IAgency = {
       name: extractString(data.get('name') as string),
-      avatar: "auhauha"
+      cnpj: extractString(data.get('name') as string),
+      address: extractString(data.get('name') as string),
+      manager: extractString(data.get('name') as string),
+      managerPhone: extractString(data.get('name') as string),
+      managerEmail: extractString(data.get('name') as string),
     }
 
-    mutateAsync(store).then(res => {
+    mutateAsync(agency).then(res => {
       console.log(res)
-      alert("xussexo")
+      alert("sucesso")
     }).catch(error => alert("erro: " + error))
   }
 

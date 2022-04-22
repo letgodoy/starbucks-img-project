@@ -1,3 +1,6 @@
+import { IStore } from '@types';
+import { Dispatch, SetStateAction } from 'react';
+import { IAgency } from './agency';
 import { IUser } from './user';
 
 export interface ICredentials {
@@ -15,6 +18,10 @@ export interface ITokens {
 export interface IAuthContext {
   user: IUser;
   token: ITokens;
-  setToken: React.Dispatch<React.SetStateAction<ITokens>>;
-  setUser: React.Dispatch<React.SetStateAction<IUser>>;
+  agency: IAgency | null;
+  store: IStore | null;
+  setToken: Dispatch<SetStateAction<ITokens>>;
+  setUser: Dispatch<SetStateAction<IUser>>;
+  setAgency: Dispatch<SetStateAction<IAgency | null>>;
+  setStore: Dispatch<SetStateAction<IStore | null>>;
 };

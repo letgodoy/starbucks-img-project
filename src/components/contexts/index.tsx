@@ -7,7 +7,7 @@ export { AuthContext } from "./auth";
 
 const queryClient = new QueryClient();
 
-export const AllUniversalContext: FC = ({ children }) => {
+export const AllUniversalContext: FC = ({ children }: any) => {
   return <QueryClientProvider client={queryClient}>
     <AuthContextProvider>
       <RouterContext />

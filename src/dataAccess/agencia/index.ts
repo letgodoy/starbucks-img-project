@@ -1,4 +1,4 @@
-import { IStore } from "@types";
+import { IAgency } from "@types";
 import { db } from "@utils";
 import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import { useMutation, useQuery } from "react-query";
@@ -20,7 +20,7 @@ const createAgency = async (agency: IAgency) => {
     });
 };
 
-const findAgencyByID = async (id: string) => {
+export const findAgencyByID = async (id: string) => {
   const docRef = doc(db, collectionName, id);
   const docSnap = await getDoc(docRef);
 

@@ -1,20 +1,20 @@
 {
-  "name": "create-react-app-with-styled-components-typescript",
+  "name": "starbucks-hub",
   "version": "5.0.0",
   "private": true,
   "dependencies": {
-    "@mui/lab": "latest",
-    "@mui/material": "latest",
-    "@mui/styled-engine-sc": "latest",
-    "@testing-library/jest-dom": "latest",
-    "@testing-library/react": "latest",
-    "@testing-library/user-event": "latest",
+    "@mui/lab": "^5.0.0-alpha.78",
+    "@mui/material": "^5.6.2",
+    "@mui/styled-engine-sc": "^5.6.1",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.1.1",
+    "@testing-library/user-event": "^14.1.1",
     "firebase": "^9.6.3",
-    "react": "latest",
-    "react-dom": "latest",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "react-query": "^3.34.19",
-    "react-scripts": "latest",
-    "styled-components": "latest",
+    "react-scripts": "^5.0.1",
+    "styled-components": "^5.3.5",
     "wouter": "^2.8.0-alpha.2"
   },
   "scripts": {
@@ -40,10 +40,10 @@
   "devDependencies": {
     "@craco/craco": "latest",
     "@mui/types": "^7.1.1",
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "@types/styled-components": "latest",
+    "@types/node": "^17.0.25",
+    "@types/react": "^18.0.6",
+    "@types/react-dom": "^18.0.2",
+    "@types/styled-components": "^5.1.25",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
     "@typescript-eslint/parser": "^5.18.0",
     "craco-alias": "^3.0.1",
@@ -54,6 +54,6 @@
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.4.0",
     "prettier": "^2.6.2",
-    "typescript": "latest"
+    "typescript": "^4.6.3"
   }
 }

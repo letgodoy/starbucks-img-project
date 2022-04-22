@@ -1,7 +1,7 @@
 import { AuthContext } from "@components";
 import { useGetUserByID, useLogIn } from "@dataAccess";
 import { Box, Button, Grid, Link, TextInput, Typography } from "@elements";
-import { ICredentials, IUser } from "@types";
+import { ICredentials } from "@types";
 import { extractString } from "@utils";
 import React, { useContext } from "react";
 import { useLocation } from "wouter";
@@ -13,8 +13,6 @@ export const Login = () => {
 
     const { isLoading: isLoadingUser, mutateAsync: mutateAsyncUser } = useGetUserByID();
 
-    const { setToken, setUser } = useContext(AuthContext)
-
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -25,22 +23,8 @@ export const Login = () => {
         }
 
         mutateAsync(credentials).then(res => {
-
-            console.log(res.uid)
-
-            const { stsTokenManager } = res
-
-            setToken(stsTokenManager)
-
-            mutateAsyncUser(res.uid).then(user => {
-                return setUser(user as IUser);
-            })
-
             setLocation("/marcas")
-
         })
-
-
 
     }
 

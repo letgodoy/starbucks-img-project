@@ -7,6 +7,7 @@ import {
   CadastroLoja,
   Dashboard,
   CadastroAgencia,
+  CadastroCampanha,
 } from "@pages";
 import { RoutesList } from "@types";
 
@@ -49,6 +50,11 @@ export const routes: RoutesList[] = [
   {
     path: "/home",
     component: Dashboard,
+    isPublic: true,
+  },
+  {
+    path: "/cadastrocampanha/:marca",
+    component: CadastroCampanha,
     isPublic: true,
   },
 ];

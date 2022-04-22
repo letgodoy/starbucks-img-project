@@ -1,6 +1,6 @@
 import { useCreateAgency } from "@dataAccess";
 import { Box, Button, Grid, TextInput, Typography } from "@elements";
-import { IAgency, IStore } from "@types";
+import { IAgency } from "@types";
 import { extractString } from "@utils";
 import React from "react";
 
@@ -14,12 +14,16 @@ export const CadastroAgencia = () => {
 
     const agency: IAgency = {
       name: extractString(data.get('name') as string),
-      avatar: "auhauha"
+      cnpj: extractString(data.get('name') as string),
+      address: extractString(data.get('name') as string),
+      manager: extractString(data.get('name') as string),
+      managerPhone: extractString(data.get('name') as string),
+      managerEmail: extractString(data.get('name') as string),
     }
 
     mutateAsync(agency).then(res => {
       console.log(res)
-      alert("xussexo")
+      alert("sucesso")
     }).catch(error => alert("erro: " + error))
   }
 

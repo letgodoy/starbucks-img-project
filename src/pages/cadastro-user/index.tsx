@@ -1,9 +1,9 @@
+import { AuthContext } from "@components";
 import { useCreateUser } from "@dataAccess";
 import { Box, Button, Grid, Link, TextInput, Typography } from "@elements";
 import { ICreateUser } from "@types";
 import { extractString } from "@utils";
 import React, { useContext } from "react";
-import { AuthContext } from "@components";
 
 export const CadastroUser = () => {
 
@@ -23,12 +23,12 @@ export const CadastroUser = () => {
       role: extractString(data.get('role') as string),
       store: extractString(data.get('store') as string),
       phone: extractString(data.get('phone') as string),
-      cargo: extractString(data.get('cargo') as string)
+      cargo: extractString(data.get('cargo') as string),
     }
 
     mutateAsync(user).then(res => {
       console.log(res)
-      alert("xussexo")
+      alert("sucesso")
     }).catch(error => alert("erro: " + error))
   }
 
