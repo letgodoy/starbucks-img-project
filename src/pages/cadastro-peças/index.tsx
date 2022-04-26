@@ -1,27 +1,43 @@
-import { useCreateAgency } from "@dataAccess";
+import { useCreatePiece } from "@dataAccess";
 import { Box, Button, Grid, TextInput, Typography } from "@elements";
-import { IAgency } from "@types";
+import { IImage, IPiece } from "@types";
 import { extractString } from "@utils";
 import React from "react";
 
-export const CadastroImagem = () => {
+export const CadastroPeca = ({ params }: { params: { marca: string, campanha: string } }) => {
 
-  const { mutateAsync, isLoading } = useCreateAgency()
+  const { marca, campanha } = params
+
+  const { mutateAsync, isLoading } = useCreatePiece()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const agency: IAgency = {
+    const tags: string[] = []
+    const images: IImage[] = [{
+      url: extractString(data.get('url') as string),
+      ref: extractString(data.get('ref') as string),
+    }]
+
+    const piece: IPiece = {
       name: extractString(data.get('name') as string),
-      cnpj: extractString(data.get('name') as string),
-      address: extractString(data.get('name') as string),
-      manager: extractString(data.get('name') as string),
-      managerPhone: extractString(data.get('name') as string),
-      managerEmail: extractString(data.get('name') as string),
+      description: extractString(data.get('name') as string),
+      tags,
+      createdAt: new Date().toISOString(),
+      createdBy: new Date().toISOString(),
+      approvedBy: extractString(data.get('name') as string),
+      type: extractString(data.get('name') as string),
+      marca,
+      campaign: campanha,
+      mainImg: {
+        url: extractString(data.get('url') as string),
+        ref: extractString(data.get('ref') as string),
+      },
+      images,
     }
 
-    mutateAsync(agency).then(res => {
+    mutateAsync(piece).then(res => {
       console.log(res)
       alert("sucesso")
     }).catch(error => alert("erro: " + error))

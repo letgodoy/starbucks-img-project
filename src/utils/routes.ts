@@ -1,13 +1,14 @@
 import {
-  Marcas,
-  CadastroUser,
-  Error404,
-  Login,
-  CadastroMarca,
-  CadastroLoja,
-  Dashboard,
   CadastroAgencia,
   CadastroCampanha,
+  CadastroLoja,
+  CadastroMarca,
+  CadastroPeca,
+  CadastroUser,
+  Dashboard,
+  Error404,
+  Login,
+  Marcas,
 } from "@pages";
 import { RoutesList } from "@types";
 
@@ -48,13 +49,18 @@ export const routes: RoutesList[] = [
     isPublic: true,
   },
   {
-    path: "/home",
+    path: "/home/:marca",
     component: Dashboard,
     isPublic: true,
   },
   {
     path: "/cadastrocampanha/:marca",
     component: CadastroCampanha,
+    isPublic: true,
+  },
+  {
+    path: "/cadastropeca/:marca/:campanha",
+    component: CadastroPeca,
     isPublic: true,
   },
 ];

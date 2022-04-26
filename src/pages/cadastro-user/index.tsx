@@ -33,8 +33,7 @@ export const CadastroUser = () => {
   }
 
   return <Grid container sx={{ height: '100vh' }}>
-    <Grid item xs={12} sm={8} md={5}
-    >
+    <Grid item xs={12}>
       <Box
         sx={{
           my: 8,
@@ -87,33 +86,16 @@ export const CadastroUser = () => {
             required
             fullWidth
             id="password"
-            label="E-mail"
+            label="Senha"
             name="password"
           />
-          {/* <FormControlLabel
-                      control={<Checkbox value="remember" color="primary" />}
-                      label="Remember me"
-                  /> */}
           <Button
             type="submit"
             fullWidth
-            variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
         </Box>
       </Box>
     </Grid>

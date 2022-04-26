@@ -3,6 +3,7 @@ import { getAnalytics } from "firebase/analytics";
 import { FirebaseOptions, initializeApp } from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
+import { connectStorageEmulator, getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -18,10 +19,12 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore();
 const analytics = getAnalytics(app);
+const storage = getStorage(app);
 
 if (process.env.REACT_APP_DEV) {
   connectAuthEmulator(auth, "http://localhost:9099");
   connectFirestoreEmulator(db, "localhost", 8080);
+  connectStorageEmulator(storage, "localhost", 9199)
 }
 
-export { app, auth, db, analytics, firebaseConfig };
+export { app, auth, db, analytics, firebaseConfig, storage };

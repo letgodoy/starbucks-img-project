@@ -5,7 +5,7 @@ import { AllUniversalContext } from './components';
 
 export default function App() {
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth={false}>
       <AllUniversalContext/>
     </Container>
   );

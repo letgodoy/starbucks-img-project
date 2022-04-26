@@ -1,14 +1,15 @@
-import { Box, Grid, Typography } from "@elements";
-import React from "react";
+import Logo from "@assets/southrock_preto_1.png";
+import { Box, Button, Grid, Typography } from "@elements";
 
 export const Error404 = () => {
 
-    return <Grid container sx={{ height: '100vh' }}>
+    return <Grid container={true} sx={{ height: '100vh' }}>
         <Grid
             item
             xs={false}
             sm={4}
             md={7}
+            lg={6}
             sx={{
                 backgroundImage: 'url(https://source.unsplash.com/random)',
                 backgroundRepeat: 'no-repeat',
@@ -18,10 +19,7 @@ export const Error404 = () => {
                 backgroundPosition: 'center',
             }}
         />
-        <Grid item xs={12} sm={8} md={5}
-            // component={Paper} 
-            // elevation={6} 
-            square>
+        <Grid item xs={12} sm={8} md={5} lg={6}>
             <Box
                 sx={{
                     my: 8,
@@ -31,9 +29,16 @@ export const Error404 = () => {
                     alignItems: 'center',
                 }}
             >
-                <Typography component="h1" variant="h5">
-                    Não existe
+                <img
+                    src={Logo}
+                    alt="Logo Southrock"
+                    loading="lazy"
+                    width="50%"
+                />
+                <Typography variant="h4" component="h2" align="center" marginY={4}>
+                    Pagina não encontrada
                 </Typography>
+                <Button href="/login">Ir para login</Button>
             </Box>
         </Grid>
     </Grid>

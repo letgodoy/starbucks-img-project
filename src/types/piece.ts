@@ -8,6 +8,11 @@ export interface IPiece {
   type: string;
   marca: string;
   campaign: string;
-  mainImg: string;
-  images: Array<string>;
+  mainImg: IImage;
+  images: Array<IImage>;
+}
+
+export interface IImage {
+  url: string;
+  ref: string;
 }

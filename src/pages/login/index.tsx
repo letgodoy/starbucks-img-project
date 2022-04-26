@@ -1,10 +1,10 @@
-import { AuthContext } from "@components";
 import { useGetUserByID, useLogIn } from "@dataAccess";
 import { Box, Button, Grid, Link, TextInput, Typography } from "@elements";
 import { ICredentials } from "@types";
 import { extractString } from "@utils";
-import React, { useContext } from "react";
+import React from "react";
 import { useLocation } from "wouter";
+import Logo from "@assets/southrock_preto_1.png";
 
 export const Login = () => {
     const [location, setLocation] = useLocation();
@@ -28,14 +28,15 @@ export const Login = () => {
 
     }
 
-    return <Grid container sx={{ height: '100vh' }}>
+    return <Grid container={true} sx={{ height: '100vh' }}>
         <Grid
             item
             xs={false}
             sm={4}
             md={7}
+            lg={6}
             sx={{
-                backgroundImage: 'url(https://source.unsplash.com/random)',
+                backgroundImage: 'url(https://source.unsplash.com/random/?city,night)',
                 backgroundRepeat: 'no-repeat',
                 backgroundColor: (t: any) =>
                     t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -43,10 +44,7 @@ export const Login = () => {
                 backgroundPosition: 'center',
             }}
         />
-        <Grid item xs={12} sm={8} md={5}
-        // component={Paper} 
-        // elevation={6} 
-        >
+        <Grid item xs={12} sm={8} md={5} lg={6}>
             <Box
                 sx={{
                     my: 8,
@@ -56,19 +54,19 @@ export const Login = () => {
                     alignItems: 'center',
                 }}
             >
-                {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                    <LockOutlinedIcon />
-                </Avatar> */}
-                <Typography component="h1" variant="h5">
-                    Sign in
-                </Typography>
-                <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                <img
+                    src={Logo}
+                    alt="Logo Southrock"
+                    loading="lazy"
+                    width="30%"
+                />
+                <Box component="form" noValidate onSubmit={handleSubmit} marginY={5}>
                     <TextInput
                         margin="normal"
                         required
                         fullWidth
                         id="email"
-                        label="Email Address"
+                        label="E-mail"
                         name="email"
                         autoComplete="email"
                         autoFocus
@@ -78,7 +76,7 @@ export const Login = () => {
                         required
                         fullWidth
                         name="password"
-                        label="Password"
+                        label="Senha"
                         type="password"
                         id="password"
                         autoComplete="current-password"
@@ -93,20 +91,15 @@ export const Login = () => {
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
                     >
-                        Sign In
+                        Entrar
                     </Button>
-                    <Grid container>
+                    {/* <Grid container>
                         <Grid item xs>
                             <Link href="#" variant="body2">
                                 Forgot password?
                             </Link>
                         </Grid>
-                        <Grid item>
-                            <Link href="#" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
+                    </Grid> */}
                 </Box>
             </Box>
         </Grid>

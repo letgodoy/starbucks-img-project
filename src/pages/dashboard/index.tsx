@@ -1,39 +1,11 @@
-import { Box, Grid } from "@elements";
-import Avatar from "@mui/material/Avatar";
-import React, { useContext } from "react";
-import { useGetBrands } from "@dataAccess";
+import { Layout } from "@components";
 
-export const Dashboard = () => {
+export const Dashboard = ({ params }: { params: { marca: string } }) => {
 
-  const { data } = useGetBrands()
+  const { marca } = params
 
-  return <Grid container>
-    <Grid container >
+  return <Layout title="Inicio" marca={marca}>
+    dashboard
+  </Layout>
 
-      <Box
-        sx={{
-          my: 8,
-          mx: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-            os clientes aqui
-            <Box
-        sx={{
-          my: 8,
-          mx: 4,
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}
-      >
-      {data?.map(item => <Avatar key={item.name} sx={{ m: 1, bgcolor: 'secondary.main', width: 70, height: 70 }}>
-                    {item.name}
-                </Avatar>)}
-                </Box>
-      </Box>
-    </Grid>
-  </Grid>
 }
