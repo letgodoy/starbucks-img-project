@@ -22,7 +22,7 @@ jobs:
           node-version: '16.x'
 
       - name: install packages
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       # - name: tests
       #   run: npm run test --passWithNoTests
