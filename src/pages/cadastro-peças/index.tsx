@@ -1,3 +1,4 @@
+import { Layout } from "@components";
 import { useCreatePiece } from "@dataAccess";
 import { Box, Button, Grid, TextInput, Typography } from "@elements";
 import { IImage, IPiece } from "@types";
@@ -43,7 +44,7 @@ export const CadastroPeca = ({ params }: { params: { marca: string, campanha: st
     }).catch(error => alert("erro: " + error))
   }
 
-  return <Grid container sx={{ height: '100vh' }}>
+  return <Layout params={params}><Grid container sx={{ height: '100vh' }}>
     <Grid item xs={12} sm={8} md={5}
     >
       <Box
@@ -56,7 +57,7 @@ export const CadastroPeca = ({ params }: { params: { marca: string, campanha: st
         }}
       >
         <Typography component="h1" variant="h5">
-          Cadastro de loja
+          Cadastro de peça
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextInput
@@ -82,4 +83,5 @@ export const CadastroPeca = ({ params }: { params: { marca: string, campanha: st
       </Box>
     </Grid>
   </Grid>
+  </Layout>
 }

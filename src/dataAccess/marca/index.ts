@@ -6,7 +6,7 @@ import { useMutation, useQuery } from "react-query";
 const collectionName = "brands";
 
 const createBrand = async (marca: IBrand) => {
-  const target = doc(db, collectionName, marca.name);
+  const target = doc(db, collectionName, marca.slug);
 
   setDoc(target, marca)
     .then((res) => {

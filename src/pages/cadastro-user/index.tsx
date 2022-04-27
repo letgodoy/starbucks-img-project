@@ -1,11 +1,11 @@
-import { AuthContext } from "@components";
+import { AuthContext, Layout } from "@components";
 import { useCreateUser } from "@dataAccess";
 import { Box, Button, Grid, Link, TextInput, Typography } from "@elements";
 import { ICreateUser } from "@types";
 import { extractString } from "@utils";
 import React, { useContext } from "react";
 
-export const CadastroUser = () => {
+export const CadastroUser = ({params}:any) => {
 
   const { mutateAsync, isLoading } = useCreateUser()
 
@@ -32,7 +32,8 @@ export const CadastroUser = () => {
     }).catch(error => alert("erro: " + error))
   }
 
-  return <Grid container sx={{ height: '100vh' }}>
+  return <Layout params={params}>
+  <Grid container sx={{ height: '100vh' }}>
     <Grid item xs={12}>
       <Box
         sx={{
@@ -100,4 +101,5 @@ export const CadastroUser = () => {
       </Box>
     </Grid>
   </Grid>
+</Layout>
 }

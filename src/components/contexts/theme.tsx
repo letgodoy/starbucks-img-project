@@ -50,7 +50,6 @@ export const themeOptionsDark: ThemeOptions = {
       main: '#b8dbd9',
     },
   },
-  
 };
 
 export const themeOptionsLight: ThemeOptions = {
@@ -66,4 +65,4 @@ export const themeOptionsLight: ThemeOptions = {
   },
 };
 
-export const theme = createTheme(themeOptionsLight);
+export const theme = createTheme(themeOptionsDark);

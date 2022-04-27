@@ -1,27 +1,29 @@
 import { AuthContext } from "@components";
-import { Box, Grid, Typography } from "@elements";
-import { FC, PropsWithChildren, useContext } from "react";
+import { Grid } from "@elements";
+import { Container } from "@mui/material";
+import { useContext } from "react";
+import { NavBar } from "../navBar";
+import { SideMenu } from "../sideMenu";
 
-export const Layout: FC<PropsWithChildren<{title: string, marca: string}>> = ({ children, title, marca }: any) => {
+export const Layout = ({ children, params }: any) => {
 
   const context = useContext(AuthContext)
 
-  return <Grid container sx={{ height: '100vh' }}>
-    <Grid item xs={12}>
-      <Box
-        sx={{
-          my: 8,
-          mx: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          {title} - {marca}
-        </Typography>
-        {children}
-      </Box>
+  return <Grid container spacing={3}>
+    <Grid item xs={3}>
+      <SideMenu params={params} />
+    </Grid>
+    <Grid item xs={9}>
+      <Grid container>
+        <Grid item xs={12}>
+          <NavBar />
+        </Grid>
+        <Grid item xs={12}>
+          <Container>
+            {children}
+          </Container>
+        </Grid>
+      </Grid>
     </Grid>
   </Grid>
 }

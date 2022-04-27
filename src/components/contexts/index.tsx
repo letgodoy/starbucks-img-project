@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { FC } from "react";
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { AuthContextProvider } from "./auth";
@@ -13,6 +13,7 @@ export const AllUniversalContext: FC = ({ children }: any) => {
   return <QueryClientProvider client={queryClient}>
     <ThemeProvider theme={theme}>
       <AuthContextProvider>
+        <CssBaseline />
         <RouterContext />
       </AuthContextProvider>
     </ThemeProvider>
