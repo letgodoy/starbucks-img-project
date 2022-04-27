@@ -36,7 +36,7 @@ export const routes: RoutesList[] = [
     visibleMenu: true
   },
   {
-    path: "/cadastrousuario/:marca",
+    path: "/cadastrousuario",
     component: CadastroUser,
     isPublic: true,
     title: "Cadastro de usuário",
@@ -44,7 +44,7 @@ export const routes: RoutesList[] = [
     visibleMenu: true
   },
   {
-    path: "/cadastromarcas/:marca",
+    path: "/cadastromarcas",
     component: CadastroMarca,
     isPublic: true,
     title: "Cadastro de marca",
@@ -52,7 +52,7 @@ export const routes: RoutesList[] = [
     visibleMenu: true
   },
   {
-    path: "/cadastrolojas/:marca",
+    path: "/cadastrolojas",
     component: CadastroLoja,
     isPublic: true,
     title: "Cadastro de lojas",
@@ -60,7 +60,7 @@ export const routes: RoutesList[] = [
     visibleMenu: true
   },
   {
-    path: "/cadastroagencia/:marca",
+    path: "/cadastroagencia",
     component: CadastroAgencia,
     isPublic: true,
     title: "Cadastro de agência",
