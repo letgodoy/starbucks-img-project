@@ -4,4 +4,5 @@ export * from "./campaign";
 export * from "./loja";
 export * from "./marca";
 export * from "./user";
-export * from "./piece";
+export * from "./peca";
+export * from "./fotografo";

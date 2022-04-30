@@ -1,6 +1,8 @@
 import {
   CadastroAgencia,
   CadastroCampanha,
+  CadastroFotografo,
+  CadastroImagens,
   CadastroLoja,
   CadastroMarca,
   CadastroPeca,
@@ -88,6 +90,22 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de peças",
     id: 10,
+    visibleMenu: true
+  },
+  {
+    path: "/cadastrofotografo",
+    component: CadastroFotografo,
+    isPublic: true,
+    title: "Cadastro de estúdio de fotografia",
+    id: 11,
+    visibleMenu: true
+  },
+  {
+    path: "/cadastroimagem/:marca",
+    component: CadastroImagens,
+    isPublic: true,
+    title: "Cadastro de Imagens",
+    id: 12,
     visibleMenu: true
   },
 ];
