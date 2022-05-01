@@ -5,7 +5,7 @@ import { IBrand } from "@types";
 import { extractString } from "@utils";
 import React, { useContext } from "react";
 
-export const CadastroMarca = ({params}: any) => {
+export const CadastroMarca = ({ params }: any) => {
 
   const { mutateAsync, isLoading } = useCreateBrand()
 
@@ -42,7 +42,7 @@ export const CadastroMarca = ({params}: any) => {
           <Typography component="h1" variant="h5">
             Cadastro de marca
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextInput
               margin="normal"
               required

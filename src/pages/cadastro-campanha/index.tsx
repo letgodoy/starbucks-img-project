@@ -1,9 +1,9 @@
+import { Layout } from "@components";
 import { useCreateCampaign } from "@dataAccess";
 import { Box, Button, Grid, TextInput, Typography } from "@elements";
 import { ICreateCampaign } from "@types";
 import { extractString } from "@utils";
 import React from "react";
-import { Layout } from "@components";
 
 export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
 
@@ -58,7 +58,7 @@ export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
           <Typography component="h1" variant="h5">
             Cadastro de campanha
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextInput
               margin="normal"
               required

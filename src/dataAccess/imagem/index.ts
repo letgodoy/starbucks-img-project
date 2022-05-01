@@ -1,14 +1,23 @@
-import { IPiece } from "@types";
+import { IImage } from "@types";
 import { db } from "@utils";
-import { addDoc, collection, doc, getDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  collectionGroup,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { useMutation, useQuery } from "react-query";
 
 const collectionName = "images";
 
-const createPiece = async (piece: IPiece) => {
+const createImage = async (image: IImage) => {
   const target = collection(db, collectionName);
 
-  await addDoc(target, piece)
+  await addDoc(target, image)
     .then((res) => {
       console.log("Document add", res);
       alert("Document add");
@@ -20,7 +29,7 @@ const createPiece = async (piece: IPiece) => {
     });
 };
 
-const findPieceByID = async (id: string) => {
+const findImageByID = async (id: string) => {
   const docRef = doc(db, collectionName, id);
   const docSnap = await getDoc(docRef);
 
@@ -33,27 +42,29 @@ const findPieceByID = async (id: string) => {
   }
 };
 
-const findPieces = async (marca: string) => {
-  const docRef = doc(db, collectionName, marca);
-  const querySnapshot = await getDoc(docRef);
+const findImages = async (marca: string) => {
+  const docRef = query(
+    collectionGroup(db, collectionName),
+    where("marca", "==", marca)
+  );
+  const querySnapshot = await getDocs(docRef);
 
-  if (querySnapshot.exists()) {
-    return querySnapshot.data()?.campaigns;
-  } else {
-    // doc.data() will be undefined in this case
-    console.log("No such document!");
-    return {};
-  }
+  let list: IImage[] = [];
+  querySnapshot.forEach((doc) => {
+    list.push(doc.data() as IImage);
+  });
+
+  return list;
 };
 
-export function useCreatePiece() {
-  return useMutation(createPiece);
+export function useCreateImage() {
+  return useMutation(createImage);
 }
 
-export function useGetPieceByID() {
-  return useMutation(findPieceByID);
+export function useGetImageByID() {
+  return useMutation(findImageByID);
 }
 
-export function useGetPieces(marca: string) {
-  return useQuery("findPieces", () => findPieces(marca));
+export function useGetImages(marca: string) {
+  return useQuery("findImages", () => findImages(marca));
 }

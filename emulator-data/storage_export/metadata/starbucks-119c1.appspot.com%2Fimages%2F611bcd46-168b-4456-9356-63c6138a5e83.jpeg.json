@@ -1,0 +1,25 @@
+{
+  "name": "images/611bcd46-168b-4456-9356-63c6138a5e83.jpeg",
+  "bucket": "starbucks-119c1.appspot.com",
+  "contentType": "image/jpeg",
+  "metageneration": 1,
+  "generation": 1651377100006,
+  "storageClass": "STANDARD",
+  "contentDisposition": "inline",
+  "cacheControl": "public, max-age=3600",
+  "contentEncoding": "identity",
+  "customMetadata": {
+    "lastModified": "1645715393059",
+    "name": "aZ0e48W_460s.jpeg",
+    "size": "26159"
+  },
+  "downloadTokens": [
+    "0fbc5b9c-1ab7-4920-bab5-6455915e6d72"
+  ],
+  "etag": "NIycGhf7r/gO0qGx4MZpCygNdH0",
+  "timeCreated": "2022-05-01T03:51:40.005Z",
+  "updated": "2022-05-01T03:51:40.005Z",
+  "size": 26159,
+  "md5Hash": "DzLCzahn8h7gButDwwrGew==",
+  "crc32c": "2824197789"
+}

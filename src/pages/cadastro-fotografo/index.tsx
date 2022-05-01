@@ -1,7 +1,7 @@
 import { Layout } from "@components";
-import { useCreateAgency, useCreatePhotographer } from "@dataAccess";
+import { useCreatePhotographer } from "@dataAccess";
 import { Box, Button, Grid, TextInput, Typography } from "@elements";
-import { IAgency, IPhotographer } from "@types";
+import { IPhotographer } from "@types";
 import { extractString } from "@utils";
 import React from "react";
 
@@ -43,7 +43,7 @@ export const CadastroFotografo = ({ params }: any) => {
           <Typography component="h1" variant="h5">
             Cadastro de agencia
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextInput
               margin="normal"
               required

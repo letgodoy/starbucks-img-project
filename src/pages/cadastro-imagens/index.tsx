@@ -1,42 +1,71 @@
 import { Layout } from "@components";
-import { useCreatePiece } from "@dataAccess";
+import { uploadImage, useCreateImage } from "@dataAccess";
 import { Box, Button, Grid, TextInput, Typography } from "@elements";
-import { IImage, IPiece, IStorageImage } from "@types";
-import { extractString } from "@utils";
-import React from "react";
+import { IFileStorage, IImage } from "@types";
+import { extractString, fileTypes } from "@utils";
+import React, { useState } from "react";
+import { FileUploader } from "react-drag-drop-files";
+import { TagsInput } from "../../elements/tagInput";
 
-export const CadastroImagens = ({ params }: { params: { marca: string, campanha: string } }) => {
+export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
 
-  const { marca, campanha } = params
+  const { marca } = params
 
-  const { mutateAsync, isLoading } = useCreatePiece()
+  const [file, setFile] = useState(null);
+  const [tags, setTags] = useState<Array<string>>([]);
+
+  const { mutateAsync, isLoading } = useCreateImage()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const tags: string[] = []
-
-    const piece: IImage = {
-      name: extractString(data.get('name') as string),
-      description: extractString(data.get('name') as string),
-      tags,
-      createdAt: new Date().toISOString(),
-      createdBy: new Date().toISOString(),
-      approvedBy: extractString(data.get('name') as string),
-      product: extractString(data.get('name') as string),
-      marca,
-      mainImg: {
-        url: extractString(data.get('url') as string),
-        ref: extractString(data.get('ref') as string),
-      },
+    let upload = {
+      url: "",
+      ref: ""
     }
 
-    mutateAsync(piece).then(res => {
-      console.log(res)
-      alert("sucesso")
-    }).catch(error => alert("erro: " + error))
+    if (file) {
+      const storageFile: IFileStorage = await uploadImage(file) as IFileStorage
+
+      upload.url = storageFile.url
+      upload.ref = storageFile.fileName
+
+      if (storageFile.url) {
+        const image: IImage = {
+          name: extractString(data.get('name') as string),
+          description: extractString(data.get('description') as string),
+          year: extractString(data.get('year') as string),
+          tags,
+          createdAt: new Date().toISOString(),
+          createdBy: new Date().toISOString(),
+          product: extractString(data.get('product') as string),
+          marca,
+          mainImg: upload,
+        }
+
+        mutateAsync(image).then(res => {
+          console.log(res)
+          alert("sucesso")
+        }).catch(error => alert("erro: " + error))
+      } else {
+        alert("nao salvou")
+      }
+
+
+    } else {
+      alert("falta imagem")
+    }
   }
+
+  const handleSelecetedTags = (items: Array<string>) => {
+    console.log(items);
+    // setTags(items)
+  }
+
+  const handleImage = async (file: any) => {
+    setFile(file)
+  };
 
   return <Layout params={params}>
     <Grid container sx={{ height: '100vh' }}>
@@ -53,7 +82,7 @@ export const CadastroImagens = ({ params }: { params: { marca: string, campanha:
           <Typography component="h1" variant="h5">
             Cadastro de imagens
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextInput
               margin="normal"
               required
@@ -66,54 +95,44 @@ export const CadastroImagens = ({ params }: { params: { marca: string, campanha:
             />
             <TextInput
               margin="normal"
-              required
               fullWidth
-              id="cnpj"
-              label="Cnpj"
-              name="cnpj"
-              autoComplete="cnpj"
+              id="description"
+              label="Descrição"
+              name="description"
+              autoComplete="description"
+              multiline
+              maxRows={3}
               autoFocus
             />
             <TextInput
               margin="normal"
-              required
               fullWidth
-              id="address"
-              label="Endereço"
-              name="address"
-              autoComplete="address"
+              id="product"
+              label="Produto"
+              name="product"
+              autoComplete="product"
               autoFocus
             />
             <TextInput
               margin="normal"
-              required
               fullWidth
-              id="manager"
-              label="Gerente"
-              name="manager"
-              autoComplete="manager"
+              id="year"
+              label="Ano"
+              name="year"
+              autoComplete="year"
               autoFocus
             />
-            <TextInput
-              margin="normal"
-              required
+            <TagsInput
+              selectedTags={handleSelecetedTags}
               fullWidth
-              id="managerPhone"
-              label="Telefone do gerente"
-              name="managerPhone"
-              autoComplete="managerPhone"
-              autoFocus
+              variant="outlined"
+              id="tags"
+              name="tags"
+              placeholder="Tags"
+              label="tags"
+              tags={tags}
             />
-            <TextInput
-              margin="normal"
-              required
-              fullWidth
-              id="managerEmail"
-              label="E-mail do gerente"
-              name="managerEmail"
-              autoComplete="managerEmail"
-              autoFocus
-            />
+            <FileUploader handleChange={handleImage} types={fileTypes} multiple={false} />
             <Button
               type="submit"
               fullWidth

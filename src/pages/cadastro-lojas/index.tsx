@@ -43,7 +43,7 @@ export const CadastroLoja = ({ params }: any) => {
           <Typography component="h1" variant="h5">
             Cadastro de agencia
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextInput
               margin="normal"
               required

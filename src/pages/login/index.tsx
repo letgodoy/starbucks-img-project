@@ -1,10 +1,10 @@
+import Logo from "@assets/southrock_preto_1.png";
 import { useGetUserByID, useLogIn } from "@dataAccess";
-import { Box, Button, Grid, Link, TextInput, Typography } from "@elements";
+import { Box, Button, Grid, TextInput } from "@elements";
 import { ICredentials } from "@types";
 import { extractString } from "@utils";
 import React from "react";
 import { useLocation } from "wouter";
-import Logo from "@assets/southrock_preto_1.png";
 
 export const Login = () => {
     const [location, setLocation] = useLocation();
@@ -60,7 +60,7 @@ export const Login = () => {
                     loading="lazy"
                     width="30%"
                 />
-                <Box component="form" noValidate onSubmit={handleSubmit} marginY={5}>
+                <Box component="form" onSubmit={handleSubmit} marginY={5}>
                     <TextInput
                         margin="normal"
                         required

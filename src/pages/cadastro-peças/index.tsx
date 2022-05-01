@@ -1,7 +1,7 @@
 import { Layout } from "@components";
 import { useCreatePiece } from "@dataAccess";
 import { Box, Button, Grid, TextInput, Typography } from "@elements";
-import { IImage, IPiece } from "@types";
+import { IPiece, IStorageImage } from "@types";
 import { extractString } from "@utils";
 import React from "react";
 
@@ -16,7 +16,7 @@ export const CadastroPeca = ({ params }: { params: { marca: string, campanha: st
     const data = new FormData(event.currentTarget);
 
     const tags: string[] = []
-    const images: IImage[] = [{
+    const images: IStorageImage[] = [{
       url: extractString(data.get('url') as string),
       ref: extractString(data.get('ref') as string),
     }]
@@ -59,7 +59,7 @@ export const CadastroPeca = ({ params }: { params: { marca: string, campanha: st
         <Typography component="h1" variant="h5">
           Cadastro de peça
         </Typography>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextInput
             margin="normal"
             required

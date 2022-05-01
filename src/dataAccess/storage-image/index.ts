@@ -1,25 +1,34 @@
+import { IFile, IFileStorage } from "@types";
 import { storage } from "@utils";
 import {
   deleteObject,
   getDownloadURL,
   ref,
   uploadBytesResumable,
+  UploadMetadata,
 } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 
-export const uploadImage = (file: any) => {
-  const metadata = {
-    contentType: "image/jpeg",
+const uploadStorageFile = async (folder: string, file: any) => {
+  const { type, name, size, lastModified } = file;
+  const metadata: UploadMetadata = {
+    contentType: type,
+    customMetadata: {
+      lastModified,
+      name,
+      size: `${size}`,
+    },
   };
+  const fileName = uuidv4() + type.replace("image/", ".");
 
-  // Upload file and metadata to the object 'images/mountains.jpg'
-  const storageRef = ref(storage, "pieces/" + file.name);
+  const storageRef = ref(storage, folder + fileName);
   const uploadTask = uploadBytesResumable(storageRef, file, metadata);
 
-  // Listen for state changes, errors, and completion of the upload.
   uploadTask.on(
     "state_changed",
     (snapshot) => {
       // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+      console.log(snapshot);
       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       console.log("Upload is " + progress + "% done");
       switch (snapshot.state) {
@@ -41,29 +50,27 @@ export const uploadImage = (file: any) => {
         case "storage/canceled":
           // User canceled the upload
           break;
-
-        // ...
-
         case "storage/unknown":
           // Unknown error occurred, inspect error.serverResponse
           break;
       }
     },
-    () => {
-      // Upload completed successfully, now we can get the download URL
-      const url = getDownloadURL(uploadTask.snapshot.ref);
-
-      return {
-        url,
-        ...uploadTask.snapshot,
-      };
-    }
   );
+
+  return await uploadTask.then(async (snapshot) => {
+    const url = await getDownloadURL(snapshot.ref);
+
+    return {
+      url,
+      fileName,
+      ...snapshot
+    }
+  });
 };
 
-export const deleteFile = (fileName: string) => {
+const deleteStorageFile = (folder: string, fileName: string) => {
   // Create a reference to the file to delete
-  const desertRef = ref(storage, "pieces/" + fileName);
+  const desertRef = ref(storage, folder + fileName);
 
   // Delete the file
   deleteObject(desertRef)
@@ -75,8 +82,8 @@ export const deleteFile = (fileName: string) => {
     });
 };
 
-export const getDownload = (fileName: string) => {
-  const starsRef = ref(storage, "pieces/" + fileName);
+const getDownload = (folder: string, fileName: string) => {
+  const starsRef = ref(storage, folder + fileName);
 
   // Get the download URL
   getDownloadURL(starsRef)
@@ -120,8 +127,8 @@ export const getDownload = (fileName: string) => {
     });
 };
 
-export const getURLDownload = (fileName: string) => {
-  const starsRef = ref(storage, "pieces/" + fileName);
+const getURLDownload = (folder: string, fileName: string) => {
+  const starsRef = ref(storage, folder + fileName);
 
   // Get the download URL
   getDownloadURL(starsRef)
@@ -150,4 +157,36 @@ export const getURLDownload = (fileName: string) => {
           break;
       }
     });
+};
+
+export const uploadImage = (file: IFile) => {
+  return uploadStorageFile("images/", file);
+};
+
+export const uploadPiece = (file: IFile) => {
+  return uploadStorageFile("pieces/", file);
+};
+
+export const deleteImage = (fileName: string) => {
+  return deleteStorageFile("images/", fileName);
+};
+
+export const deletePiece = (fileName: string) => {
+  return deleteStorageFile("pieces/", fileName);
+};
+
+export const getDownloadImage = (fileName: string) => {
+  return getDownload("images/", fileName);
+};
+
+export const getDownloadPiece = (fileName: string) => {
+  return getDownload("pieces/", fileName);
+};
+
+export const getURLDownloadImage = (fileName: string) => {
+  return getURLDownload("images/", fileName);
+};
+
+export const getURLDownloadPiece = (fileName: string) => {
+  return getURLDownload("pieces/", fileName);
 };
