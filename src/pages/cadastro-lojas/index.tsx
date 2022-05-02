@@ -41,7 +41,7 @@ export const CadastroLoja = ({ params }: any) => {
           }}
         >
           <Typography component="h1" variant="h5">
-            Cadastro de agencia
+            Cadastro de loja
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextInput

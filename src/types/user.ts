@@ -10,8 +10,12 @@ export interface IUser {
   email: string;
   avatar: string;
   role: string;
-  store?: string;
+  store?: string | null;
   phone: string;
   cargo: string;
-  agency?: string;
+  agency?: string | null;
+  createAt: string;
+  createBy: string;
+  lastUpdated: string;
+  photographer?: string | null;
 };

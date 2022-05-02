@@ -1,13 +1,13 @@
 import { ICreateUser } from "@types";
 import { auth, db } from "@utils";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useMutation } from "react-query";
 
 const collectionName = "users";
 
-const createUser = async (user: ICreateUser) => {
-  const { email, password } = user;
+const createUser = async ({ password, ...user }: ICreateUser) => {
+  const { email } = user;
 
   const userCreated = await createUserWithEmailAndPassword(
     auth,
@@ -18,13 +18,7 @@ const createUser = async (user: ICreateUser) => {
   const account = doc(db, collectionName, userCreated.user.uid);
   setDoc(account, {
     uid: userCreated.user.uid,
-    name: user.name,
-    email: user.email,
-    avatar: user.avatar,
-    role: user.role,
-    store: user.store,
-    phone: user.phone,
-    cargo: user.cargo,
+    ...user,
   })
     .then((res) => {
       console.log("Document written with ID: ", res);

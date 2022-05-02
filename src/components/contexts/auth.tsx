@@ -10,7 +10,12 @@ const DEFAULT_VALUE: IAuthContext = {
     role: "",
     store: "",
     cargo: "",
-    phone: ""
+    phone: "",
+    createAt: "",
+    createBy: "",
+    lastUpdated: "",
+    photographer: "",
+    agency: ""
   },
   token: {
     accessToken: "",
@@ -20,10 +25,12 @@ const DEFAULT_VALUE: IAuthContext = {
   },
   agency: null,
   store: null,
+  photographer: null,
   setUser: () => { },
   setToken: () => { },
   setAgency: () => { },
   setStore: () => { },
+  setPhotographer: () => { },
 };
 
 export const AuthContext: Context<IAuthContext> = createContext<IAuthContext>(DEFAULT_VALUE);
@@ -33,9 +40,10 @@ export const AuthContextProvider = ({ children }: any) => {
   const [token, setToken] = useState(DEFAULT_VALUE.token);
   const [agency, setAgency] = useState(DEFAULT_VALUE.agency);
   const [store, setStore] = useState(DEFAULT_VALUE.store);
+  const [photographer, setPhotographer] = useState(DEFAULT_VALUE.photographer);
 
   return <AuthContext.Provider value={{
-    user, token, agency, store, setUser, setToken, setAgency, setStore,
+    user, token, agency, store, photographer, setUser, setToken, setAgency, setStore, setPhotographer
   }}>
     {children}
   </AuthContext.Provider>;

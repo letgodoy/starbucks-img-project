@@ -1,4 +1,4 @@
-import { IStore } from '@types';
+import { IPhotographer, IStore } from '@types';
 import { Dispatch, SetStateAction } from 'react';
 import { IAgency } from './agency';
 import { IUser } from './user';
@@ -20,8 +20,10 @@ export interface IAuthContext {
   token: ITokens;
   agency: IAgency | null;
   store: IStore | null;
+  photographer: IPhotographer | null;
   setToken: Dispatch<SetStateAction<ITokens>>;
   setUser: Dispatch<SetStateAction<IUser>>;
   setAgency: Dispatch<SetStateAction<IAgency | null>>;
   setStore: Dispatch<SetStateAction<IStore | null>>;
+  setPhotographer: Dispatch<SetStateAction<IPhotographer | null>>;
 };
