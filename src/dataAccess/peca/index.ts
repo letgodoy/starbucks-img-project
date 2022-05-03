@@ -13,11 +13,7 @@ const createPiece = async (piece: IPiece) => {
       console.log("Document add", res);
       alert("Document add");
     })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      alert(errorCode + ": " + errorMessage);
-    });
+    .catch((error) => error);
 };
 
 const findPieceByID = async (id: string) => {

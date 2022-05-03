@@ -1,11 +1,15 @@
-import { Layout } from "@components";
+import { AlertContext, AuthContext, Layout } from "@components";
 import { useCreateStore } from "@dataAccess";
-import { Box, Button, Grid, TextInput, Typography } from "@elements";
+import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
 import { IStore } from "@types";
 import { extractString } from "@utils";
-import React from "react";
+import React, { useContext } from "react";
+import Slugify from "slugify";
 
 export const CadastroLoja = ({ params }: any) => {
+
+  const loggedUser = useContext(AuthContext)
+  const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
   const { mutateAsync, isLoading } = useCreateStore()
 
@@ -13,19 +17,27 @@ export const CadastroLoja = ({ params }: any) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
+    const now = new Date().toISOString()
+
     const store: IStore = {
+      slug: Slugify(extractString(data.get('name') as string)),
       name: extractString(data.get('name') as string),
       cnpj: extractString(data.get('cnpj') as string),
       address: extractString(data.get('address') as string),
       manager: extractString(data.get('manager') as string),
       managerPhone: extractString(data.get('managerPhone') as string),
       managerEmail: extractString(data.get('managerEmail') as string),
+      createdAt: now,
+      createdBy: loggedUser.user.uid,
+      lastUpdated: now
     }
 
     mutateAsync(store).then(res => {
-      console.log(res)
-      alert("sucesso")
-    }).catch(error => alert("erro: " + error))
+      setOpenSuccess("Loja salva com sucesso.")
+    }).catch(error => {
+      console.warn("erro: " + error)
+      setOpenError("Erro ao salvar. Tente novamente.")
+    })
   }
 
   return <Layout params={params}>
@@ -63,6 +75,7 @@ export const CadastroLoja = ({ params }: any) => {
               name="cnpj"
               autoComplete="cnpj"
               autoFocus
+            // mask="000.000.000/0000-00"
             />
             <TextInput
               margin="normal"
@@ -93,6 +106,7 @@ export const CadastroLoja = ({ params }: any) => {
               name="managerPhone"
               autoComplete="managerPhone"
               autoFocus
+              type="phone"
             />
             <TextInput
               margin="normal"
@@ -103,14 +117,15 @@ export const CadastroLoja = ({ params }: any) => {
               name="managerEmail"
               autoComplete="managerEmail"
               autoFocus
+              type="email"
             />
-            <Button
+            {isLoading ? <Loading /> : <Button
               type="submit"
               fullWidth
               sx={{ mt: 3, mb: 2 }}
             >
               Salvar
-            </Button>
+            </Button>}
           </Box>
         </Box>
       </Grid>

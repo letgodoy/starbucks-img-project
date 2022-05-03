@@ -10,8 +10,6 @@ export const SideMenu = ({ params }: { params?: { marca: string, campanha: strin
 
   const { marca, campanha } = params || {marca: "", campanha: ""}
 
-  const context = useContext(AuthContext)
-
   const darkMode = true
 
   const [selectedIndex, setSelectedIndex] = useState(1);

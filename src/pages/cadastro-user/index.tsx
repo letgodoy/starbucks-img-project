@@ -1,4 +1,4 @@
-import { AuthContext, Layout } from "@components";
+import { AlertContext, AuthContext, Layout } from "@components";
 import { useCreateUser, useGetAgencies, useGetPhotographers, useGetStores } from "@dataAccess";
 import { Box, Button, Grid, TextInput, Typography } from "@elements";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
@@ -19,7 +19,8 @@ export const CadastroUser = ({ params }: any) => {
   const [agency, setAgency] = useState<string | null>(null)
   const [photography, setPhotography] = useState<string | null>(null)
 
-  const context = useContext(AuthContext)
+  const loggedUser = useContext(AuthContext)
+  const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -38,15 +39,17 @@ export const CadastroUser = ({ params }: any) => {
       photographer: photography,
       phone: extractString(data.get('phone') as string),
       cargo: extractString(data.get('cargo') as string),
-      createAt: now,
-      createBy: context.user.uid,
+      createdAt: now,
+      createdBy: loggedUser.user.uid,
       lastUpdated: now
     }
 
     mutateAsync(user).then(res => {
-      console.log(res)
-      alert("sucesso")
-    }).catch(error => alert("erro: " + error))
+      setOpenSuccess("Cadastrado com sucesso.")
+    }).catch(error => {
+      console.warn("erro: " + error)
+      setOpenError("Erro ao salvar. Tente novamente.")
+    })
   }
 
   const BasicFields = <>
@@ -94,7 +97,7 @@ export const CadastroUser = ({ params }: any) => {
     />
   </>
 
-  const SelectStoreElement = <FormControl fullWidth sx={{ marginY: 3}}>
+  const SelectStoreElement = <FormControl fullWidth sx={{ marginY: 3 }}>
     <InputLabel id="selectStore">Selecione a loja</InputLabel>
     <Select
       labelId="selectStore"
@@ -110,7 +113,7 @@ export const CadastroUser = ({ params }: any) => {
     </Select>
   </FormControl>
 
-  const SelectAgencyElement = <FormControl fullWidth sx={{ marginY: 3}}>
+  const SelectAgencyElement = <FormControl fullWidth sx={{ marginY: 3 }}>
     <InputLabel id="selectAgency">Selecione a agência</InputLabel>
     <Select
       labelId="selectAgency"
@@ -126,7 +129,7 @@ export const CadastroUser = ({ params }: any) => {
     </Select>
   </FormControl>
 
-  const SelectPhotographyElement = <FormControl fullWidth sx={{ marginY: 3}}>
+  const SelectPhotographyElement = <FormControl fullWidth sx={{ marginY: 3 }}>
     <InputLabel id="selectPhotography">Selecione a agência de fotografia</InputLabel>
     <Select
       labelId="selectPhotography"
@@ -196,7 +199,7 @@ export const CadastroUser = ({ params }: any) => {
           <Typography component="h1" variant="h5">
             Cadastro de usuário
           </Typography>
-          <FormControl fullWidth sx={{ marginY: 3}}>
+          <FormControl fullWidth sx={{ marginY: 3 }}>
             <InputLabel id="selectType">Tipo de usuário</InputLabel>
             <Select
               labelId="selectType"

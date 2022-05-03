@@ -14,8 +14,8 @@ export interface IUser {
   phone: string;
   cargo: string;
   agency?: string | null;
-  createAt: string;
-  createBy: string;
+  createdAt: string;
+  createdBy: string;
   lastUpdated: string;
   photographer?: string | null;
-};
+}

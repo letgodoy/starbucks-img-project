@@ -1,13 +1,15 @@
-import { Layout } from "@components";
+import { AlertContext, Layout } from "@components";
 import { useCreatePiece } from "@dataAccess";
 import { Box, Button, Grid, TextInput, Typography } from "@elements";
 import { IPiece, IStorageImage } from "@types";
 import { extractString } from "@utils";
-import React from "react";
+import React, { useContext } from "react";
 
 export const CadastroPeca = ({ params }: { params: { marca: string, campanha: string } }) => {
 
   const { marca, campanha } = params
+
+  const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
   const { mutateAsync, isLoading } = useCreatePiece()
 
@@ -39,9 +41,11 @@ export const CadastroPeca = ({ params }: { params: { marca: string, campanha: st
     }
 
     mutateAsync(piece).then(res => {
-      console.log(res)
-      alert("sucesso")
-    }).catch(error => alert("erro: " + error))
+      setOpenSuccess("Cadastrado com sucesso.")
+    }).catch(error => {
+      console.warn("erro: " + error)
+      setOpenError("Erro ao salvar. Tente novamente.")
+    })
   }
 
   return <Layout params={params}><Grid container sx={{ height: '100vh' }}>

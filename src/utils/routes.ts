@@ -96,7 +96,7 @@ export const routes: RoutesList[] = [
     path: "/cadastrofotografo",
     component: CadastroFotografo,
     isPublic: true,
-    title: "Cadastro de estúdio de fotografia",
+    title: "Cadastro de agência de fotografia",
     id: 11,
     visibleMenu: true
   },

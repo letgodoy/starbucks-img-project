@@ -9,15 +9,8 @@ const createAgency = async (agency: IAgency) => {
   const target = doc(db, collectionName, agency.cnpj);
 
   setDoc(target, agency)
-    .then((res) => {
-      console.log("Document written with ID: ", res);
-      alert("Document written with ID: " + res);
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      alert(errorCode + ": " + errorMessage);
-    });
+    .then((res) => res)
+    .catch((error) => error);
 };
 
 export const findAgencyByID = async (id: string) => {

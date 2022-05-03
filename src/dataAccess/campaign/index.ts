@@ -15,11 +15,7 @@ const createCampaign = async (campanha: ICreateCampaign) => {
       console.log("Document add", res);
       alert("Document add");
     })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      alert(errorCode + ": " + errorMessage);
-    });
+    .catch((error) => error);
 };
 
 const findCampaignByID = async (id: string) => {

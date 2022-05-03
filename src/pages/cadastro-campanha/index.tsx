@@ -1,27 +1,24 @@
-import { Layout } from "@components";
+import { AlertContext, AuthContext, Layout } from "@components";
 import { useCreateCampaign } from "@dataAccess";
 import { Box, Button, Grid, TextInput, Typography } from "@elements";
 import { ICreateCampaign } from "@types";
 import { extractString } from "@utils";
-import React from "react";
+import React, { useContext } from "react";
+import { useLocation } from "wouter";
 
 export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
 
   const { marca } = params;
 
+  const { setOpenSuccess, setOpenError } = useContext(AlertContext)
+
+  const [location, setLocation] = useLocation();
+
+  if (!marca || marca === "undefined") setLocation("/marcas")
+
   const { mutateAsync, isLoading } = useCreateCampaign();
 
-  // const { user, agency } = useContext(AuthContext)
-
-  const user = {
-    uid: "",
-    name: "",
-  }
-
-  const agency = {
-    cnpj: "",
-    name: "",
-  }
+  const { user, agency } = useContext(AuthContext)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -32,15 +29,17 @@ export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
       createdAt: new Date().toISOString(),
       createdBy: user.uid,
       createdByName: user.name,
-      createdByAgency: agency.cnpj,
-      createdByAgencyName: agency.name,
+      createdByAgency: agency?.cnpj,
+      createdByAgencyName: agency?.name,
       marca
     }
 
     mutateAsync(campaign).then(res => {
-      console.log(res)
-      alert("sucesso")
-    }).catch(error => alert("erro: " + error))
+      setOpenSuccess("Cadastrado com sucesso.")
+    }).catch(error => {
+      console.warn("erro: " + error)
+      setOpenError("Erro ao salvar. Tente novamente.")
+    })
   }
 
   return <Layout params={params}>

@@ -5,4 +5,7 @@ export interface IBrand {
   name: string;
   avatar?: string;
   campaigns?: Array<ICampaign>;
-};
+  createdAt: string;
+  createdBy: string;
+  lastUpdated: string;
+}

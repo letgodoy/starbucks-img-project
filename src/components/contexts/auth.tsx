@@ -11,8 +11,8 @@ const DEFAULT_VALUE: IAuthContext = {
     store: "",
     cargo: "",
     phone: "",
-    createAt: "",
-    createBy: "",
+    createdAt: "",
+    createdBy: "",
     lastUpdated: "",
     photographer: "",
     agency: ""

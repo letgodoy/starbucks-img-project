@@ -22,11 +22,7 @@ const createImage = async (image: IImage) => {
       console.log("Document add", res);
       alert("Document add");
     })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      alert(errorCode + ": " + errorMessage);
-    });
+    .catch((error) => error);
 };
 
 const findImageByID = async (id: string) => {

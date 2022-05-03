@@ -1,30 +1,39 @@
-import { AuthContext, Layout } from "@components";
+import { AlertContext, AuthContext, Layout } from "@components";
 import { useCreateBrand } from "@dataAccess";
-import { Box, Button, Grid, TextInput, Typography } from "@elements";
+import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
 import { IBrand } from "@types";
 import { extractString } from "@utils";
 import React, { useContext } from "react";
+import Slugify from "slugify";
 
 export const CadastroMarca = ({ params }: any) => {
 
   const { mutateAsync, isLoading } = useCreateBrand()
 
-  const context = useContext(AuthContext)
+  const loggedUser = useContext(AuthContext)
+  const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
+    const now = new Date().toISOString()
+
     const brand: IBrand = {
       name: extractString(data.get('name') as string),
-      slug: extractString(data.get('name') as string).replace(" ", "-"),
-      avatar: "auhauha"
+      slug: Slugify(extractString(data.get('name') as string)),
+      avatar: "auhauha",
+      createdAt: now,
+      createdBy: loggedUser.user.uid,
+      lastUpdated: now
     }
 
     mutateAsync(brand).then(res => {
-      console.log(res)
-      alert("sucesso")
-    }).catch(error => alert("erro: " + error))
+      setOpenSuccess("Loja salva com sucesso.")
+    }).catch(error => {
+      console.warn("erro: " + error)
+      setOpenError("Erro ao salvar. Tente novamente.")
+    })
   }
 
   return <Layout params={params}>
@@ -53,13 +62,13 @@ export const CadastroMarca = ({ params }: any) => {
               autoComplete="name"
               autoFocus
             />
-            <Button
+            {isLoading ? <Loading /> : <Button
               type="submit"
               fullWidth
               sx={{ mt: 3, mb: 2 }}
             >
               Salvar
-            </Button>
+            </Button>}
           </Box>
         </Box>
       </Grid>

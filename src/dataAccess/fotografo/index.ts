@@ -9,15 +9,8 @@ const createPhotographer = async (photographer: IPhotographer) => {
   const target = doc(db, collectionName, photographer.cnpj);
 
   setDoc(target, photographer)
-    .then((res) => {
-      console.log("Document written with ID: ", res);
-      alert("Document written with ID: " + res);
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      alert(errorCode + ": " + errorMessage);
-    });
+    .then((res) => res)
+    .catch((error) => error);
 };
 
 export const findPhotographerByID = async (id: string) => {
