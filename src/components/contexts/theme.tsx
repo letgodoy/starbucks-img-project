@@ -65,4 +65,4 @@ export const themeOptionsLight: ThemeOptions = {
   },
 };
 
-export const theme = createTheme(themeOptionsDark);
+export const theme = createTheme(themeOptionsLight);
