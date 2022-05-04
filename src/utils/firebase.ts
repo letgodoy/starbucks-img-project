@@ -21,10 +21,10 @@ const db = getFirestore();
 const analytics = getAnalytics(app);
 const storage = getStorage(app);
 
-if (process.env.REACT_APP_DEV) {
-  connectAuthEmulator(auth, "http://localhost:9099");
-  connectFirestoreEmulator(db, "localhost", 8080);
-  connectStorageEmulator(storage, "localhost", 9199)
-}
+// if (process.env.REACT_APP_DEV) {
+//   connectAuthEmulator(auth, "http://localhost:9099");
+//   connectFirestoreEmulator(db, "localhost", 8080);
+//   connectStorageEmulator(storage, "localhost", 9199)
+// }
 
 export { app, auth, db, analytics, firebaseConfig, storage };
