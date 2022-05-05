@@ -1,6 +1,7 @@
 import { IStorageImage } from ".";
 
 export interface IImage {
+  id: string;
   name: string;
   description?: string;
   year?: string;

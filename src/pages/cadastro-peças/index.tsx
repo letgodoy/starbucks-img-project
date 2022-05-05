@@ -1,6 +1,6 @@
 import { AlertContext, Layout } from "@components";
 import { useCreatePiece } from "@dataAccess";
-import { Box, Button, Grid, TextInput, Typography } from "@elements";
+import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
 import { IPiece, IStorageImage } from "@types";
 import { extractString } from "@utils";
 import React, { useContext } from "react";
@@ -74,15 +74,13 @@ export const CadastroPeca = ({ params }: { params: { marca: string, campanha: st
             autoComplete="name"
             autoFocus
           />
-
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Sign In
-          </Button>
+{isLoading ? <Loading /> : <Button
+              type="submit"
+              fullWidth
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Salvar
+            </Button>}
         </Box>
       </Box>
     </Grid>

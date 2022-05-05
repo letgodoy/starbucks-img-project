@@ -82,6 +82,7 @@ export const TagsInput: FC<TextFieldProps & {
         });
         return (
           <TextInput
+          sx={{ marginY: 2}}
           {...getRootProps({}, {suppressRefError: true})}
             InputProps={{
               startAdornment: selectedItem.map(item => (

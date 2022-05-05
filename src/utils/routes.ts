@@ -9,6 +9,7 @@ import {
   CadastroUser,
   Dashboard,
   Error404,
+  ImgDetail,
   Login,
   Marcas,
 } from "@pages";
@@ -107,5 +108,12 @@ export const routes: RoutesList[] = [
     title: "Cadastro de Imagens",
     id: 12,
     visibleMenu: true
+  },
+  {
+    path: "/detalheimagem/:marca/:id",
+    component: ImgDetail,
+    isPublic: true,
+    title: "Detalhe da Imagem",
+    id: 13,
   },
 ];

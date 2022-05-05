@@ -8,5 +8,6 @@ export * from "./cadastro-marcas";
 export * from "./cadastro-peças";
 export * from "./cadastro-user";
 export * from "./dashboard";
+export * from "./image-detail";
 export * from "./login";
 export * from "./marcas";

@@ -1,18 +1,20 @@
-import { Layout } from "@components";
+import { AlertContext, Layout } from "@components";
 import { uploadImage, useCreateImage } from "@dataAccess";
-import { Box, Button, Grid, TextInput, Typography } from "@elements";
+import { Box, Button, FileUploadInput, Grid, Loading, TextInput, Typography } from "@elements";
 import { IFileStorage, IImage } from "@types";
-import { extractString, fileTypes } from "@utils";
-import React, { useState } from "react";
-import { FileUploader } from "react-drag-drop-files";
+import { extractString } from "@utils";
+import React, { useContext, useState } from "react";
 import { TagsInput } from "../../elements/tagInput";
 
 export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
 
   const { marca } = params
 
+  const { setOpenSuccess, setOpenError } = useContext(AlertContext)
+
   const [file, setFile] = useState(null);
   const [tags, setTags] = useState<Array<string>>([]);
+  const [loadingFile, setLoadingFile] = useState<boolean>(false)
 
   const { mutateAsync, isLoading } = useCreateImage()
 
@@ -26,6 +28,7 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
     }
 
     if (file) {
+      setLoadingFile(true)
       const storageFile: IFileStorage = await uploadImage(file) as IFileStorage
 
       upload.url = storageFile.url
@@ -33,6 +36,7 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
 
       if (storageFile.url) {
         const image: IImage = {
+          id: storageFile.fileName,
           name: extractString(data.get('name') as string),
           description: extractString(data.get('description') as string),
           year: extractString(data.get('year') as string),
@@ -46,15 +50,12 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
 
         mutateAsync(image).then(res => {
           console.log(res)
-          alert("sucesso")
+          setOpenSuccess("Imagem salva com sucesso")
         }).catch(error => alert("erro: " + error))
       } else {
-        alert("nao salvou")
+        setOpenError("Algo de errado aconteceu. Tente novamente")
       }
-
-
-    } else {
-      alert("falta imagem")
+      setLoadingFile(false)
     }
   }
 
@@ -123,23 +124,23 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
               autoFocus
             />
             <TagsInput
-              selectedTags={handleSelecetedTags}
+              selectedTags={(e) => handleSelecetedTags(e)}
               fullWidth
               variant="outlined"
               id="tags"
               name="tags"
               placeholder="Tags"
-              label="tags"
+              label="Tags"
               tags={tags}
             />
-            <FileUploader handleChange={handleImage} types={fileTypes} multiple={false} />
-            <Button
+            <FileUploadInput handleChange={handleImage} multiple={false} />
+            {isLoading || loadingFile ? <Loading /> : <Button
               type="submit"
               fullWidth
               sx={{ mt: 3, mb: 2 }}
             >
               Salvar
-            </Button>
+            </Button>}
           </Box>
         </Box>
       </Grid>

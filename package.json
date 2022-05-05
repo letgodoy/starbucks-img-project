@@ -11,9 +11,11 @@
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^14.1.1",
     "@types/react-input-mask": "^3.0.1",
+    "axios": "^0.27.2",
     "craco": "^0.0.3",
     "downshift": "^6.1.7",
     "firebase": "^9.6.3",
+    "image-downloader": "^4.3.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-drag-drop-files": "^2.3.5",
@@ -32,6 +34,11 @@
     "test": "craco test",
     "eject": "react-scripts eject",
     "emulator": "firebase emulators:start --export-on-exit=./emulator-data --import=./emulator-data"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
   },
   "browserslist": {
     "production": [

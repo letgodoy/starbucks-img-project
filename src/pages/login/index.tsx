@@ -1,9 +1,10 @@
 import Logo from "@assets/southrock_preto_1.png";
-import { useGetUserByID, useLogIn } from "@dataAccess";
+import { AlertContext, AuthContext } from "@components";
+import { findAgencyByID, findStoreByID, findUserByID, useGetUserByID, useLogIn } from "@dataAccess";
 import { Box, Button, Grid, TextInput } from "@elements";
-import { ICredentials } from "@types";
+import { IAgency, ICredentials, IStore, IUser } from "@types";
 import { extractString } from "@utils";
-import React from "react";
+import React, { useContext } from "react";
 import { useLocation } from "wouter";
 
 export const Login = () => {
@@ -12,6 +13,11 @@ export const Login = () => {
     const { mutateAsync, isLoading } = useLogIn();
 
     const { isLoading: isLoadingUser, mutateAsync: mutateAsyncUser } = useGetUserByID();
+
+    const { user, setUser, setToken, setAgency, setStore } =
+        useContext(AuthContext);
+
+    const { setOpenSuccess, setOpenError } = useContext(AlertContext);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -22,7 +28,28 @@ export const Login = () => {
             password: extractString(data.get('password') as string),
         }
 
-        mutateAsync(credentials).then(res => {
+        mutateAsync(credentials).then(async res => {
+            const { stsTokenManager } = res as any;
+
+            setToken(stsTokenManager);
+
+            await findUserByID(res.uid).then(async (userFind) => {
+                setUser(userFind as IUser);
+
+                if (userFind.agency) {
+                    await findAgencyByID(userFind.agency).then((agency) => {
+                        setAgency(agency as IAgency);
+                    });
+                }
+
+                if (userFind.store) {
+                    await findStoreByID(userFind.store).then((store) => {
+                        setStore(store as IStore);
+                    });
+                }
+
+                setOpenSuccess(`Bem vindo ${userFind.name}`);
+            });
             setLocation("/marcas")
         })
 
@@ -105,3 +132,7 @@ export const Login = () => {
         </Grid>
     </Grid>
 }
+function setToken(stsTokenManager: any) {
+    throw new Error("Function not implemented.");
+}
+

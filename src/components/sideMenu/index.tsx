@@ -1,14 +1,13 @@
 import LogoDark from "@assets/southrock_preto_1_icon.png";
-import { AuthContext } from "@components";
 import { Box, Button, Typography } from "@elements";
 import { Divider, List, ListItemButton, ListItemText } from "@mui/material";
 import { routes } from "@utils";
-import React, { FC, PropsWithChildren, useContext, useState } from "react";
+import React, { useState } from "react";
 import { useLocation } from "wouter";
 
 export const SideMenu = ({ params }: { params?: { marca: string, campanha: string } }) => {
 
-  const { marca, campanha } = params || {marca: "", campanha: ""}
+  const { marca, campanha } = params || { marca: "", campanha: "" }
 
   const darkMode = true
 
@@ -29,9 +28,7 @@ export const SideMenu = ({ params }: { params?: { marca: string, campanha: strin
 
     if (!visibleMenu) return null
 
-    let redirect = path
-    redirect = path.match(":marca") ? path.replace(":marca", marca) : redirect
-    redirect = path.match(":campanha") ? path.replace(":campanha", campanha) : redirect
+    const redirect = path.replace(":marca", marca).replace(":campanha", campanha)
 
     return <ListItemButton
       key={id}
@@ -46,12 +43,14 @@ export const SideMenu = ({ params }: { params?: { marca: string, campanha: strin
   });
 
   return <Box pt={3} pb={1} px={4} textAlign="center">
-    <Box component={Button} to={`/home/${marca}`} display="flex" alignItems="center" justifyContent={"center"} gap={1} marginY={2}>
-      <Box component="img" src={LogoDark} alt="Southrock HUB" width="2rem" />
-      <Typography component="h6" fontWeight="medium">
-        Southrock HUB
-      </Typography>
-    </Box>
+    <Button href={`/home/${marca}`} sx={{ marginY: 2, paddingY: 1 }} fullWidth>
+      <Box display="flex" alignItems="center" justifyContent={"center"} gap={1} >
+        <Box component="img" src={LogoDark} alt="Southrock HUB" width="2rem" />
+        <Typography component="h6" fontWeight="medium">
+          Southrock HUB
+        </Typography>
+      </Box>
+    </Button>
     <Divider
       light={!!darkMode}
     />

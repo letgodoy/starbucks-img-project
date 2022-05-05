@@ -27,22 +27,22 @@ export const Layout = ({ children, params }: any) => {
           <Container>
             {children}
             <Snackbar open={!!openInfo} autoHideDuration={6000} onClose={handleCloseInfo} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
-              <Alert onClose={handleCloseInfo} severity="info" sx={{ width: '100%' }}>
+              <Alert onClose={handleCloseInfo} variant="filled" severity="info" sx={{ width: '100%' }}>
                 {openInfo}
               </Alert>
             </Snackbar>
             <Snackbar open={!!openWarning} autoHideDuration={6000} onClose={handleCloseWarning} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
-              <Alert onClose={handleCloseWarning} severity="warning" sx={{ width: '100%' }}>
+              <Alert onClose={handleCloseWarning} variant="filled" severity="warning" sx={{ width: '100%' }}>
                 {openWarning}
               </Alert>
             </Snackbar>
             <Snackbar open={!!openError} autoHideDuration={6000} onClose={handleCloseError} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
-              <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+              <Alert onClose={handleCloseError} variant="filled" severity="error" sx={{ width: '100%' }}>
                 {openError}
               </Alert>
             </Snackbar>
             <Snackbar open={!!openSuccess} autoHideDuration={6000} onClose={handleCloseSuccess} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
-              <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
+              <Alert onClose={handleCloseSuccess} variant="filled" severity="success" sx={{ width: '100%' }}>
                 {openSuccess}
               </Alert>
             </Snackbar>
