@@ -11,8 +11,8 @@ const getRouters = (): ReactElement<RouteProps>[] => {
 }
 
 export const RouterContext = () => {
-  return <Switch>
+  return <Router>
     {getRouters()}
-  </Switch>
+  </Router>
 }
 

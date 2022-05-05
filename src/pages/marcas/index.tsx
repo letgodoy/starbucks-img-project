@@ -7,6 +7,7 @@ import Avatar from "@mui/material/Avatar";
 export const Marcas = () => {
 
   const { data } = useGetBrands()
+  console.log(data)
 
   const listBrands = data?.map(item => <Link href={"/home/" + item.slug} key={item.name}>
     <ListItem>
