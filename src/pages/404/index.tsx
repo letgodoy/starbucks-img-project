@@ -1,5 +1,6 @@
 import Logo from "@assets/southrock_preto_1.png";
 import { Box, Button, Grid, Typography } from "@elements";
+import Background from "@assets/img_southrock_6.png"
 
 export const Error404 = () => {
 
@@ -11,7 +12,7 @@ export const Error404 = () => {
             md={7}
             lg={6}
             sx={{
-                backgroundImage: 'url(https://source.unsplash.com/random)',
+                backgroundImage: `url(${Background})`,
                 backgroundRepeat: 'no-repeat',
                 backgroundColor: (t: any) =>
                     t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],

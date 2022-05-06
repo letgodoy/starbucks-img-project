@@ -1,19 +1,24 @@
-import { ICreateCampaign } from "@types";
+import { ICampaign } from "@types";
 import { db } from "@utils";
-import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  collectionGroup,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { useMutation, useQuery } from "react-query";
 
-const collectionName = "brands";
+const collectionName = "campaigns";
 
-const createCampaign = async (campanha: ICreateCampaign) => {
-  const target = doc(db, collectionName, campanha.marca);
+const createCampaign = async (campanha: ICampaign) => {
+  const target = doc(db, collectionName, campanha.slug);
 
-  await updateDoc(target, {
-    campaigns: arrayUnion(campanha),
-  })
+  return await setDoc(target, campanha)
     .then((res) => {
-      console.log("Document add", res);
-      alert("Document add");
+      return res;
     })
     .catch((error) => error);
 };
@@ -32,16 +37,18 @@ const findCampaignByID = async (id: string) => {
 };
 
 const findCampaigns = async (marca: string) => {
-  const docRef = doc(db, collectionName, marca);
-  const querySnapshot = await getDoc(docRef);
+  const docRef = query(
+    collectionGroup(db, collectionName),
+    where("marca", "==", marca)
+  );
+  const querySnapshot = await getDocs(docRef);
 
-  if (querySnapshot.exists()) {
-    return querySnapshot.data()?.campaigns;
-  } else {
-    // doc.data() will be undefined in this case
-    console.log("No such document!");
-    return {};
-  }
+  let list: ICampaign[] = [];
+  querySnapshot.forEach((doc) => {
+    list.push(doc.data() as ICampaign);
+  });
+
+  return list;
 };
 
 export function useCreateCampaign() {

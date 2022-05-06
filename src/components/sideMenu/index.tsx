@@ -1,6 +1,6 @@
 import LogoDark from "@assets/southrock_preto_1_icon.png";
 import { Box, Button, Typography } from "@elements";
-import { Divider, List, ListItemButton, ListItemText } from "@mui/material";
+import { Divider, List, ListItemButton, ListItemText, Paper } from "@mui/material";
 import { routes } from "@utils";
 import React, { useState } from "react";
 import { useLocation } from "wouter";
@@ -42,14 +42,15 @@ export const SideMenu = ({ params }: { params?: { marca: string, campanha: strin
     </ListItemButton>
   });
 
-  return <Box pt={3} pb={1} px={4} textAlign="center">
+  return <Paper elevation={3} sx={{ height: "96vh", margin: 2, borderRadius: 2, padding: 2, background: "linear-gradient(142deg, rgba(255,255,255,1) 0%, rgba(0,0,0,0.05) 100%)" }}>
+    <Box display="flex" alignItems="center" justifyContent={"center"} gap={1} >
+      <Box component="img" src={LogoDark} alt="Southrock HUB" width="2rem" />
+      <Typography component="h6" fontWeight="medium">
+        Southrock HUB
+      </Typography>
+    </Box>
     <Button href={`/home/${marca}`} sx={{ marginY: 2, paddingY: 1 }} fullWidth>
-      <Box display="flex" alignItems="center" justifyContent={"center"} gap={1} >
-        <Box component="img" src={LogoDark} alt="Southrock HUB" width="2rem" />
-        <Typography component="h6" fontWeight="medium">
-          Southrock HUB
-        </Typography>
-      </Box>
+      Home {marca}
     </Button>
     <Divider
       light={!!darkMode}
@@ -57,5 +58,5 @@ export const SideMenu = ({ params }: { params?: { marca: string, campanha: strin
     <List component="nav" aria-label="main mailbox folders">
       {renderRoutes}
     </List>
-  </Box>
+  </Paper>
 }

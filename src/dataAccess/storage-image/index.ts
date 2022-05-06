@@ -86,7 +86,7 @@ const getDownload = (folder: string, fileName: string) => {
   const starsRef = ref(storage, folder + fileName);
 
   // Get the download URL
-  getDownloadURL(starsRef)
+  return getDownloadURL(starsRef)
     .then((url) => {
       console.log(url);
       // Insert url into an <img> tag to "download"
@@ -100,9 +100,11 @@ const getDownload = (folder: string, fileName: string) => {
       xhr.open("GET", url);
       xhr.send();
 
+      return url
+
       // Or inserted into an <img> element
-      const img = document.getElementById("myimg");
-      img?.setAttribute("src", url);
+      // const img = document.getElementById("myimg");
+      // img?.setAttribute("src", url);
     })
     .catch((error) => {
       // A full list of error codes is available at
@@ -127,14 +129,15 @@ const getDownload = (folder: string, fileName: string) => {
     });
 };
 
-const getURLDownload = (folder: string, fileName: string) => {
+const getURLDownload = async (folder: string, fileName: string) => {
   const starsRef = ref(storage, folder + fileName);
 
   // Get the download URL
-  getDownloadURL(starsRef)
+  return await getDownloadURL(starsRef)
     .then((url) => {
       console.log(url);
       // Insert url into an <img> tag to "download"
+      return url
     })
     .catch((error) => {
       // A full list of error codes is available at

@@ -12,6 +12,7 @@ export interface IImage {
   product?: string;
   marca: string;
   mainImg: IStorageImage;
+  campaign: string;
 }
 
 export interface IFile {

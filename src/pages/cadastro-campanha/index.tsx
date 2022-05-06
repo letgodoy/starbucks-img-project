@@ -1,10 +1,11 @@
 import { AlertContext, AuthContext, Layout } from "@components";
 import { useCreateCampaign } from "@dataAccess";
 import { Box, Button, Grid, TextInput, Typography } from "@elements";
-import { ICreateCampaign } from "@types";
+import { ICampaign } from "@types";
 import { extractString } from "@utils";
 import React, { useContext } from "react";
 import { useLocation } from "wouter";
+import Slugify from "slugify";
 
 export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
 
@@ -18,24 +19,27 @@ export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
 
   const { mutateAsync, isLoading } = useCreateCampaign();
 
-  const { user, agency } = useContext(AuthContext)
+  const { user, agency, photographer } = useContext(AuthContext)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const campaign: ICreateCampaign = {
+    const campaign: ICampaign = {
       name: extractString(data.get('name') as string),
+      slug: Slugify(extractString(data.get('name') as string)),
       createdAt: new Date().toISOString(),
       createdBy: user.uid,
       createdByName: user.name,
-      createdByAgency: agency?.cnpj,
-      createdByAgencyName: agency?.name,
+      createdByAgency: agency?.cnpj || photographer?.cnpj || "admin",
+      createdByAgencyName: agency?.name || photographer?.name || "admin",
       marca
     }
 
     mutateAsync(campaign).then(res => {
+      console.log(res)
       setOpenSuccess("Cadastrado com sucesso.")
+      event.currentTarget.reset()
     }).catch(error => {
       console.warn("erro: " + error)
       setOpenError("Erro ao salvar. Tente novamente.")
@@ -81,3 +85,4 @@ export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
     </Grid>
   </Layout>
 }
+

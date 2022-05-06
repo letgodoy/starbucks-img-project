@@ -1,8 +1,6 @@
 import { Layout } from "@components";
 import { useGetImageByID } from "@dataAccess";
-import { Box, Button, Grid, TextInput, Typography } from "@elements";
-import axios from "axios";
-import fs from "fs"
+import { Attribute, Box, Button, Grid, Typography } from "@elements";
 
 export const ImgDetail = ({ params }: { params: { id: string } }) => {
 
@@ -10,20 +8,21 @@ export const ImgDetail = ({ params }: { params: { id: string } }) => {
 
   const { data } = useGetImageByID(id)
 
-  console.log(data)
-  const filepath = "/southrockHub"
-
   const downloadFile = async () => {
-    const response = await axios({
-      url: data?.mainImg.url,
-      method: 'GET',
-      responseType: 'stream'
-    });
-    return new Promise((resolve, reject) => {
-      response.data.pipe(fs.createWriteStream(filepath))
-        .on('error', reject)
-        .once('close', () => resolve(filepath));
-    });
+    fetch(data?.mainImg.url, {
+      mode: 'no-cors',
+    })
+      .then(response => response.blob())
+      .then(blob => {
+        let blobUrl = window.URL.createObjectURL(blob);
+        let a = document.createElement('a');
+        a.download = data?.mainImg.ref;
+        a.href = blobUrl;
+        a.target = "_blank"
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      })
   }
 
   return <Layout params={params}>
@@ -38,16 +37,18 @@ export const ImgDetail = ({ params }: { params: { id: string } }) => {
             alignItems: 'center',
           }}
         >
-          <Typography component="h1" variant="h5">
+          <Typography component="p" variant="button">
             {data?.name}
           </Typography>
           <Box component="img" src={data?.mainImg.url} alt={data?.name} width="100%" marginY={4} />
+          {/* <a href={data?.mainImg.url} download={data?.name}> */}
           <Button onClick={downloadFile} sx={{ marginY: 2 }}>Download</Button>
-          <TextInput label="Nome" variant="standard" disabled value={data?.name} fullWidth sx={{ marginY: 2 }} />
-          <TextInput label="Produto" variant="standard" disabled value={data?.product} fullWidth sx={{ marginY: 2 }} />
-          <TextInput label="Ano" variant="standard" disabled value={data?.year} fullWidth sx={{ marginY: 2 }} />
-          <TextInput label="Descrição" variant="standard" disabled value={data?.description} fullWidth sx={{ marginY: 2 }} />
-          <TextInput label="Tags" variant="standard" disabled value={data?.tags} fullWidth sx={{ marginY: 2 }} />
+          {/* </a> */}
+          <Attribute label="Nome" value={data?.name} />
+          <Attribute label="Produto" value={data?.product} />
+          <Attribute label="Ano" value={data?.year} />
+          <Attribute label="Descrição" value={data?.description} />
+          <Attribute label="Tags" value={data?.tags} />
         </Box>
       </Grid>
     </Grid>

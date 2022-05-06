@@ -1,6 +1,6 @@
 import { AlertContext, AuthContext, Layout } from "@components";
 import { useCreateUser, useGetAgencies, useGetPhotographers, useGetStores } from "@dataAccess";
-import { Box, Button, Grid, TextInput, Typography } from "@elements";
+import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { ICreateUser } from "@types";
 import { extractString } from "@utils";
@@ -46,6 +46,7 @@ export const CadastroUser = ({ params }: any) => {
 
     mutateAsync(user).then(res => {
       setOpenSuccess("Cadastrado com sucesso.")
+      event.currentTarget.reset()
     }).catch(error => {
       console.warn("erro: " + error)
       setOpenError("Erro ao salvar. Tente novamente.")
@@ -222,13 +223,13 @@ export const CadastroUser = ({ params }: any) => {
           </FormControl>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             {form}
-            {form && <Button
+            {form && (isLoading ? <Loading /> : <Button
               type="submit"
               fullWidth
               sx={{ mt: 3, mb: 2 }}
             >
-              Cadastrar
-            </Button>}
+              Salvar
+            </Button>)}
           </Box>
         </Box>
       </Grid>

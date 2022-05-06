@@ -1,3 +1,4 @@
+import Background from "@assets/img_southrock_7.png";
 import Logo from "@assets/southrock_preto_1.png";
 import { AlertContext, AuthContext } from "@components";
 import { findAgencyByID, findStoreByID, findUserByID, useGetUserByID, useLogIn } from "@dataAccess";
@@ -63,7 +64,7 @@ export const Login = () => {
             md={7}
             lg={6}
             sx={{
-                backgroundImage: 'url(https://source.unsplash.com/random/?city,night)',
+                backgroundImage: `url(${Background})`,
                 backgroundRepeat: 'no-repeat',
                 backgroundColor: (t: any) =>
                     t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],

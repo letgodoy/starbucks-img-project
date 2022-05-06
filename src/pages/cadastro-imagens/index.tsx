@@ -1,7 +1,7 @@
 import { AlertContext, Layout } from "@components";
-import { uploadImage, useCreateImage } from "@dataAccess";
-import { Box, Button, FileUploadInput, Grid, Loading, TextInput, Typography } from "@elements";
-import { IFileStorage, IImage } from "@types";
+import { uploadImage, useCreateImage, useGetCampaigns } from "@dataAccess";
+import { Box, Button, FileUploadInput, Grid, Loading, Select, TextInput, Typography } from "@elements";
+import { ICampaign, IFileStorage, IImage } from "@types";
 import { extractString } from "@utils";
 import React, { useContext, useState } from "react";
 import { TagsInput } from "../../elements/tagInput";
@@ -12,8 +12,17 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
 
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
+  const { data: listCampaigns } = useGetCampaigns(marca)
+
+  let listCampaignsSelect: ({ name: string; value: string; } | null)[] = []
+
+  listCampaigns?.map((item: ICampaign) => {
+    return listCampaignsSelect.push({ name: item.name, value: item.name })
+  })
+
   const [file, setFile] = useState(null);
   const [tags, setTags] = useState<Array<string>>([]);
+  const [campaign, setCampaign] = useState<string>("");
   const [loadingFile, setLoadingFile] = useState<boolean>(false)
 
   const { mutateAsync, isLoading } = useCreateImage()
@@ -26,7 +35,7 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
       url: "",
       ref: ""
     }
-
+    
     if (file) {
       setLoadingFile(true)
       const storageFile: IFileStorage = await uploadImage(file) as IFileStorage
@@ -46,11 +55,13 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
           product: extractString(data.get('product') as string),
           marca,
           mainImg: upload,
+          campaign
         }
 
         mutateAsync(image).then(res => {
           console.log(res)
           setOpenSuccess("Imagem salva com sucesso")
+          event.currentTarget.reset()
         }).catch(error => alert("erro: " + error))
       } else {
         setOpenError("Algo de errado aconteceu. Tente novamente")
@@ -132,6 +143,13 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
               placeholder="Tags"
               label="Tags"
               tags={tags}
+            />
+            <Select
+              id="selectStore"
+              value={campaign}
+              label="Selecione a campanha"
+              onChange={(event) => setCampaign(event.target.value as string)}
+              listData={listCampaignsSelect}
             />
             <FileUploadInput handleChange={handleImage} multiple={false} />
             {isLoading || loadingFile ? <Loading /> : <Button

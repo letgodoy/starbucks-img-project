@@ -34,6 +34,7 @@ export const CadastroLoja = ({ params }: any) => {
 
     mutateAsync(store).then(res => {
       setOpenSuccess("Loja salva com sucesso.")
+      event.currentTarget.reset()
     }).catch(error => {
       console.warn("erro: " + error)
       setOpenError("Erro ao salvar. Tente novamente.")

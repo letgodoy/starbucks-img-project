@@ -1,10 +1,8 @@
-import { ICampaign } from "./campaign";
-
 export interface IBrand {
   slug: string;
   name: string;
   avatar?: string;
-  campaigns?: Array<ICampaign>;
+  hero?: string;
   createdAt: string;
   createdBy: string;
   lastUpdated: string;

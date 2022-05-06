@@ -30,6 +30,7 @@ export const CadastroMarca = ({ params }: any) => {
 
     mutateAsync(brand).then(res => {
       setOpenSuccess("Loja salva com sucesso.")
+      event.currentTarget.reset()
     }).catch(error => {
       console.warn("erro: " + error)
       setOpenError("Erro ao salvar. Tente novamente.")

@@ -28,7 +28,7 @@ export const Dashboard = ({ params }: { params: { marca: string } }) => {
 
   ))
 
-  return <Layout title="Inicio" params={params}>
+  return <Layout title="Inicio" params={params} sx={{ paddingY: 3 }}>
     <Masonry columns={3} spacing={2}>
       <>{Items}</>
     </Masonry>
