@@ -9,7 +9,7 @@ export const SideMenu = ({ params }: { params?: { marca: string, campanha: strin
 
   const { marca, campanha } = params || { marca: "", campanha: "" }
 
-  const darkMode = true
+  const darkMode = false
 
   const [selectedIndex, setSelectedIndex] = useState(1);
 

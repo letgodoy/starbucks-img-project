@@ -1,9 +1,10 @@
-import { AlertContext, AuthContext, Layout } from "@components";
+import { AlertContext, AuthContext, CompanyForm, Layout } from "@components";
 import { useCreateAgency } from "@dataAccess";
-import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
-import { IAgency } from "@types";
-import { extractString } from "@utils";
-import React, { useContext } from "react";
+import { Attribute, Box, Button, Grid, Loading, MaskedInput, TextInput, Typography } from "@elements";
+import { Divider } from "@mui/material";
+import { Address, IAgency } from "@types";
+import { extractString, getAddressByCep } from "@utils";
+import React, { FormEvent, useContext, useEffect, useState } from "react";
 import Slugify from "slugify";
 
 export const CadastroAgencia = ({ params }: any) => {
@@ -12,11 +13,13 @@ export const CadastroAgencia = ({ params }: any) => {
 
   const { mutateAsync, isLoading } = useCreateAgency()
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
     const now = new Date().toISOString()
+
+    console.log(data.entries())
 
     const agency: IAgency = {
       slug: Slugify(extractString(data.get('name') as string)),
@@ -31,13 +34,13 @@ export const CadastroAgencia = ({ params }: any) => {
       lastUpdated: now
     }
 
-    mutateAsync(agency).then(res => {
-      setOpenSuccess("Loja salva com sucesso.")
-      event.currentTarget.reset()
-    }).catch(error => {
-      console.warn("erro: " + error)
-      setOpenError("Erro ao salvar. Tente novamente.")
-    })
+    // mutateAsync(agency).then(res => {
+    //   setOpenSuccess("Loja salva com sucesso.")
+    //   event.currentTarget.reset()
+    // }).catch(error => {
+    //   console.warn("erro: " + error)
+    //   setOpenError("Erro ao salvar. Tente novamente.")
+    // })
   }
 
   return <Layout params={params}>
@@ -55,77 +58,7 @@ export const CadastroAgencia = ({ params }: any) => {
           <Typography component="h1" variant="h5">
             Cadastro de agência
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <TextInput
-              margin="normal"
-              required
-              fullWidth
-              id="name"
-              label="Nome"
-              name="name"
-              autoComplete="name"
-              autoFocus
-            />
-            <TextInput
-              margin="normal"
-              required
-              fullWidth
-              id="cnpj"
-              label="Cnpj"
-              name="cnpj"
-              autoComplete="cnpj"
-              autoFocus
-            />
-            <TextInput
-              margin="normal"
-              required
-              fullWidth
-              id="address"
-              label="Endereço"
-              name="address"
-              autoComplete="address"
-              autoFocus
-            />
-            <TextInput
-              margin="normal"
-              required
-              fullWidth
-              id="manager"
-              label="Gerente"
-              name="manager"
-              autoComplete="manager"
-              autoFocus
-            />
-            <TextInput
-              margin="normal"
-              required
-              fullWidth
-              id="managerPhone"
-              label="Telefone do gerente"
-              name="managerPhone"
-              autoComplete="managerPhone"
-              autoFocus
-              type="phone"
-            />
-            <TextInput
-              margin="normal"
-              required
-              fullWidth
-              id="managerEmail"
-              label="E-mail do gerente"
-              name="managerEmail"
-              autoComplete="managerEmail"
-              autoFocus
-              type="email"
-            />
-            {isLoading ? <Loading /> : <Button
-              type="submit"
-              fullWidth
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Salvar
-            </Button>}
-          </Box>
+          <CompanyForm handleSubmit={handleSubmit} isLoading={!!isLoading} />
         </Box>
       </Grid>
     </Grid>

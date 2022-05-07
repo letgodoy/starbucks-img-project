@@ -1,6 +1,6 @@
 import { AlertContext, AuthContext, Layout } from "@components";
 import { useCreateUser, useGetAgencies, useGetPhotographers, useGetStores } from "@dataAccess";
-import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
+import { Box, Button, Grid, Loading, MaskedInput, TextInput, Typography } from "@elements";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { ICreateUser } from "@types";
 import { extractString } from "@utils";
@@ -72,13 +72,14 @@ export const CadastroUser = ({ params }: any) => {
       label="Cargo"
       name="cargo"
     />
-    <TextInput
+    <MaskedInput
       margin="normal"
       required
       fullWidth
       id="phone"
       label="Telefone"
       name="phone"
+      mask="(99) 99999-9999"
     />
     <TextInput
       margin="normal"

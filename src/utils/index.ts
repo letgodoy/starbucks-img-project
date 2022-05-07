@@ -1,3 +1,4 @@
+export * from "./buscaCep";
 export * from "./colors";
 export * from "./constants";
 export * from "./extractors";

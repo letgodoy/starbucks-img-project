@@ -1,6 +1,6 @@
 import { AlertContext, AuthContext, Layout } from "@components";
 import { useCreateStore } from "@dataAccess";
-import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
+import { Box, Button, Grid, Loading, MaskedInput, TextInput, Typography } from "@elements";
 import { IStore } from "@types";
 import { extractString } from "@utils";
 import React, { useContext } from "react";
@@ -98,7 +98,7 @@ export const CadastroLoja = ({ params }: any) => {
               autoComplete="manager"
               autoFocus
             />
-            <TextInput
+            <MaskedInput
               margin="normal"
               required
               fullWidth
@@ -108,6 +108,7 @@ export const CadastroLoja = ({ params }: any) => {
               autoComplete="managerPhone"
               autoFocus
               type="phone"
+              mask="(99) 99999-9999"
             />
             <TextInput
               margin="normal"
