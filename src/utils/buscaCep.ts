@@ -1,6 +1,6 @@
-import { Address } from "@types"
+import { IAddress } from "@types"
 
-export const getAddressByCep = async (cep: string): Promise<Address> => {
+export const getAddressByCep = async (cep: string): Promise<IAddress> => {
   
   // const resultCep = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
   const resultCep = await fetch(`https://ws.apicep.com/cep/${cep}.json`)

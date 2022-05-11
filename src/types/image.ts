@@ -1,25 +1,28 @@
-import { IStorageImage } from ".";
+import { IBrand, ICampaign, IStorageImage } from ".";
 
 export interface IImage {
   id: string;
   name: string;
   description?: string;
+  format?: string;
+  validate?: string;
+  sku?: string;
   year?: string;
   tags?: Array<string>;
   createdAt: string;
   createdBy: string;
   approvedBy?: string;
   product?: string;
-  marca: string;
+  marca: IBrand;
   mainImg: IStorageImage;
-  campaign: string;
+  campaign: ICampaign;
 }
 
 export interface IFile {
   lastModified: string;
   lastModifiedDate: Date;
   name: string;
-  size: 18213;
+  size: number;
   type: string;
   webkitRelativePath: string;
   file: Blob;

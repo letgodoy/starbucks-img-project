@@ -1,6 +1,6 @@
-import { IBrand } from ".";
+import { IBrand } from '.';
 
-export interface ICampaign {
+export interface IProduct {
   name: string;
   slug: string;
   year: string;

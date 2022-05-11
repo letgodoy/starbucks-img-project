@@ -1,14 +1,18 @@
-import { Attribute, Box, Button, Loading, MaskedInput, TextInput } from "@elements";
+import { Box, Button, Loading, MaskedInput, TextInput } from "@elements";
 import { Divider } from "@mui/material";
-import { Address } from "@types";
-import { getAddressByCep } from "@utils";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { IAddress } from "@types";
+import { extractString, getAddressByCep } from "@utils";
+import { FormEvent, useContext, useEffect, useState } from "react";
+import Slugify from "slugify";
+import { AuthContext } from "../contexts";
 
-export const CompanyForm = ({ handleSubmit, isLoading }: { handleSubmit: any, isLoading: boolean }) => {
+export const CompanyForm = ({ handleSubmit, isLoading, isStore }: { handleSubmit: any, isLoading: boolean, isStore?: boolean }) => {
   const darkMode = false
 
+  const loggedUser = useContext(AuthContext)
+
   const [cep, setCep] = useState<string | undefined>()
-  const [address, setAddress] = useState<Address | null>(null)
+  const [address, setAddress] = useState<IAddress | null>(null)
 
   const addressAttributes = address && cep ? <Box sx={{
     width: "100%",
@@ -36,6 +40,7 @@ export const CompanyForm = ({ handleSubmit, isLoading }: { handleSubmit: any, is
       name="addressNumber"
       autoComplete="addressNumber"
       autoFocus
+      onChange={(e) => setAddress({ ...address, numero: e.target.value })}
     />
     <TextInput
       margin="normal"
@@ -43,6 +48,7 @@ export const CompanyForm = ({ handleSubmit, isLoading }: { handleSubmit: any, is
       label="Complemento"
       name="addressComplement"
       autoComplete="addressComplement"
+      onChange={(e) => setAddress({ ...address, complemento: e.target.value })}
     />
     <TextInput
       margin="normal"
@@ -74,9 +80,6 @@ export const CompanyForm = ({ handleSubmit, isLoading }: { handleSubmit: any, is
       value={address.uf}
       disabled
     />
-    {/* <Attribute label="Bairro" value={address.bairro} sx={{ width: 300 }} />
-    <Attribute label="Cidade" value={address.localidade} sx={{ width: 350 }} />
-    <Attribute label="Estado" value={address.uf} sx={{ width: 100 }} /> */}
   </Box> : null
 
   useEffect(() => {
@@ -91,12 +94,43 @@ export const CompanyForm = ({ handleSubmit, isLoading }: { handleSubmit: any, is
 
   }, [cep])
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => useCallback(() => {
-    // event.preventDefault();
-    handleSubmit(event)
-  }, [handleSubmit])
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const data = new FormData(event.currentTarget);
+
+    const now = new Date().toISOString()
+
+    const form: Record<string, any> = {
+      slug: Slugify(extractString(data.get('name') as string)),
+      name: extractString(data.get('name') as string),
+      cnpj: extractString(data.get('cnpj') as string),
+      address: address,
+      manager: extractString(data.get('manager') as string),
+      managerPhone: extractString(data.get('managerPhone') as string),
+      managerEmail: extractString(data.get('managerEmail') as string),
+      createdAt: now,
+      createdBy: loggedUser.user.uid,
+      lastUpdated: now
+    }
+
+    if (isStore) form.cod = extractString(data.get('cod') as string)
+
+    handleSubmit(form)
+    event.currentTarget.reset()
+  }
 
   return <Box component="form" onSubmit={onSubmit} sx={{ mt: 1 }}>
+    {isStore && <TextInput
+      margin="normal"
+      required
+      fullWidth
+      id="cod"
+      label="Código"
+      name="cod"
+      autoComplete="cod"
+      autoFocus
+    />}
     <TextInput
       margin="normal"
       required

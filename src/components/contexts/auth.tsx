@@ -8,14 +8,14 @@ const DEFAULT_VALUE: IAuthContext = {
     email: "",
     avatar: "",
     role: "",
-    store: "",
+    store: null,
     cargo: "",
     phone: "",
     createdAt: "",
     createdBy: "",
     lastUpdated: "",
-    photographer: "",
-    agency: ""
+    photographer: null,
+    agency: null
   },
   token: {
     accessToken: "",

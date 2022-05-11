@@ -1,8 +1,10 @@
+import { IAddress } from "./address";
+
 export interface IAgency {
   slug: string;
   name: string;
   cnpj: string;
-  address: string;
+  address: IAddress;
   manager: string;
   managerPhone: string;
   managerEmail: string;

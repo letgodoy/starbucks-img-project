@@ -3,7 +3,7 @@ import { useCreateUser, useGetAgencies, useGetPhotographers, useGetStores } from
 import { Box, Button, Grid, Loading, MaskedInput, TextInput, Typography } from "@elements";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { ICreateUser } from "@types";
-import { extractString } from "@utils";
+import { extractString, userType } from "@utils";
 import React, { ReactElement, useContext, useEffect, useState } from "react";
 
 export const CadastroUser = ({ params }: any) => {
@@ -150,32 +150,21 @@ export const CadastroUser = ({ params }: any) => {
   useEffect(() => {
     switch (role) {
       case "admin":
+      case "operationManager":
+      case "districtManager":
         return setForm(BasicFields)
       case "managerStore":
         return setForm(<>
           {SelectStoreElement}
           {BasicFields}
         </>)
-      case "userStore":
-        return setForm(<>
-          {SelectStoreElement}
-          {BasicFields}
-        </>)
       case "managerAgency":
-        return setForm(<>
-          {SelectAgencyElement}
-          {BasicFields}
-        </>)
       case "userAgency":
         return setForm(<>
           {SelectAgencyElement}
           {BasicFields}
         </>)
       case "managerPhoto":
-        return setForm(<>
-          {SelectPhotographyElement}
-          {BasicFields}
-        </>)
       case "userPhoto":
         return setForm(<>
           {SelectPhotographyElement}
@@ -210,16 +199,9 @@ export const CadastroUser = ({ params }: any) => {
               onChange={(event) => setRole(event.target.value)}
               label="Tipo de usuário"
             >
-              <MenuItem value="">
-                <em> -- </em>
-              </MenuItem>
-              <MenuItem value={"admin"}>Administrador</MenuItem>
-              <MenuItem value={"managerStore"}>Gerente de loja</MenuItem>
-              <MenuItem value={"managerAgency"}>Gerente de agencia</MenuItem>
-              <MenuItem value={"managerPhoto"}>Gerente de fotógrafos</MenuItem>
-              <MenuItem value={"userStore"}>Usuário de loja</MenuItem>
-              <MenuItem value={"userAgency"}>Usuário de agencia</MenuItem>
-              <MenuItem value={"userPhoto"}>Usuário de fotógrafos</MenuItem>
+              {userType.map((item, key) => {
+                return <MenuItem key={key} value={item.value}>{item.name}</MenuItem>
+              })}
             </Select>
           </FormControl>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>

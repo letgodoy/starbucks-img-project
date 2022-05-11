@@ -1,47 +1,23 @@
-import { AlertContext, AuthContext, CompanyForm, Layout } from "@components";
+import { AlertContext, CompanyForm, Layout } from "@components";
 import { useCreateAgency } from "@dataAccess";
-import { Attribute, Box, Button, Grid, Loading, MaskedInput, TextInput, Typography } from "@elements";
-import { Divider } from "@mui/material";
-import { Address, IAgency } from "@types";
-import { extractString, getAddressByCep } from "@utils";
-import React, { FormEvent, useContext, useEffect, useState } from "react";
-import Slugify from "slugify";
+import { Box, Grid, Typography } from "@elements";
+import { IAgency } from "@types";
+import { useCallback, useContext } from "react";
 
 export const CadastroAgencia = ({ params }: any) => {
-  const loggedUser = useContext(AuthContext)
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
   const { mutateAsync, isLoading } = useCreateAgency()
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  const handleSubmit = useCallback(async (agency: IAgency) => {
 
-    const now = new Date().toISOString()
-
-    console.log(data.entries())
-
-    const agency: IAgency = {
-      slug: Slugify(extractString(data.get('name') as string)),
-      name: extractString(data.get('name') as string),
-      cnpj: extractString(data.get('cnpj') as string),
-      address: extractString(data.get('address') as string),
-      manager: extractString(data.get('manager') as string),
-      managerPhone: extractString(data.get('managerPhone') as string),
-      managerEmail: extractString(data.get('managerEmail') as string),
-      createdAt: now,
-      createdBy: loggedUser.user.uid,
-      lastUpdated: now
-    }
-
-    // mutateAsync(agency).then(res => {
-    //   setOpenSuccess("Loja salva com sucesso.")
-    //   event.currentTarget.reset()
-    // }).catch(error => {
-    //   console.warn("erro: " + error)
-    //   setOpenError("Erro ao salvar. Tente novamente.")
-    // })
-  }
+    mutateAsync(agency).then(res => {
+      setOpenSuccess("Loja salva com sucesso.")
+    }).catch(error => {
+      console.warn("erro: " + error)
+      setOpenError("Erro ao salvar. Tente novamente.")
+    })
+  }, [])
 
   return <Layout params={params}>
     <Grid container sx={{ height: '100vh' }}>

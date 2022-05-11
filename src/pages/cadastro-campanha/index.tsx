@@ -1,11 +1,11 @@
 import { AlertContext, AuthContext, Layout } from "@components";
 import { useCreateCampaign } from "@dataAccess";
-import { Box, Button, Grid, TextInput, Typography } from "@elements";
+import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
 import { ICampaign } from "@types";
 import { extractString } from "@utils";
-import React, { useContext } from "react";
-import { useLocation } from "wouter";
+import React, { useContext, useEffect } from "react";
 import Slugify from "slugify";
+import { useLocation } from "wouter";
 
 export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
 
@@ -15,7 +15,9 @@ export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
 
   const [location, setLocation] = useLocation();
 
-  if (!marca || marca === "undefined") setLocation("/marcas")
+  useEffect(() => {
+    if (!marca || marca === "undefined") setLocation("/marcas")  
+  }, [])
 
   const { mutateAsync, isLoading } = useCreateCampaign();
 
@@ -28,6 +30,7 @@ export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
     const campaign: ICampaign = {
       name: extractString(data.get('name') as string),
       slug: Slugify(extractString(data.get('name') as string)),
+      year: extractString(data.get('year') as string),
       createdAt: new Date().toISOString(),
       createdBy: user.uid,
       createdByName: user.name,
@@ -47,7 +50,7 @@ export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
   }
 
   return <Layout params={params}>
-    <Grid container sx={{ height: '100vh' }}>
+    <Grid container>
       <Grid item xs={12}>
         <Box
           sx={{
@@ -72,13 +75,23 @@ export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
               autoComplete="name"
               autoFocus
             />
-            <Button
+            <TextInput
+              margin="normal"
+              required
+              fullWidth
+              id="year"
+              label="Ano"
+              name="year"
+              autoComplete="year"
+              autoFocus
+            />
+            {isLoading ? <Loading /> : <Button
               type="submit"
               fullWidth
               sx={{ mt: 3, mb: 2 }}
             >
               Salvar
-            </Button>
+            </Button>}
           </Box>
         </Box>
       </Grid>
