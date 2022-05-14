@@ -1,4 +1,4 @@
-import { AlertContext, AuthContext, Layout } from "@components";
+import { AlertContext, AuthContext, BrandContext, Layout } from "@components";
 import { useCreateCampaign } from "@dataAccess";
 import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
 import { ICampaign } from "@types";
@@ -9,14 +9,14 @@ import { useLocation } from "wouter";
 
 export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
 
-  const { marca } = params;
+  const { selectedBrand: marca } = useContext(BrandContext);
 
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
   const [location, setLocation] = useLocation();
 
   useEffect(() => {
-    if (!marca || marca === "undefined") setLocation("/marcas")  
+    if (!marca) setLocation("/marcas")
   }, [])
 
   const { mutateAsync, isLoading } = useCreateCampaign();
@@ -26,6 +26,8 @@ export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+
+    if (!marca) throw Error("Não foi possível selecionar a marca")
 
     const campaign: ICampaign = {
       name: extractString(data.get('name') as string),

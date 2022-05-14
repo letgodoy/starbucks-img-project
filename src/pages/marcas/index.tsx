@@ -1,23 +1,36 @@
+import { BrandContext } from "@components";
 import { useGetBrands } from "@dataAccess";
-import { Grid, Link, Typography } from "@elements";
+import { Grid, Typography } from "@elements";
 import ImageIcon from '@mui/icons-material/Image';
 import { List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
+import { IBrand } from "@types";
+import { useContext } from "react";
+import { useLocation } from "wouter";
 
 export const Marcas = () => {
 
+  const { setBrand } = useContext(BrandContext)
+
+  const [location, setLocation] = useLocation()
+
   const { data } = useGetBrands()
 
-  const listBrands = data?.map(item => <Link href={"/home/" + item.slug} key={item.name}>
-    <ListItem>
-      <ListItemAvatar>
-        <Avatar>
-          <ImageIcon />
-        </Avatar>
-      </ListItemAvatar>
-      <ListItemText primary={item.name} />
-    </ListItem>
-  </Link>)
+  const handleSelectBrand = (marca: IBrand) => {
+
+    setBrand(marca)
+    setLocation("/home" + marca.slug)
+
+  }
+
+  const listBrands = data?.map((item) => <ListItem key={item.name} onClick={() => handleSelectBrand(item as IBrand)}>
+    <ListItemAvatar>
+      <Avatar>
+        <ImageIcon />
+      </Avatar>
+    </ListItemAvatar>
+    <ListItemText primary={item.name} />
+  </ListItem>)
 
   return <Grid container width={"100%"} justifyContent={"center"} alignItems={"center"}>
     <Grid item padding={4} justifyContent={"center"} alignItems={"center"} sm={10} md={6} lg={4} textAlign={"center"}>

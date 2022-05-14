@@ -1,23 +1,28 @@
-import { AlertContext, Layout } from "@components";
+import { AlertContext, BrandContext, Layout } from "@components";
 import { uploadImage, useCreateImage, useGetCampaigns } from "@dataAccess";
 import { Box, Button, FileUploadInput, Grid, Loading, Select, TextInput, Typography } from "@elements";
 import { ICampaign, IFileStorage, IImage } from "@types";
 import { extractString } from "@utils";
 import React, { useContext, useState } from "react";
+import { useLocation } from "wouter";
 import { TagsInput } from "../../elements/tagInput";
 
 export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
 
-  const { marca } = params
+  const { selectedBrand: marca } = useContext(BrandContext)
+
+  const [location, setLocation] = useLocation();
+
+  if (!marca) setLocation("/marcas")
 
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
-  const { data: listCampaigns } = useGetCampaigns(marca)
+  const { data: listCampaigns } = useGetCampaigns(marca?.slug || "")
 
   let listCampaignsSelect: ({ name: string; value: string; } | null)[] = []
 
   listCampaigns?.map((item: ICampaign) => {
-    return listCampaignsSelect.push({ name: item.name, value: item.name })
+    return listCampaignsSelect.push({ name: item.name, value: item.slug })
   })
 
   const [file, setFile] = useState(null);
@@ -31,11 +36,17 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
+    if (!marca) throw Error("Não foi possível selecionar a marca")
+
+    const campanha = listCampaigns?.find(item => item.slug = campaign)
+    
+    if (!campanha) throw Error("Não foi possível selecionar a campanha")
+
     let upload = {
       url: "",
       ref: ""
     }
-    
+
     if (file) {
       setLoadingFile(true)
       const storageFile: IFileStorage = await uploadImage(file) as IFileStorage
@@ -55,7 +66,7 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
           product: extractString(data.get('product') as string),
           marca,
           mainImg: upload,
-          campaign
+          campaign: campanha
         }
 
         mutateAsync(image).then(res => {

@@ -3,11 +3,13 @@ import { FC } from "react";
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { AlertContextProvider } from "./alerts";
 import { AuthContextProvider } from "./auth";
+import { BrandContextProvider } from "./brand";
 import { RouterContext } from "./router";
 import { theme } from "./theme";
 
-export { AuthContext } from "./auth";
 export { AlertContext } from "./alerts";
+export { AuthContext } from "./auth";
+export { BrandContext } from "./brand";
 
 const queryClient = new QueryClient();
 
@@ -17,7 +19,9 @@ export const AllUniversalContext: FC = ({ children }: any) => {
       <AuthContextProvider>
         <CssBaseline />
         <AlertContextProvider>
-          <RouterContext />
+          <BrandContextProvider>
+            <RouterContext />
+          </BrandContextProvider>
         </AlertContextProvider>
       </AuthContextProvider>
     </ThemeProvider>

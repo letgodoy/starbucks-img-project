@@ -2,9 +2,9 @@ import { AlertContext, AuthContext, Layout } from "@components";
 import { useCreateUser, useGetAgencies, useGetPhotographers, useGetStores } from "@dataAccess";
 import { Box, Button, Grid, Loading, MaskedInput, TextInput, Typography } from "@elements";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { ICreateUser } from "@types";
+import { IAgency, ICreateUser, IPhotographer, IStore } from "@types";
 import { extractString, userType } from "@utils";
-import React, { ReactElement, useContext, useEffect, useState } from "react";
+import React, { Dispatch, ReactElement, SetStateAction, useContext, useEffect, useState } from "react";
 
 export const CadastroUser = ({ params }: any) => {
 
@@ -15,9 +15,9 @@ export const CadastroUser = ({ params }: any) => {
 
   const [role, setRole] = useState<string>("")
   const [form, setForm] = useState<ReactElement | null>(null)
-  const [store, setStore] = useState<string | null>(null)
-  const [agency, setAgency] = useState<string | null>(null)
-  const [photography, setPhotography] = useState<string | null>(null)
+  const [store, setStore] = useState<IStore | null>(null)
+  const [agency, setAgency] = useState<IAgency | null>(null)
+  const [photography, setPhotography] = useState<IPhotographer | null>(null)
 
   const loggedUser = useContext(AuthContext)
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
@@ -51,6 +51,11 @@ export const CadastroUser = ({ params }: any) => {
       console.warn("erro: " + error)
       setOpenError("Erro ao salvar. Tente novamente.")
     })
+  }
+
+  const handleCompany = (value: string | null, list: IStore[] | IAgency[] | IPhotographer[] | undefined, setCompany: Dispatch<SetStateAction<IStore | IAgency | IPhotographer | null>>) => {
+    const company: IStore | IAgency | IPhotographer | null = value ? list?.find(item => item.slug = value) || null : null
+    setCompany(company)
   }
 
   const BasicFields = <>
@@ -104,13 +109,12 @@ export const CadastroUser = ({ params }: any) => {
     <Select
       labelId="selectStore"
       id="selectStoreElement"
-      value={store}
+      value={store?.slug}
       label="Selecione a loja"
-      onChange={(event) => setStore(event.target.value)}
+      onChange={(event) => handleCompany(event.target.value, listStores as IStore[], setStore)}
     >
-      {/* <MenuItem value={""}>Selecione</MenuItem> */}
       {listStores?.map((item, index) => {
-        return <MenuItem key={index} value={item.name}>{item.name}</MenuItem>
+        return <MenuItem key={index} value={item.slug}>{item.name}</MenuItem>
       })}
     </Select>
   </FormControl>
@@ -120,13 +124,12 @@ export const CadastroUser = ({ params }: any) => {
     <Select
       labelId="selectAgency"
       id="selectAgencyElement"
-      value={agency}
+      value={agency?.slug}
       label="Selecione a agência"
-      onChange={(event) => setAgency(event.target.value)}
+      onChange={(event) => handleCompany(event.target.value, listAgencies as IAgency[], setAgency)}
     >
-      {/* <MenuItem value={""}>Selecione</MenuItem> */}
       {listAgencies?.map((item, index) => {
-        return <MenuItem key={index} value={item.name}>{item.name}</MenuItem>
+        return <MenuItem key={index} value={item.slug}>{item.name}</MenuItem>
       })}
     </Select>
   </FormControl>
@@ -136,13 +139,12 @@ export const CadastroUser = ({ params }: any) => {
     <Select
       labelId="selectPhotography"
       id="selectPhotographyElement"
-      value={photography}
+      value={photography?.slug}
       label="Selecione a agência de fotografia"
-      onChange={(event) => setPhotography(event.target.value)}
+      onChange={(event) => handleCompany(event.target.value, listPhotography as IPhotographer[], setPhotography)}
     >
-      {/* <MenuItem value={""}>Selecione</MenuItem> */}
       {listPhotography?.map((item, index) => {
-        return <MenuItem key={index} value={item.name}>{item.name}</MenuItem>
+        return <MenuItem key={index} value={item.slug}>{item.name}</MenuItem>
       })}
     </Select>
   </FormControl>
