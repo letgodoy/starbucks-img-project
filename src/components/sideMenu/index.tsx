@@ -14,7 +14,7 @@ export const SideMenu = ({ params }: { params?: { campanha: string } }) => {
 
   const { campanha } = params || { campanha: "" }
 
-  const darkMode = false
+  const darkMode = true
 
   const [selectedIndex, setSelectedIndex] = useState(1);
 
@@ -47,7 +47,7 @@ export const SideMenu = ({ params }: { params?: { campanha: string } }) => {
     </ListItemButton>
   });
 
-  return <Paper elevation={3} sx={{ height: "96vh", margin: 2, borderRadius: 2, padding: 2, background: "linear-gradient(142deg, rgba(255,255,255,1) 0%, rgba(0,0,0,0.05) 100%)" }}>
+  return <Paper elevation={3} sx={{ position: "fixed", color: "white", height: "96vh", margin: 2, borderRadius: 2, padding: 2, background: "linear-gradient(142deg, #0a0a0a 0%, #202020 100%)" }}>
     <Box display="flex" alignItems="center" justifyContent={"center"} gap={1} >
       <Box component="img" src={LogoDark} alt="Southrock HUB" width="2rem" />
       <Typography component="h6" fontWeight="medium">

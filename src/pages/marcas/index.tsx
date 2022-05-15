@@ -19,7 +19,7 @@ export const Marcas = () => {
   const handleSelectBrand = (marca: IBrand) => {
 
     setBrand(marca)
-    setLocation("/home" + marca.slug)
+    setLocation("/home/" + marca.slug)
 
   }
 

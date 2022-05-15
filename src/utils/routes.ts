@@ -9,9 +9,11 @@ import {
   CadastroUser,
   Dashboard,
   Error404,
+  Hub,
   ImgDetail,
   Login,
   Marcas,
+  Search,
 } from "@pages";
 import { RoutesList } from "@types";
 
@@ -28,7 +30,7 @@ export const routes: RoutesList[] = [
     component: Login,
     isPublic: true,
     title: "Login",
-    id: 2
+    id: 2,
   },
   {
     path: "/marcas",
@@ -36,7 +38,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Selecione a marca",
     id: 3,
-    visibleMenu: true
+    visibleMenu: true,
   },
   {
     path: "/cadastrousuario",
@@ -44,7 +46,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de usuário",
     id: 4,
-    visibleMenu: true
+    visibleMenu: true,
   },
   {
     path: "/cadastromarcas",
@@ -52,7 +54,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de marca",
     id: 5,
-    visibleMenu: true
+    visibleMenu: true,
   },
   {
     path: "/cadastrolojas",
@@ -60,7 +62,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de lojas",
     id: 6,
-    visibleMenu: true
+    visibleMenu: true,
   },
   {
     path: "/cadastroagencia",
@@ -68,7 +70,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de agência",
     id: 7,
-    visibleMenu: true
+    visibleMenu: true,
   },
   {
     path: "/home/:marca",
@@ -83,7 +85,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de campanha",
     id: 9,
-    visibleMenu: true
+    visibleMenu: true,
   },
   {
     path: "/cadastropeca/:marca/:campanha",
@@ -91,7 +93,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de peças",
     id: 10,
-    visibleMenu: true
+    visibleMenu: true,
   },
   {
     path: "/cadastrofotografo",
@@ -99,7 +101,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de agência de fotografia",
     id: 11,
-    visibleMenu: true
+    visibleMenu: true,
   },
   {
     path: "/cadastroimagem/:marca",
@@ -107,7 +109,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de Imagens",
     id: 12,
-    visibleMenu: true
+    visibleMenu: true,
   },
   {
     path: "/detalheimagem/:marca/:id",
@@ -115,5 +117,21 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Detalhe da Imagem",
     id: 13,
+  },
+  {
+    path: "/hub",
+    component: Hub,
+    isPublic: true,
+    title: "HUB",
+    id: 14,
+    visibleMenu: true,
+  },
+  {
+    path: "/busca/:marca",
+    component: Search,
+    isPublic: true,
+    title: "Busca",
+    id: 15,
+    visibleMenu: true,
   },
 ];

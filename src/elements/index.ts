@@ -11,3 +11,4 @@ export * from "./select";
 export * from "./tagInput";
 export * from "./textinput";
 export * from "./typography";
+export * from "./dataCard";

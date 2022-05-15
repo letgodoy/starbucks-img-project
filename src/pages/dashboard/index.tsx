@@ -1,13 +1,27 @@
-import { Layout } from "@components";
+import { BrandContext, Layout } from "@components";
 import { useGetImages } from "@dataAccess";
+import { Box, DataCard } from "@elements";
 import { Masonry } from "@mui/lab";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "wouter";
 
 export const Dashboard = ({ params }: { params: { marca: string } }) => {
 
-  const { marca } = params
+  const marca = useContext(BrandContext)?.selectedBrand?.slug || params.marca
 
   const { data } = useGetImages(marca)
+
+  const [unavaliableImg, setUnavaliableImg] = useState(0)
+
+  useEffect(() => {
+    let count = 0
+    data?.forEach(element => {
+      if (!element.approvedBy) {
+        count++
+      }
+    });
+    setUnavaliableImg(count)
+  }, [data])
 
   const Items = data?.map((item, index) => (
     <Link href={`/detalheimagem/${marca}/${item.id}`} key={index}>
@@ -29,6 +43,36 @@ export const Dashboard = ({ params }: { params: { marca: string } }) => {
   ))
 
   return <Layout title="Inicio" params={params} sx={{ paddingY: 3 }}>
+    <Box width={"100%"} display="flex" flexDirection={"row"} flexWrap="wrap">
+      <DataCard
+        title="Total de imagens"
+        count={data?.length || 0}
+        percentage={{
+          amount: unavaliableImg,
+          label: "Imagens sem avaliação"
+        }}
+        icon={<p>IC</p>}
+      />
+      <DataCard
+        title="Total de artes"
+        count={data?.length || 0}
+        percentage={{
+          amount: 1237676,
+          label: "Artes sem avaliação"
+        }}
+        icon={<p>IC</p>}
+      />
+      <DataCard
+        title="Pedidos"
+        count={data?.length || 0}
+        percentage={{
+          amount: 1237676,
+          label: "Pedidos sem aprovação"
+        }}
+        icon={<p>IC</p>}
+      />
+    </Box>
+
     <Masonry columns={3} spacing={2}>
       <>{Items}</>
     </Masonry>
