@@ -1,6 +1,9 @@
 import { BrandContext, Layout } from "@components";
 import { useGetImages } from "@dataAccess";
 import { Box, DataCard } from "@elements";
+import BackupTableIcon from '@mui/icons-material/BackupTable';
+import CropOriginalIcon from '@mui/icons-material/CropOriginal';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 import { Masonry } from "@mui/lab";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "wouter";
@@ -11,16 +14,32 @@ export const Dashboard = ({ params }: { params: { marca: string } }) => {
 
   const { data } = useGetImages(marca)
 
+  const now = new Date()
+
   const [unavaliableImg, setUnavaliableImg] = useState(0)
+  const [invalidImg, setInvalidImg] = useState(0)
 
   useEffect(() => {
-    let count = 0
+    let countUnavabile = 0
+    let countInvalid = 0
+
     data?.forEach(element => {
       if (!element.approvedBy) {
-        count++
+        countUnavabile++
+      }
+
+      if (element.validate) {
+        const validade = new Date(element.validate).getTime()
+
+        if (validade < now.getTime()) {
+          countInvalid++
+        }
       }
     });
-    setUnavaliableImg(count)
+
+    setUnavaliableImg(countUnavabile)
+    setInvalidImg(countInvalid)
+
   }, [data])
 
   const Items = data?.map((item, index) => (
@@ -47,29 +66,34 @@ export const Dashboard = ({ params }: { params: { marca: string } }) => {
       <DataCard
         title="Total de imagens"
         count={data?.length || 0}
-        percentage={{
+        percentage={[{
           amount: unavaliableImg,
           label: "Imagens sem avaliação"
-        }}
-        icon={<p>IC</p>}
+        },
+        {
+          amount: invalidImg,
+          label: "Imagens vencidas"
+        }
+        ]}
+        icon={<CropOriginalIcon fontSize="large" />}
       />
       <DataCard
         title="Total de artes"
         count={data?.length || 0}
-        percentage={{
-          amount: 1237676,
+        percentage={[{
+          amount: 123,
           label: "Artes sem avaliação"
-        }}
-        icon={<p>IC</p>}
+        }]}
+        icon={<BackupTableIcon fontSize="large" />}
       />
       <DataCard
         title="Pedidos"
         count={data?.length || 0}
-        percentage={{
-          amount: 1237676,
+        percentage={[{
+          amount: 123,
           label: "Pedidos sem aprovação"
-        }}
-        icon={<p>IC</p>}
+        }]}
+        icon={<ListAltIcon fontSize="large" />}
       />
     </Box>
 

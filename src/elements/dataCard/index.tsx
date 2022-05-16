@@ -7,10 +7,10 @@ import { Typography } from "../typography";
 interface IDataCard {
   title: string,
   count: number,
-  percentage: {
+  percentage: Array<{
     amount: number,
     label: string
-  }
+  }>,
   icon: ReactElement
 }
 
@@ -30,16 +30,19 @@ export const DataCard: FC<IDataCard> = ({ icon, title, percentage, count }) => {
         variant="middle"
       />
       <Box paddingX={2} paddingY={1}>
-        <Typography component="p" display="flex">
-          <Typography
-            component="span"
-            fontWeight="bold"
-            color="secondary"
-          >
-            {percentage.amount}
+        {percentage?.map(item => {
+          return <Typography component="p" display="flex">
+            <Typography
+              component="span"
+              fontWeight="bold"
+              color="secondary"
+            >
+              {item.amount}
+            </Typography>
+            &nbsp;{item.label}
           </Typography>
-          &nbsp;{percentage.label}
-        </Typography>
+        })}
+
       </Box>
     </Card>
     <Box

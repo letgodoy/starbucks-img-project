@@ -3,7 +3,6 @@ import { IBrand } from '.';
 export interface IProduct {
   name: string;
   slug: string;
-  year: string;
   marca: IBrand;
   createdAt: string;
   createdBy: string;

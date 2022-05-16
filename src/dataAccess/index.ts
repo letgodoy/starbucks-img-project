@@ -1,6 +1,7 @@
 export * from "./agencia";
 export * from "./authentication";
 export * from "./campaign";
+export * from "./category";
 export * from "./fotografo";
 export * from "./imagem";
 export * from "./loja";
