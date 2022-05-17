@@ -1,11 +1,11 @@
-import { IPiece } from "@types";
+import { IArt } from "@types";
 import { db } from "@utils";
 import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 import { useMutation, useQuery } from "react-query";
 
 const collectionName = "pieces";
 
-const createPiece = async (piece: IPiece) => {
+const createPiece = async (piece: IArt) => {
   const target = collection(db, collectionName);
 
   await addDoc(target, piece)

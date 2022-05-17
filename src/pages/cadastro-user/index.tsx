@@ -40,7 +40,7 @@ export const CadastroUser = ({ params }: any) => {
       phone: extractString(data.get('phone') as string),
       cargo: extractString(data.get('cargo') as string),
       createdAt: now,
-      createdBy: loggedUser.user.uid || "tester",
+      createdBy: loggedUser.user,
       lastUpdated: now
     }
 

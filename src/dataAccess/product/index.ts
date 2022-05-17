@@ -1,4 +1,4 @@
-import { ICategory } from "@types";
+import { IProduct } from "@types";
 import { db } from "@utils";
 import {
   collectionGroup,
@@ -11,19 +11,19 @@ import {
 } from "firebase/firestore";
 import { useMutation, useQuery } from "react-query";
 
-const collectionName = "categories";
+const collectionName = "products";
 
-const createCategory = async (categoria: ICategory) => {
-  const target = doc(db, collectionName, categoria.slug);
+const createProduct = async (produto: IProduct) => {
+  const target = doc(db, collectionName, produto.slug);
 
-  return await setDoc(target, categoria)
+  return await setDoc(target, produto)
     .then((res) => {
       return res;
     })
     .catch((error) => error);
 };
 
-const findCategoryByID = async (id: string) => {
+const findProductByID = async (id: string) => {
   const docRef = doc(db, collectionName, id);
   const docSnap = await getDoc(docRef);
 
@@ -36,29 +36,29 @@ const findCategoryByID = async (id: string) => {
   }
 };
 
-const findCategories = async (marca: string) => {
+const findProducts = async (marca: string) => {
   const docRef = query(
     collectionGroup(db, collectionName),
     where("marca", "==", marca)
   );
   const querySnapshot = await getDocs(docRef);
 
-  let list: ICategory[] = [];
+  let list: IProduct[] = [];
   querySnapshot.forEach((doc) => {
-    list.push(doc.data() as ICategory);
+    list.push(doc.data() as IProduct);
   });
 
   return list;
 };
 
-export function useCreateCategory() {
-  return useMutation(createCategory);
+export function useCreateProduct() {
+  return useMutation(createProduct);
 }
 
-export function useGetCategoryByID() {
-  return useMutation(findCategoryByID);
+export function useGetProductByID() {
+  return useMutation(findProductByID);
 }
 
-export function useGetCategories(marca: string) {
-  return useQuery("findCategories", () => findCategories(marca));
+export function useGetProducts(marca: string) {
+  return useQuery("findProducts", () => findProducts(marca));
 }

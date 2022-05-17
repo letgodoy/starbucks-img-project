@@ -1,7 +1,7 @@
-import { AlertContext, BrandContext, Layout } from "@components";
-import { uploadImage, useCreateImage, useGetCampaigns } from "@dataAccess";
+import { AlertContext, AuthContext, BrandContext, Layout } from "@components";
+import { uploadImage, useCreateImage, useGetCampaigns, useGetCategories, useGetProducts } from "@dataAccess";
 import { Box, Button, FileUploadInput, Grid, Loading, Select, TextInput, Typography } from "@elements";
-import { ICampaign, IFileStorage, IImage } from "@types";
+import { ICampaign, ICategory, IFileStorage, IImage } from "@types";
 import { extractString } from "@utils";
 import React, { useContext, useState } from "react";
 import { useLocation } from "wouter";
@@ -10,24 +10,32 @@ import { TagsInput } from "../../elements/tagInput";
 export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
 
   const { selectedBrand: marca } = useContext(BrandContext)
+  const { setOpenSuccess, setOpenError } = useContext(AlertContext)
+  const { user } = useContext(AuthContext)
 
   const [location, setLocation] = useLocation();
 
   if (!marca) setLocation("/marcas")
 
-  const { setOpenSuccess, setOpenError } = useContext(AlertContext)
+  const { data: listCategories } = useGetCategories(marca?.slug || "")
+  const { data: listProducts } = useGetProducts(marca?.slug || "")
 
-  const { data: listCampaigns } = useGetCampaigns(marca?.slug || "")
+  let listCategoriesSelect: ({ name: string; value: string; } | null)[] = []
 
-  let listCampaignsSelect: ({ name: string; value: string; } | null)[] = []
+  listCategories?.map((item: ICategory) => {
+    return listCategoriesSelect.push({ name: item.name, value: item.slug })
+  })
 
-  listCampaigns?.map((item: ICampaign) => {
-    return listCampaignsSelect.push({ name: item.name, value: item.slug })
+  let listProductsSelect: ({ name: string; value: string; } | null)[] = []
+
+  listProducts?.map((item: ICategory) => {
+    return listProductsSelect.push({ name: item.name, value: item.slug })
   })
 
   const [file, setFile] = useState(null);
   const [tags, setTags] = useState<Array<string>>([]);
-  const [campaign, setCampaign] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
+  const [product, setProduct] = useState<string>("");
   const [loadingFile, setLoadingFile] = useState<boolean>(false)
 
   const { mutateAsync, isLoading } = useCreateImage()
@@ -38,9 +46,11 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
 
     if (!marca) throw Error("Não foi possível selecionar a marca")
 
-    const campanha = listCampaigns?.find(item => item.slug = campaign)
+    const categoria = listCategories?.find(item => item.slug = category)
+    const produto = listProducts?.find(item => item.slug = product)
     
-    if (!campanha) throw Error("Não foi possível selecionar a campanha")
+    if (!categoria) throw Error("Não foi possível selecionar a categoria")
+    if (!produto) throw Error("Não foi possível selecionar o produto")
 
     let upload = {
       url: "",
@@ -62,11 +72,11 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
           year: extractString(data.get('year') as string),
           tags,
           createdAt: new Date().toISOString(),
-          createdBy: new Date().toISOString(),
-          product: extractString(data.get('product') as string),
+          createdBy: user,
+          product: produto,
           marca,
           mainImg: upload,
-          campaign: campanha
+          category: categoria
         }
 
         mutateAsync(image).then(res => {
@@ -156,11 +166,18 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
               tags={tags}
             />
             <Select
-              id="selectStore"
-              value={campaign}
-              label="Selecione a campanha"
-              onChange={(event) => setCampaign(event.target.value as string)}
-              listData={listCampaignsSelect}
+              id="selectCategory"
+              value={category}
+              label="Selecione a categoria"
+              onChange={(event) => setCategory(event.target.value as string)}
+              listData={listCategoriesSelect}
+            />
+            <Select
+              id="selectProduct"
+              value={product}
+              label="Selecione o produto"
+              onChange={(event) => setProduct(event.target.value as string)}
+              listData={listProductsSelect}
             />
             <FileUploadInput handleChange={handleImage} multiple={false} />
             {isLoading || loadingFile ? <Loading /> : <Button

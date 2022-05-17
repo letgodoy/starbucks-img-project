@@ -1,9 +1,11 @@
-export interface IPiece {
+import { IUser } from ".";
+
+export interface IArt {
   name: string;
   description?: string;
   tags?: Array<string>;
   createdAt: string;
-  createdBy: string;
+  createdBy: IUser;
   approvedBy?: string;
   type: string;
   marca: string;

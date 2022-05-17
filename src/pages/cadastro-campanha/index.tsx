@@ -34,10 +34,8 @@ export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
       slug: Slugify(extractString(data.get('name') as string)),
       year: extractString(data.get('year') as string),
       createdAt: new Date().toISOString(),
-      createdBy: user.uid,
-      createdByName: user.name,
-      createdByAgency: agency?.cnpj || photographer?.cnpj || "admin",
-      createdByAgencyName: agency?.name || photographer?.name || "admin",
+      createdBy: user,
+      createdByAgency: agency || photographer || "admin",
       marca
     }
 

@@ -1,7 +1,7 @@
-import { AlertContext, Layout } from "@components";
+import { AlertContext, AuthContext, Layout } from "@components";
 import { useCreatePiece } from "@dataAccess";
 import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
-import { IPiece, IStorageImage } from "@types";
+import { IArt, IStorageImage } from "@types";
 import { extractString } from "@utils";
 import React, { useContext } from "react";
 
@@ -10,6 +10,7 @@ export const CadastroPeca = ({ params }: { params: { marca: string, campanha: st
   const { marca, campanha } = params
 
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
+  const { user: loggedUser } = useContext(AuthContext)
 
   const { mutateAsync, isLoading } = useCreatePiece()
 
@@ -23,12 +24,12 @@ export const CadastroPeca = ({ params }: { params: { marca: string, campanha: st
       ref: extractString(data.get('ref') as string),
     }]
 
-    const piece: IPiece = {
+    const piece: IArt = {
       name: extractString(data.get('name') as string),
       description: extractString(data.get('name') as string),
       tags,
       createdAt: new Date().toISOString(),
-      createdBy: new Date().toISOString(),
+      createdBy: loggedUser,
       approvedBy: extractString(data.get('name') as string),
       type: extractString(data.get('name') as string),
       marca,

@@ -1,3 +1,4 @@
+import { IUser } from ".";
 import { IAddress } from "./address";
 
 export interface IPhotographer {
@@ -9,6 +10,6 @@ export interface IPhotographer {
   managerPhone: string;
   managerEmail: string;
   createdAt: string;
-  createdBy: string;
+  createdBy: IUser;
   lastUpdated: string;
 }

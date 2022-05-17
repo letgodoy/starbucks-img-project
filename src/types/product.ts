@@ -1,12 +1,10 @@
-import { IBrand } from '.';
+import { IAgency, IBrand, IUser } from '.';
 
 export interface IProduct {
   name: string;
   slug: string;
   marca: IBrand;
   createdAt: string;
-  createdBy: string;
-  createdByName: string;
-  createdByAgency?: string;
-  createdByAgencyName?: string;
+  createdBy: IUser;
+  createdByAgency?: IAgency;
 }

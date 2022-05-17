@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
+import { IUser } from "./user";
 
 export interface IBrand {
   slug: string;
@@ -6,7 +7,7 @@ export interface IBrand {
   avatar?: string;
   hero?: string;
   createdAt: string;
-  createdBy: string;
+  createdBy: IUser;
   lastUpdated: string;
 }
 

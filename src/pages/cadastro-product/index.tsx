@@ -1,35 +1,45 @@
-import { AlertContext, AuthContext, Layout } from "@components";
-import { useCreateBrand } from "@dataAccess";
+import { AlertContext, AuthContext, BrandContext, Layout } from "@components";
+import { useCreateCategory, useCreateProduct } from "@dataAccess";
 import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
-import { IBrand } from "@types";
+import { ICategory, IProduct } from "@types";
 import { extractString } from "@utils";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Slugify from "slugify";
+import { useLocation } from "wouter";
 
-export const CadastroMarca = ({ params }: any) => {
+export const CadastroProduto = ({ params }: { params: { marca: string } }) => {
 
-  const { mutateAsync, isLoading } = useCreateBrand()
+  const { selectedBrand: marca } = useContext(BrandContext);
 
-  const loggedUser = useContext(AuthContext)
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
+
+  const [location, setLocation] = useLocation();
+
+  useEffect(() => {
+    if (!marca) setLocation("/marcas")
+  }, [])
+
+  const { mutateAsync, isLoading } = useCreateProduct();
+
+  const { user } = useContext(AuthContext)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const now = new Date().toISOString()
+    if (!marca) throw Error("Não foi possível selecionar a marca")
 
-    const brand: IBrand = {
+    const product: IProduct = {
       name: extractString(data.get('name') as string),
       slug: Slugify(extractString(data.get('name') as string)),
-      avatar: "auhauha",
-      createdAt: now,
-      createdBy: loggedUser.user,
-      lastUpdated: now
+      createdAt: new Date().toISOString(),
+      createdBy: user,
+      marca
     }
 
-    mutateAsync(brand).then(res => {
-      setOpenSuccess("Loja salva com sucesso.")
+    mutateAsync(product).then(res => {
+      console.log(res)
+      setOpenSuccess("Cadastrado com sucesso.")
       event.currentTarget.reset()
     }).catch(error => {
       console.warn("erro: " + error)
@@ -38,7 +48,7 @@ export const CadastroMarca = ({ params }: any) => {
   }
 
   return <Layout params={params}>
-    <Grid container sx={{ height: '100vh' }}>
+    <Grid container>
       <Grid item xs={12}>
         <Box
           sx={{
@@ -50,7 +60,7 @@ export const CadastroMarca = ({ params }: any) => {
           }}
         >
           <Typography component="h1" variant="h5">
-            Cadastro de marca
+            Cadastro de produto
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextInput
@@ -76,3 +86,4 @@ export const CadastroMarca = ({ params }: any) => {
     </Grid>
   </Layout>
 }
+

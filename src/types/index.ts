@@ -7,7 +7,7 @@ export * from "./campaign";
 export * from "./category";
 export * from "./image";
 export * from "./photographer";
-export * from "./piece";
+export * from "./art";
 export * from "./product";
 export * from "./store";
 export * from "./user";

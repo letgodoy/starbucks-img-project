@@ -110,7 +110,7 @@ export const CompanyForm = ({ handleSubmit, isLoading, isStore }: { handleSubmit
       managerPhone: extractString(data.get('managerPhone') as string),
       managerEmail: extractString(data.get('managerEmail') as string),
       createdAt: now,
-      createdBy: loggedUser.user.uid,
+      createdBy: loggedUser.user,
       lastUpdated: now
     }
 

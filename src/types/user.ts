@@ -15,7 +15,7 @@ export interface IUser {
   cargo: string;
   agency?: IAgency | null;
   createdAt: string;
-  createdBy: string;
+  createdBy: IUser | null;
   lastUpdated: string;
   photographer?: IPhotographer | null;
 }

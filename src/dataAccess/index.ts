@@ -7,5 +7,6 @@ export * from "./imagem";
 export * from "./loja";
 export * from "./marca";
 export * from "./peca";
+export * from "./product";
 export * from "./storage-image";
 export * from "./user";

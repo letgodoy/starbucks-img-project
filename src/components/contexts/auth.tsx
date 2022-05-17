@@ -12,7 +12,7 @@ const DEFAULT_VALUE: IAuthContext = {
     cargo: "",
     phone: "",
     createdAt: "",
-    createdBy: "",
+    createdBy: null,
     lastUpdated: "",
     photographer: null,
     agency: null

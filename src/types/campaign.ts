@@ -1,4 +1,4 @@
-import { IBrand } from ".";
+import { IAgency, IBrand, IPhotographer, IUser } from ".";
 
 export interface ICampaign {
   name: string;
@@ -6,8 +6,6 @@ export interface ICampaign {
   year: string;
   marca: IBrand;
   createdAt: string;
-  createdBy: string;
-  createdByName: string;
-  createdByAgency?: string;
-  createdByAgencyName?: string;
+  createdBy: IUser;
+  createdByAgency?: IAgency | IPhotographer | string;
 }

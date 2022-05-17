@@ -1,4 +1,4 @@
-import { IBrand, ICampaign, IStorageImage } from ".";
+import { IBrand, ICampaign, ICategory, IProduct, IStorageImage, IUser } from ".";
 
 export interface IImage {
   id: string;
@@ -10,12 +10,12 @@ export interface IImage {
   year?: string;
   tags?: Array<string>;
   createdAt: string;
-  createdBy: string;
-  approvedBy?: string;
-  product?: string;
+  createdBy: IUser;
+  approvedBy?: IUser;
+  product?: IProduct;
+  category?: ICategory;
   marca: IBrand;
   mainImg: IStorageImage;
-  campaign: ICampaign;
 }
 
 export interface IFile {
