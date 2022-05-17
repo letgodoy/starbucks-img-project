@@ -1,13 +1,13 @@
 import { AlertContext, AuthContext, BrandContext, Layout } from "@components";
-import { uploadImage, useCreateImage, useGetCategories, useGetProducts } from "@dataAccess";
+import { uploadImage, useCreateImage, useGetCampaigns, useGetProducts } from "@dataAccess";
 import { Box, Button, FileUploadInput, Grid, Loading, Select, TextInput, Typography } from "@elements";
-import { ICategory, IFileStorage, IImage, IProduct } from "@types";
+import { IArt, ICampaign, ICategory, IFileStorage, IImage } from "@types";
 import { extractString } from "@utils";
 import React, { useContext, useState } from "react";
 import { useLocation } from "wouter";
 import { TagsInput } from "../../elements/tagInput";
 
-export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
+export const CadastroArte = ({ params }: { params: { marca: string } }) => {
 
   const { selectedBrand: marca } = useContext(BrandContext)
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
@@ -17,25 +17,17 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
 
   if (!marca) setLocation("/marcas")
 
-  const { data: listCategories } = useGetCategories(marca?.slug || "")
-  const { data: listProducts } = useGetProducts(marca?.slug || "")
+  const { data: listCampaigns } = useGetCampaigns(marca?.slug || "")
 
-  let listCategoriesSelect: ({ name: string; value: string; } | null)[] = []
+  let listCampaignsSelect: ({ name: string; value: string; } | null)[] = []
 
-  listCategories?.map((item: ICategory) => {
-    return listCategoriesSelect.push({ name: item.name, value: item.slug })
-  })
-
-  let listProductsSelect: ({ name: string; value: string; } | null)[] = []
-
-  listProducts?.map((item: IProduct) => {
-    return listProductsSelect.push({ name: item.name, value: item.slug })
+  listCampaigns?.map((item: ICampaign) => {
+    return listCampaignsSelect.push({ name: item.name, value: item.slug })
   })
 
   const [file, setFile] = useState(null);
   const [tags, setTags] = useState<Array<string>>([]);
-  const [category, setCategory] = useState<string>("");
-  const [product, setProduct] = useState<string>("");
+  const [campaign, setCampaign] = useState<string>("");
   const [loadingFile, setLoadingFile] = useState<boolean>(false)
 
   const { mutateAsync, isLoading } = useCreateImage()
@@ -46,11 +38,9 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
 
     if (!marca) throw Error("Não foi possível selecionar a marca")
 
-    const categoria = listCategories?.find(item => item.slug = category)
-    const produto = listProducts?.find(item => item.slug = product)
+    const campanha = listCampaigns?.find(item => item.slug = campaign)
 
-    if (!categoria) throw Error("Não foi possível selecionar a categoria")
-    if (!produto) throw Error("Não foi possível selecionar o produto")
+    if (!campanha) throw Error("Não foi possível selecionar a campanha")
 
     let upload = {
       url: "",
@@ -65,7 +55,7 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
       upload.ref = storageFile.fileName
 
       if (storageFile.url) {
-        const image: IImage = {
+        const art: IArt = {
           id: storageFile.fileName,
           name: extractString(data.get('name') as string),
           description: extractString(data.get('description') as string),
@@ -73,13 +63,12 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
           tags,
           createdAt: new Date().toISOString(),
           createdBy: user,
-          product: produto,
           marca,
           mainImg: upload,
-          category: categoria
+          category: campanha
         }
 
-        mutateAsync(image).then(res => {
+        mutateAsync(art).then(res => {
           console.log(res)
           setOpenSuccess("Imagem salva com sucesso")
           event.currentTarget.reset()
@@ -113,7 +102,7 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
           }}
         >
           <Typography component="h1" variant="h5">
-            Cadastro de imagens
+            Cadastro de arte
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextInput
@@ -166,11 +155,11 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
               tags={tags}
             />
             <Select
-              id="selectCategory"
-              value={category}
-              label="Selecione a categoria"
-              onChange={(event) => setCategory(event.target.value as string)}
-              listData={listCategoriesSelect}
+              id="selectCampaign"
+              value={campaign}
+              label="Selecione a campanha"
+              onChange={(event) => setCampaign(event.target.value as string)}
+              listData={listCampaignsSelect}
             />
             <Select
               id="selectProduct"

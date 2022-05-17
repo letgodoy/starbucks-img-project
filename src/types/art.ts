@@ -1,18 +1,20 @@
-import { IUser } from ".";
+import { IBrand, ICampaign, IUser } from ".";
 
 export interface IArt {
   name: string;
-  description?: string;
+  observation?: string;
   tags?: Array<string>;
   createdAt: string;
   createdBy: IUser;
-  approvedBy?: string;
+  approvedBy?: IUser;
   type: string;
-  marca: string;
-  campaign: string;
+  marca: IBrand;
+  campaign: ICampaign;
   mainImg: IStorageImage;
   images: Array<IStorageImage>;
-  year?: string;
+  year: string;
+  format: string;
+  especification: string;
 }
 
 export interface IStorageImage {

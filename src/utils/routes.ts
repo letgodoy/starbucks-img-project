@@ -6,7 +6,7 @@ import {
   CadastroImagens,
   CadastroLoja,
   CadastroMarca,
-  CadastroPeca,
+  CadastroArte,
   CadastroProduto,
   CadastroUser,
   Dashboard,
@@ -90,10 +90,10 @@ export const routes: RoutesList[] = [
     visibleMenu: true,
   },
   {
-    path: "/cadastropeca/:marca/:campanha",
-    component: CadastroPeca,
+    path: "/cadastroarte/:marca",
+    component: CadastroArte,
     isPublic: true,
-    title: "Cadastro de peças",
+    title: "Cadastro de arte",
     id: 10,
     visibleMenu: true,
   },
@@ -143,7 +143,8 @@ export const routes: RoutesList[] = [
     title: "Cadastro Categoria",
     id: 16,
     visibleMenu: true,
-  },  {
+  },
+  {
     path: "/cadastroproduto/:marca",
     component: CadastroProduto,
     isPublic: true,
