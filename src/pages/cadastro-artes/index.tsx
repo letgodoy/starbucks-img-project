@@ -1,9 +1,10 @@
 import { AlertContext, AuthContext, BrandContext, Layout } from "@components";
-import { uploadImage, useCreateImage, useGetCampaigns, useGetProducts } from "@dataAccess";
+import { uploadImage, useCreateArt, useGetCampaigns } from "@dataAccess";
 import { Box, Button, FileUploadInput, Grid, Loading, Select, TextInput, Typography } from "@elements";
-import { IArt, ICampaign, ICategory, IFileStorage, IImage } from "@types";
+import { IArt, ICampaign, IFileStorage } from "@types";
 import { extractString } from "@utils";
 import React, { useContext, useState } from "react";
+import Slugify from "slugify";
 import { useLocation } from "wouter";
 import { TagsInput } from "../../elements/tagInput";
 
@@ -25,68 +26,86 @@ export const CadastroArte = ({ params }: { params: { marca: string } }) => {
     return listCampaignsSelect.push({ name: item.name, value: item.slug })
   })
 
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState<Array<any> | null>(null);
   const [tags, setTags] = useState<Array<string>>([]);
   const [campaign, setCampaign] = useState<string>("");
   const [loadingFile, setLoadingFile] = useState<boolean>(false)
 
-  const { mutateAsync, isLoading } = useCreateImage()
+  const { mutateAsync, isLoading } = useCreateArt()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    try {
+      if (!marca) throw Error("Não foi possível selecionar a marca")
 
-    if (!marca) throw Error("Não foi possível selecionar a marca")
+      const campanha = listCampaigns?.find(item => item.slug = campaign)
 
-    const campanha = listCampaigns?.find(item => item.slug = campaign)
+      if (!campanha) throw Error("Não foi possível selecionar a campanha")
 
-    if (!campanha) throw Error("Não foi possível selecionar a campanha")
+      if (files) {
+        setLoadingFile(true)
 
-    let upload = {
-      url: "",
-      ref: ""
-    }
+        let imagesUploaded: { url: string; ref: string; }[] = []
 
-    if (file) {
-      setLoadingFile(true)
-      const storageFile: IFileStorage = await uploadImage(file) as IFileStorage
+        await Promise.all(files.map(async (image: any) => {
+          const storageFile: IFileStorage = await uploadImage(image) as IFileStorage
 
-      upload.url = storageFile.url
-      upload.ref = storageFile.fileName
+          imagesUploaded.push({
+            url: storageFile.url,
+            ref: storageFile.fileName
+          })
+        }))
 
-      if (storageFile.url) {
-        const art: IArt = {
-          id: storageFile.fileName,
-          name: extractString(data.get('name') as string),
-          description: extractString(data.get('description') as string),
-          year: extractString(data.get('year') as string),
-          tags,
-          createdAt: new Date().toISOString(),
-          createdBy: user,
-          marca,
-          mainImg: upload,
-          category: campanha
+        console.log("aquiii")
+        console.log(imagesUploaded)
+
+        const name = extractString(data.get('name') as string)
+        const year = extractString(data.get('year') as string)
+
+        if (imagesUploaded.length == files.length) {
+          console.log("aquiii 2")
+          const art: IArt = {
+            id: Slugify(`${year}-${campanha.slug}-${name}`),
+            name,
+            observation: extractString(data.get('observation') as string),
+            year,
+            tags,
+            createdAt: new Date().toISOString(),
+            createdBy: user,
+            marca,
+            campaign: campanha,
+            type: extractString(data.get('type') as string),
+            images: imagesUploaded,
+            format: extractString(data.get('format') as string),
+            specification: extractString(data.get('specification') as string),
+          }
+
+          mutateAsync(art).then((res: any) => {
+            console.log(res)
+            setOpenSuccess("Cadastrado com sucesso.")
+            event.currentTarget.reset()
+          }).catch((error: string) => {
+            console.warn("erro: " + error)
+            setOpenError("Erro ao salvar. Tente novamente.")
+          })
+        } else {
+          setOpenError("Algo de errado aconteceu. Tente novamente")
         }
-
-        mutateAsync(art).then(res => {
-          console.log(res)
-          setOpenSuccess("Imagem salva com sucesso")
-          event.currentTarget.reset()
-        }).catch(error => alert("erro: " + error))
-      } else {
-        setOpenError("Algo de errado aconteceu. Tente novamente")
+        setLoadingFile(false)
       }
-      setLoadingFile(false)
+    } catch (e) {
+      setOpenError(e as string)
     }
   }
 
   const handleSelecetedTags = (items: Array<string>) => {
-    console.log(items);
+    // console.log(items);
     // setTags(items)
   }
 
   const handleImage = async (file: any) => {
-    setFile(file)
+    setFiles(Object.values(file))
   };
 
   return <Layout params={params}>
@@ -118,21 +137,12 @@ export const CadastroArte = ({ params }: { params: { marca: string } }) => {
             <TextInput
               margin="normal"
               fullWidth
-              id="description"
-              label="Descrição"
-              name="description"
-              autoComplete="description"
+              id="observation"
+              label="Observação"
+              name="observation"
+              autoComplete="observation"
               multiline
               maxRows={3}
-              autoFocus
-            />
-            <TextInput
-              margin="normal"
-              fullWidth
-              id="product"
-              label="Produto"
-              name="product"
-              autoComplete="product"
               autoFocus
             />
             <TextInput
@@ -143,6 +153,37 @@ export const CadastroArte = ({ params }: { params: { marca: string } }) => {
               name="year"
               autoComplete="year"
               autoFocus
+              required
+            />
+            <TextInput
+              margin="normal"
+              fullWidth
+              id="type"
+              label="Tipo"
+              name="type"
+              autoComplete="type"
+              autoFocus
+              required
+            />
+            <TextInput
+              margin="normal"
+              fullWidth
+              id="format"
+              label="Formato"
+              name="format"
+              autoComplete="format"
+              autoFocus
+              required
+            />
+            <TextInput
+              margin="normal"
+              fullWidth
+              id="specification"
+              label="Especificação"
+              name="specification"
+              autoComplete="specification"
+              autoFocus
+              required
             />
             <TagsInput
               selectedTags={(e) => handleSelecetedTags(e)}
@@ -161,14 +202,7 @@ export const CadastroArte = ({ params }: { params: { marca: string } }) => {
               onChange={(event) => setCampaign(event.target.value as string)}
               listData={listCampaignsSelect}
             />
-            <Select
-              id="selectProduct"
-              value={product}
-              label="Selecione o produto"
-              onChange={(event) => setProduct(event.target.value as string)}
-              listData={listProductsSelect}
-            />
-            <FileUploadInput handleChange={handleImage} multiple={false} />
+            <FileUploadInput handleChange={handleImage} multiple={true} />
             {isLoading || loadingFile ? <Loading /> : <Button
               type="submit"
               fullWidth

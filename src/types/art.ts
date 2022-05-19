@@ -1,6 +1,7 @@
 import { IBrand, ICampaign, IUser } from ".";
 
 export interface IArt {
+  id: string;
   name: string;
   observation?: string;
   tags?: Array<string>;
@@ -10,11 +11,10 @@ export interface IArt {
   type: string;
   marca: IBrand;
   campaign: ICampaign;
-  mainImg: IStorageImage;
   images: Array<IStorageImage>;
   year: string;
   format: string;
-  especification: string;
+  specification: string;
 }
 
 export interface IStorageImage {

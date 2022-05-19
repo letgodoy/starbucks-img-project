@@ -1,4 +1,4 @@
-import { IFile, IFileStorage } from "@types";
+import { IFile } from "@types";
 import { storage } from "@utils";
 import {
   deleteObject,
@@ -41,8 +41,7 @@ const uploadStorageFile = async (folder: string, file: any) => {
       }
     },
     (error) => {
-      // A full list of error codes is available at
-      // https://firebase.google.com/docs/storage/web/handle-errors
+      console.log(error);
       switch (error.code) {
         case "storage/unauthorized":
           // User doesn't have permission to access the object
@@ -54,7 +53,7 @@ const uploadStorageFile = async (folder: string, file: any) => {
           // Unknown error occurred, inspect error.serverResponse
           break;
       }
-    },
+    }
   );
 
   return await uploadTask.then(async (snapshot) => {
@@ -63,8 +62,8 @@ const uploadStorageFile = async (folder: string, file: any) => {
     return {
       url,
       fileName,
-      ...snapshot
-    }
+      ...snapshot,
+    };
   });
 };
 
@@ -100,7 +99,7 @@ const getDownload = (folder: string, fileName: string) => {
       xhr.open("GET", url);
       xhr.send();
 
-      return url
+      return url;
 
       // Or inserted into an <img> element
       // const img = document.getElementById("myimg");
@@ -137,7 +136,7 @@ const getURLDownload = async (folder: string, fileName: string) => {
     .then((url) => {
       console.log(url);
       // Insert url into an <img> tag to "download"
-      return url
+      return url;
     })
     .catch((error) => {
       // A full list of error codes is available at

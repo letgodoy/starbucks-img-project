@@ -1,22 +1,22 @@
 import { IArt } from "@types";
 import { db } from "@utils";
-import { addDoc, collection, doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useMutation, useQuery } from "react-query";
 
-const collectionName = "pieces";
+const collectionName = "arts";
 
-const createPiece = async (piece: IArt) => {
-  const target = collection(db, collectionName);
+const createArt = async (art: IArt) => {
+  const target = doc(db, collectionName, art.id);
 
-  await addDoc(target, piece)
+  return await setDoc(target, art)
     .then((res) => {
-      console.log("Document add", res);
-      alert("Document add");
+      console.log(res)
+      return res;
     })
     .catch((error) => error);
 };
 
-const findPieceByID = async (id: string) => {
+const findArtByID = async (id: string) => {
   const docRef = doc(db, collectionName, id);
   const docSnap = await getDoc(docRef);
 
@@ -29,7 +29,7 @@ const findPieceByID = async (id: string) => {
   }
 };
 
-const findPieces = async (marca: string) => {
+const findArts = async (marca: string) => {
   const docRef = doc(db, collectionName, marca);
   const querySnapshot = await getDoc(docRef);
 
@@ -42,14 +42,14 @@ const findPieces = async (marca: string) => {
   }
 };
 
-export function useCreatePiece() {
-  return useMutation(createPiece);
+export function useCreateArt() {
+  return useMutation(createArt);
 }
 
-export function useGetPieceByID() {
-  return useMutation(findPieceByID);
+export function useGetArtByID() {
+  return useMutation(findArtByID);
 }
 
-export function useGetPieces(marca: string) {
-  return useQuery("findPieces", () => findPieces(marca));
+export function useGetArts(marca: string) {
+  return useQuery("findArts", () => findArts(marca));
 }
