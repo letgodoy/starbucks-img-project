@@ -4,12 +4,13 @@ import { IAddress } from "@types";
 import { extractString, getAddressByCep } from "@utils";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import Slugify from "slugify";
-import { AuthContext } from "../contexts";
+import { AuthContext, BrandContext } from "../contexts";
 
 export const CompanyForm = ({ handleSubmit, isLoading, isStore }: { handleSubmit: any, isLoading: boolean, isStore?: boolean }) => {
   const darkMode = false
 
   const loggedUser = useContext(AuthContext)
+  const { selectedBrand: marca } = useContext(BrandContext);
 
   const [cep, setCep] = useState<string | undefined>()
   const [address, setAddress] = useState<IAddress | null>(null)
@@ -111,7 +112,9 @@ export const CompanyForm = ({ handleSubmit, isLoading, isStore }: { handleSubmit
       managerEmail: extractString(data.get('managerEmail') as string),
       createdAt: now,
       createdBy: loggedUser.user,
-      lastUpdated: now
+      lastUpdated: now,
+      marca,
+      marcaSlug: marca?.slug
     }
 
     if (isStore) form.cod = extractString(data.get('cod') as string)

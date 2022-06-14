@@ -1,4 +1,4 @@
-import { IUser } from ".";
+import { IBrand, IUser } from ".";
 import { IAddress } from "./address";
 
 export interface IStore {
@@ -12,4 +12,6 @@ export interface IStore {
   createdAt: string;
   createdBy: IUser;
   lastUpdated: string;
+  marca?: IBrand;
+  marcaSlug?: string;
 }

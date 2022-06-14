@@ -14,4 +14,4 @@ export * from "./hub";
 export * from "./image-detail";
 export * from "./login";
 export * from "./marcas";
-export * from "./search";
+export * from "./searchImg";

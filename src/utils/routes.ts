@@ -1,12 +1,12 @@
 import {
   CadastroAgencia,
+  CadastroArte,
   CadastroCampanha,
   CadastroCategoria,
   CadastroFotografo,
   CadastroImagens,
   CadastroLoja,
   CadastroMarca,
-  CadastroArte,
   CadastroProduto,
   CadastroUser,
   Dashboard,
@@ -15,7 +15,7 @@ import {
   ImgDetail,
   Login,
   Marcas,
-  Search,
+  SearchImages,
 } from "@pages";
 import { RoutesList } from "@types";
 
@@ -43,7 +43,7 @@ export const routes: RoutesList[] = [
     visibleMenu: true,
   },
   {
-    path: "/cadastrousuario",
+    path: "/cadastro-usuario",
     component: CadastroUser,
     isPublic: true,
     title: "Cadastro de usuário",
@@ -51,7 +51,7 @@ export const routes: RoutesList[] = [
     visibleMenu: true,
   },
   {
-    path: "/cadastromarcas",
+    path: "/cadastro-marcas",
     component: CadastroMarca,
     isPublic: true,
     title: "Cadastro de marca",
@@ -59,7 +59,7 @@ export const routes: RoutesList[] = [
     visibleMenu: true,
   },
   {
-    path: "/cadastrolojas",
+    path: "/cadastro-lojas",
     component: CadastroLoja,
     isPublic: true,
     title: "Cadastro de lojas",
@@ -67,7 +67,7 @@ export const routes: RoutesList[] = [
     visibleMenu: true,
   },
   {
-    path: "/cadastroagencia",
+    path: "/cadastro-agencia",
     component: CadastroAgencia,
     isPublic: true,
     title: "Cadastro de agência",
@@ -82,7 +82,7 @@ export const routes: RoutesList[] = [
     id: 8,
   },
   {
-    path: "/cadastrocampanha/:marca",
+    path: "/cadastro-campanha/:marca",
     component: CadastroCampanha,
     isPublic: true,
     title: "Cadastro de campanha",
@@ -90,7 +90,7 @@ export const routes: RoutesList[] = [
     visibleMenu: true,
   },
   {
-    path: "/cadastroarte/:marca",
+    path: "/cadastro-arte/:marca",
     component: CadastroArte,
     isPublic: true,
     title: "Cadastro de arte",
@@ -98,7 +98,7 @@ export const routes: RoutesList[] = [
     visibleMenu: true,
   },
   {
-    path: "/cadastrofotografo",
+    path: "/cadastro-fotografo",
     component: CadastroFotografo,
     isPublic: true,
     title: "Cadastro de agência de fotografia",
@@ -106,7 +106,7 @@ export const routes: RoutesList[] = [
     visibleMenu: true,
   },
   {
-    path: "/cadastroimagem/:marca",
+    path: "/cadastro-imagem/:marca",
     component: CadastroImagens,
     isPublic: true,
     title: "Cadastro de Imagens",
@@ -114,7 +114,7 @@ export const routes: RoutesList[] = [
     visibleMenu: true,
   },
   {
-    path: "/detalheimagem/:marca/:id",
+    path: "/detalhe-imagem/:marca/:id",
     component: ImgDetail,
     isPublic: true,
     title: "Detalhe da Imagem",
@@ -129,15 +129,15 @@ export const routes: RoutesList[] = [
     visibleMenu: true,
   },
   {
-    path: "/busca/:marca",
-    component: Search,
+    path: "/busca-imagens/:marca",
+    component: SearchImages,
     isPublic: true,
-    title: "Busca",
+    title: "Busca de imagens",
     id: 15,
     visibleMenu: true,
   },
   {
-    path: "/cadastrocategoria/:marca",
+    path: "/cadastro-categoria/:marca",
     component: CadastroCategoria,
     isPublic: true,
     title: "Cadastro Categoria",
@@ -145,7 +145,7 @@ export const routes: RoutesList[] = [
     visibleMenu: true,
   },
   {
-    path: "/cadastroproduto/:marca",
+    path: "/cadastro-produto/:marca",
     component: CadastroProduto,
     isPublic: true,
     title: "Cadastro produto",

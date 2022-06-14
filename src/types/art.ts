@@ -10,6 +10,7 @@ export interface IArt {
   approvedBy?: IUser;
   type: string;
   marca: IBrand;
+  marcaSlug: string;
   campaign: ICampaign;
   images: Array<IStorageImage>;
   year: string;

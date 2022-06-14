@@ -36,7 +36,8 @@ export const CadastroCampanha = ({ params }: { params: { marca: string } }) => {
       createdAt: new Date().toISOString(),
       createdBy: user,
       createdByAgency: agency || photographer || "admin",
-      marca
+      marca,
+      marcaSlug: marca.slug,
     }
 
     mutateAsync(campaign).then(res => {

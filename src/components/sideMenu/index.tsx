@@ -1,10 +1,10 @@
 import LogoDark from "@assets/southrock_preto_1_icon.png";
+import { BrandContext } from "@components";
 import { Box, Button, Typography } from "@elements";
 import { Divider, List, ListItemButton, ListItemText, Paper } from "@mui/material";
 import { routes } from "@utils";
 import React, { useContext, useState } from "react";
 import { useLocation } from "wouter";
-import { BrandContext } from "@components";
 
 export const SideMenu = ({ params }: { params?: { campanha: string } }) => {
 

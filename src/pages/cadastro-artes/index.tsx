@@ -74,6 +74,7 @@ export const CadastroArte = ({ params }: { params: { marca: string } }) => {
             createdAt: new Date().toISOString(),
             createdBy: user,
             marca,
+            marcaSlug: marca.slug,
             campaign: campanha,
             type: extractString(data.get('type') as string),
             images: imagesUploaded,

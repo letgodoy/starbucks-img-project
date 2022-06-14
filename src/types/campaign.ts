@@ -5,6 +5,7 @@ export interface ICampaign {
   slug: string;
   year: string;
   marca: IBrand;
+  marcaSlug: string;
   createdAt: string;
   createdBy: IUser;
   createdByAgency?: IAgency | IPhotographer | string;

@@ -1,14 +1,6 @@
 import { ICampaign } from "@types";
 import { db } from "@utils";
-import {
-  collectionGroup,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
+import { doc, getDoc, getDocs, query, setDoc, where, collection } from "firebase/firestore";
 import { useMutation, useQuery } from "react-query";
 
 const collectionName = "campaigns";
@@ -38,8 +30,8 @@ const findCampaignByID = async (id: string) => {
 
 const findCampaigns = async (marca: string) => {
   const docRef = query(
-    collectionGroup(db, collectionName),
-    where("marca", "==", marca)
+    collection(db, collectionName),
+    where("marcaSlug", "==", marca)
   );
   const querySnapshot = await getDocs(docRef);
 

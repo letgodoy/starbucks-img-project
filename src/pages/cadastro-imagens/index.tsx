@@ -1,6 +1,7 @@
 import { AlertContext, AuthContext, BrandContext, Layout } from "@components";
 import { uploadImage, useCreateImage, useGetCategories, useGetProducts } from "@dataAccess";
 import { Box, Button, FileUploadInput, Grid, Loading, Select, TextInput, Typography } from "@elements";
+import { MenuItem } from "@mui/material";
 import { ICategory, IFileStorage, IImage, IProduct } from "@types";
 import { extractString } from "@utils";
 import React, { useContext, useState } from "react";
@@ -20,17 +21,18 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
   const { data: listCategories } = useGetCategories(marca?.slug || "")
   const { data: listProducts } = useGetProducts(marca?.slug || "")
 
-  let listCategoriesSelect: ({ name: string; value: string; } | null)[] = []
+  let listCategoriesSelect: ({ name: string; value: string; })[] = []
 
   listCategories?.map((item: ICategory) => {
     return listCategoriesSelect.push({ name: item.name, value: item.slug })
   })
 
-  let listProductsSelect: ({ name: string; value: string; } | null)[] = []
+  let listProductsSelect: ({ name: string; value: string; })[] = []
 
   listProducts?.map((item: IProduct) => {
     return listProductsSelect.push({ name: item.name, value: item.slug })
   })
+  console.log(listProducts)
 
   const [file, setFile] = useState(null);
   const [tags, setTags] = useState<Array<string>>([]);
@@ -70,11 +72,15 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
           name: extractString(data.get('name') as string),
           description: extractString(data.get('description') as string),
           year: extractString(data.get('year') as string),
+          format: extractString(data.get('format') as string),
+          validate: extractString(data.get('validate') as string),
+          sku: extractString(data.get('sku') as string),
           tags,
           createdAt: new Date().toISOString(),
           createdBy: user,
           product: produto,
           marca,
+          marcaSlug: marca.slug,
           mainImg: upload,
           category: categoria
         }
@@ -139,11 +145,30 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
             />
             <TextInput
               margin="normal"
+              required
               fullWidth
-              id="product"
-              label="Produto"
-              name="product"
-              autoComplete="product"
+              id="format"
+              label="Formato"
+              name="format"
+              autoFocus
+            />
+            <TextInput
+              margin="normal"
+              required
+              fullWidth
+              id="sku"
+              label="SKU"
+              name="sku"
+              autoFocus
+            />
+            <TextInput
+              margin="normal"
+              required
+              fullWidth
+              id="validate"
+              label="Validade"
+              name="validate"
+              type="date"
               autoFocus
             />
             <TextInput

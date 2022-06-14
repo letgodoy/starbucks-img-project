@@ -34,7 +34,8 @@ export const CadastroCategoria = ({ params }: { params: { marca: string } }) => 
       slug: Slugify(extractString(data.get('name') as string)),
       createdAt: new Date().toISOString(),
       createdBy: user,
-      marca
+      marca,
+      marcaSlug: marca.slug,
     }
 
     mutateAsync(category).then(res => {

@@ -4,10 +4,10 @@ export interface IImage {
   id: string;
   name: string;
   description?: string;
-  format?: string;
-  validate?: string;
-  sku?: string;
-  year?: string;
+  format: string;
+  validate: string;
+  sku: string;
+  year: string;
   tags?: Array<string>;
   createdAt: string;
   createdBy: IUser;
@@ -15,6 +15,7 @@ export interface IImage {
   product?: IProduct;
   category?: ICategory;
   marca: IBrand;
+  marcaSlug: string;
   mainImg: IStorageImage;
 }
 

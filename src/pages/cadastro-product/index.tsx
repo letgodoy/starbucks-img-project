@@ -34,7 +34,8 @@ export const CadastroProduto = ({ params }: { params: { marca: string } }) => {
       slug: Slugify(extractString(data.get('name') as string)),
       createdAt: new Date().toISOString(),
       createdBy: user,
-      marca
+      marca,
+      marcaSlug: marca.slug,
     }
 
     mutateAsync(product).then(res => {

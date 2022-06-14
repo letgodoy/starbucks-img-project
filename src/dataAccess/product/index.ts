@@ -1,7 +1,7 @@
 import { IProduct } from "@types";
 import { db } from "@utils";
 import {
-  collectionGroup,
+  collection,
   doc,
   getDoc,
   getDocs,
@@ -36,15 +36,17 @@ const findProductByID = async (id: string) => {
   }
 };
 
-const findProducts = async (marca: string) => {
+const findProducts = async (marca: any) => {
   const docRef = query(
-    collectionGroup(db, collectionName),
-    where("marca", "==", marca)
+    collection(db, collectionName),
+    where("marcaSlug", "==", marca)
   );
   const querySnapshot = await getDocs(docRef);
 
   let list: IProduct[] = [];
+
   querySnapshot.forEach((doc) => {
+    console.log(doc.data());
     list.push(doc.data() as IProduct);
   });
 
@@ -59,6 +61,6 @@ export function useGetProductByID() {
   return useMutation(findProductByID);
 }
 
-export function useGetProducts(marca: string) {
+export function useGetProducts(marca: any) {
   return useQuery("findProducts", () => findProducts(marca));
 }
