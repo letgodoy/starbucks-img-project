@@ -45,7 +45,7 @@ export const ImgDetail = ({ params }: { params: { id: string } }) => {
           <Button onClick={downloadFile} sx={{ marginY: 2 }}>Download</Button>
           {/* </a> */}
           <Attribute label="Nome" value={data?.name} />
-          <Attribute label="Produto" value={data?.product} />
+          <Attribute label="Produto" value={data?.product.name} />
           <Attribute label="Ano" value={data?.year} />
           <Attribute label="Descrição" value={data?.description} />
           <Attribute label="Tags" value={data?.tags} />

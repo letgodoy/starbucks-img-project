@@ -51,7 +51,7 @@ export const Login = () => {
 
                 setOpenSuccess(`Bem vindo ${userFind.name}`);
             });
-            setLocation("/marcas")
+            setLocation("/hub")
         })
 
     }

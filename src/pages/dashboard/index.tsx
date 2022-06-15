@@ -43,7 +43,7 @@ export const Dashboard = ({ params }: { params: { marca: string } }) => {
   }, [data])
 
   const Items = data?.map((item, index) => (
-    <Link href={`/detalheimagem/${marca}/${item.id}`} key={index}>
+    <Link href={`/detalhe-imagem/${marca}/${item.id}`} key={index}>
       <div>
         <img
           src={item.mainImg.url}

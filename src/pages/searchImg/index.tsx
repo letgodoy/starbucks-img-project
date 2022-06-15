@@ -52,7 +52,7 @@ export const SearchImages = ({ params }: { params: { marca: string } }) => {
   }, [data, listProducts])
 
   const Items = searchResult?.map((item, index) => (
-    <Link href={`/detalheimagem/${marca}/${item.id}`} key={index}>
+    <Link href={`/detalhe-imagem/${marca}/${item.id}`} key={index}>
       <div>
         <img
           src={item.mainImg.url}

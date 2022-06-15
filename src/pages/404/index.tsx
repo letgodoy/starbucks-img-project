@@ -41,7 +41,7 @@ export const Error404 = () => {
                 </Typography>
                 <Button href="/login">Ir para login</Button>
 
-                <Button href="/marcas" sx={{ marginTop: 4 }}>Simular login</Button>
+                <Button href="/hub" sx={{ marginTop: 4 }}>Simular login</Button>
             </Box>
         </Grid>
     </Grid>

@@ -140,7 +140,7 @@ export const routes: RoutesList[] = [
     path: "/cadastro-categoria/:marca",
     component: CadastroCategoria,
     isPublic: true,
-    title: "Cadastro Categoria",
+    title: "Cadastro categoria",
     id: 16,
     visibleMenu: true,
   },
