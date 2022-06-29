@@ -3,17 +3,17 @@ import { Context, createContext, useState } from "react";
 
 const DEFAULT_VALUE: IAuthContext = {
   user: {
-    uid: "",
-    name: "",
-    email: "",
+    uid: "aaaa",
+    name: "tewste",
+    email: "teste@teste",
     avatar: "",
-    role: "",
+    role: "admin test",
     store: null,
-    cargo: "",
-    phone: "",
-    createdAt: "",
+    cargo: "aaa",
+    phone: "3333",
+    createdAt: "123",
     createdBy: null,
-    lastUpdated: "",
+    lastUpdated: "123",
     photographer: null,
     agency: null
   },

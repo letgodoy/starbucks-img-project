@@ -1,6 +1,6 @@
 import { IImage } from "@types";
 import { db } from "@utils";
-import { doc, getDoc, getDocs, query, setDoc, where, collection } from "firebase/firestore";
+import { doc, getDoc, getDocs, query, setDoc, where, collection, updateDoc } from "firebase/firestore";
 import { useMutation, useQuery } from "react-query";
 
 const collectionName = "images";
@@ -9,6 +9,14 @@ const createImage = async (image: IImage) => {
   const target = doc(db, collectionName, image.id);
 
   setDoc(target, image)
+    .then((res) => res)
+    .catch((error) => error);
+};
+
+const updateImage = async (image: IImage) => {
+  const target = doc(db, collectionName, image.id);
+
+  updateDoc(target, {...image})
     .then((res) => res)
     .catch((error) => error);
 };
@@ -43,6 +51,10 @@ const findImages = async (marca: string) => {
 
 export function useCreateImage() {
   return useMutation(createImage);
+}
+
+export function useUpdateImage() {
+  return useMutation(updateImage);
 }
 
 export function useGetImageByID(id: string) {

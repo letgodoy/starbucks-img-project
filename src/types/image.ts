@@ -11,7 +11,8 @@ export interface IImage {
   tags?: Array<string>;
   createdAt: string;
   createdBy: IUser;
-  approvedBy?: IUser;
+  approvedBy?: IUser | string;
+  refusedBy?: IUser | string;
   product?: IProduct;
   category?: ICategory;
   marca: IBrand;
