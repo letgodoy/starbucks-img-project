@@ -15,3 +15,4 @@ export * from "./image-detail";
 export * from "./login";
 export * from "./marcas";
 export * from "./searchImg";
+export * from "./searchArt";

@@ -15,6 +15,7 @@ import {
   ImgDetail,
   Login,
   Marcas,
+  SearchArt,
   SearchImages,
 } from "@pages";
 import { RoutesList } from "@types";
@@ -150,6 +151,14 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro produto",
     id: 17,
+    visibleMenu: true,
+  },
+  {
+    path: "/busca-artes/:marca",
+    component: SearchArt,
+    isPublic: true,
+    title: "Busca de artes",
+    id: 18,
     visibleMenu: true,
   },
 ];

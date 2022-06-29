@@ -8,7 +8,7 @@ const collectionName = "images";
 const createImage = async (image: IImage) => {
   const target = doc(db, collectionName, image.id);
 
-  setDoc(target, image)
+  return await setDoc(target, image)
     .then((res) => res)
     .catch((error) => error);
 };
@@ -16,7 +16,7 @@ const createImage = async (image: IImage) => {
 const updateImage = async (image: IImage) => {
   const target = doc(db, collectionName, image.id);
 
-  updateDoc(target, {...image})
+  return await updateDoc(target, {...image})
     .then((res) => res)
     .catch((error) => error);
 };

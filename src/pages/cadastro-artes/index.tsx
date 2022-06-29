@@ -1,7 +1,7 @@
 import { AlertContext, AuthContext, BrandContext, Layout } from "@components";
 import { uploadImage, useCreateArt, useGetCampaigns } from "@dataAccess";
 import { Box, Button, FileUploadInput, Grid, Loading, Select, TextInput, Typography } from "@elements";
-import { IArt, ICampaign, IFileStorage } from "@types";
+import { IArt, ICampaign, IFileStorage, IStorageImage } from "@types";
 import { extractString } from "@utils";
 import React, { useContext, useState } from "react";
 import Slugify from "slugify";
@@ -46,7 +46,7 @@ export const CadastroArte = ({ params }: { params: { marca: string } }) => {
       if (files) {
         setLoadingFile(true)
 
-        let imagesUploaded: { url: string; ref: string; }[] = []
+        let imagesUploaded: IStorageImage[] = []
 
         await Promise.all(files.map(async (image: any) => {
           const storageFile: IFileStorage = await uploadImage(image) as IFileStorage

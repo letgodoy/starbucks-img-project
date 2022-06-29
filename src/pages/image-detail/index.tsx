@@ -48,7 +48,6 @@ export const ImgDetail = ({ params }: { params: { id: string } }) => {
     }
 
     mutateAsync(imgUpdated).then(res => {
-      console.log(res)
       setOpenSuccess("Atualizado com sucesso.")
     }).catch(error => {
       console.warn("erro: " + error)

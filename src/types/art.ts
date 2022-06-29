@@ -16,6 +16,7 @@ export interface IArt {
   year: string;
   format: string;
   specification: string;
+  
 }
 
 export interface IStorageImage {

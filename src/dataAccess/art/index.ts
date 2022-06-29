@@ -1,6 +1,6 @@
 import { IArt } from "@types";
 import { db } from "@utils";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, getDocs, query, setDoc, where, collection, updateDoc } from "firebase/firestore";
 import { useMutation, useQuery } from "react-query";
 
 const collectionName = "arts";
@@ -13,6 +13,14 @@ const createArt = async (art: IArt) => {
       console.log(res)
       return res;
     })
+    .catch((error) => error);
+};
+
+const updateArt = async (art: IArt) => {
+  const target = doc(db, collectionName, art.id);
+
+  return await updateDoc(target, {...art})
+    .then((res) => res)
     .catch((error) => error);
 };
 
@@ -30,20 +38,27 @@ const findArtByID = async (id: string) => {
 };
 
 const findArts = async (marca: string) => {
-  const docRef = doc(db, collectionName, marca);
-  const querySnapshot = await getDoc(docRef);
+  const docRef = query(
+    collection(db, collectionName),
+    where("marcaSlug", "==", marca)
+  );
+  const querySnapshot = await getDocs(docRef);
 
-  if (querySnapshot.exists()) {
-    return querySnapshot.data()?.campaigns;
-  } else {
-    // doc.data() will be undefined in this case
-    console.log("No such document!");
-    return {};
-  }
+  let list: IArt[] = [];
+
+  querySnapshot.forEach((doc) => {
+    list.push(doc.data() as IArt);
+  });
+
+  return list;
 };
 
 export function useCreateArt() {
   return useMutation(createArt);
+}
+
+export function useUpdateArt() {
+  return useMutation(updateArt);
 }
 
 export function useGetArtByID() {
