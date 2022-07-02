@@ -23,8 +23,10 @@ export const TagsInput: FC<TextFieldProps & {
   }, [selectedItem, selectedTags]);
 
   const handleKeyDown = (event: any) => {
-    event.stopPropagation()
     if (event.key === "Enter") {
+      event.preventDefault()
+      console.log('funcionou');
+
       const newSelectedItem = [...selectedItem];
       const duplicatedValues = newSelectedItem.indexOf(
         event.target.value.trim()
@@ -82,8 +84,8 @@ export const TagsInput: FC<TextFieldProps & {
         });
         return (
           <TextInput
-          sx={{ marginY: 2}}
-          {...getRootProps({}, {suppressRefError: true})}
+            sx={{ marginY: 2 }}
+            {...getRootProps({}, { suppressRefError: true })}
             InputProps={{
               startAdornment: selectedItem.map((item) => (
                 <Chip

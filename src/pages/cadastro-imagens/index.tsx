@@ -119,7 +119,7 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
           <Typography component="h1" variant="h5">
             Cadastro de imagens
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }} noValidate>
             <TextInput
               margin="normal"
               required
@@ -210,7 +210,7 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
 
               setFile(fileList[0]);
             }} multiple={false} />
-            
+
             {file && <div style={{ width: '100%', padding: '8px 16px', border: `1px solid ${colors.grey[500]}`, borderRadius: 8, margin: '16px 0' }}><span>{file.name}</span></div>}
 
             {isLoading || loadingFile ? <Loading /> : <Button
