@@ -46,7 +46,6 @@ const findProducts = async (marca: any) => {
   let list: IProduct[] = [];
 
   querySnapshot.forEach((doc) => {
-    console.log(doc.data());
     list.push(doc.data() as IProduct);
   });
 

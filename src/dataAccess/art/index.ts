@@ -10,7 +10,6 @@ const createArt = async (art: IArt) => {
 
   return await setDoc(target, art)
     .then((res) => {
-      console.log(res)
       return res;
     })
     .catch((error) => error);

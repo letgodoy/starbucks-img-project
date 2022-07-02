@@ -30,8 +30,8 @@ export const DataCard: FC<IDataCard> = ({ icon, title, percentage, count }) => {
         variant="middle"
       />
       <Box paddingX={2} paddingY={1}>
-        {percentage?.map(item => {
-          return <Typography component="p" display="flex">
+        {percentage?.map((item, i) => {
+          return <Typography key={i} component="p" display="flex">
             <Typography
               component="span"
               fontWeight="bold"
