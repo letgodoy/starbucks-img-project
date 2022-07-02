@@ -1,7 +1,7 @@
 import { AlertContext, AuthContext, BrandContext, Layout } from "@components";
 import { uploadImage, useCreateImage, useGetCategories, useGetProducts } from "@dataAccess";
 import { Box, Button, FileUploadInput, Grid, Loading, Select, TextInput, Typography } from "@elements";
-import { MenuItem } from "@mui/material";
+import { colors } from "@mui/material";
 import { ICategory, IFileStorage, IImage, IProduct } from "@types";
 import { extractString } from "@utils";
 import React, { useContext, useState } from "react";
@@ -34,7 +34,7 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
   })
   console.log(listProducts)
 
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
   const [tags, setTags] = useState<Array<string>>([]);
   const [category, setCategory] = useState<string>("");
   const [product, setProduct] = useState<string>("");
@@ -61,6 +61,8 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
 
     if (file) {
       setLoadingFile(true)
+
+      // @ts-ignore
       const storageFile: IFileStorage = await uploadImage(file) as IFileStorage
 
       upload.url = storageFile.url
@@ -101,10 +103,6 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
     console.log(items);
     // setTags(items)
   }
-
-  const handleImage = async (file: any) => {
-    setFile(file)
-  };
 
   return <Layout params={params}>
     <Grid container sx={{ height: '100vh' }}>
@@ -204,7 +202,17 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
               onChange={(event) => setProduct(event.target.value as string)}
               listData={listProductsSelect}
             />
-            <FileUploadInput handleChange={handleImage} multiple={false} />
+
+            <FileUploadInput onChange={(e) => {
+              const fileList = e.target.files;
+
+              if (!fileList) return;
+
+              setFile(fileList[0]);
+            }} multiple={false} />
+            
+            {file && <div style={{ width: '100%', padding: '8px 16px', border: `1px solid ${colors.grey[500]}`, borderRadius: 8, margin: '16px 0' }}><span>{file.name}</span></div>}
+
             {isLoading || loadingFile ? <Loading /> : <Button
               type="submit"
               fullWidth
