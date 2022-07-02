@@ -7,7 +7,8 @@ export interface IArt {
   tags?: Array<string>;
   createdAt: string;
   createdBy: IUser;
-  approvedBy?: IUser;
+  approvedBy?: IUser | string;
+  refusedBy?: IUser | string;
   type: string;
   marca: IBrand;
   marcaSlug: string;

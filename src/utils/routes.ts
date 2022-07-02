@@ -1,4 +1,5 @@
 import {
+  ArtDetail,
   CadastroAgencia,
   CadastroArte,
   CadastroCampanha,
@@ -160,5 +161,12 @@ export const routes: RoutesList[] = [
     title: "Busca de artes",
     id: 18,
     visibleMenu: true,
+  },
+  {
+    path: "/detalhe-arte/:marca/:id",
+    component: ArtDetail,
+    isPublic: true,
+    title: "Detalhe da Arte",
+    id: 19,
   },
 ];

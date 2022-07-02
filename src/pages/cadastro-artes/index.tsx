@@ -58,14 +58,10 @@ export const CadastroArte = ({ params }: { params: { marca: string } }) => {
           })
         }))
 
-        console.log("aquiii")
-        console.log(imagesUploaded)
-
         const name = extractString(data.get('name') as string)
         const year = extractString(data.get('year') as string)
 
         if (imagesUploaded.length == files.length) {
-          console.log("aquiii 2")
           const art: IArt = {
             id: Slugify(`${year}-${campanha.slug}-${name}`),
             name,
@@ -84,7 +80,6 @@ export const CadastroArte = ({ params }: { params: { marca: string } }) => {
           }
 
           mutateAsync(art).then((res: any) => {
-            console.log(res)
             setOpenSuccess("Cadastrado com sucesso.")
             event.currentTarget.reset()
           }).catch((error: string) => {
