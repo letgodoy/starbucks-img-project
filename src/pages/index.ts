@@ -16,3 +16,4 @@ export * from "./login";
 export * from "./marcas";
 export * from "./searchImg";
 export * from "./searchArt";
+export * from "./art-detail";

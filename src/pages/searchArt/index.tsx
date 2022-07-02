@@ -65,7 +65,7 @@ export const SearchArt = ({ params }: { params: { marca: string } }) => {
     if (data) {
       handleListItemClick({ title: "Todos", items: data })
     }
-  }, [])
+  }, [data])
 
   useEffect(() => {
     let listLinks: MenuItemList[] = []
@@ -101,7 +101,7 @@ export const SearchArt = ({ params }: { params: { marca: string } }) => {
   }, [data, listCampaigns])
 
   const Items = searchResult? searchResult.map((item, index) => (
-    <Link href={`/detalhe-imagem/${marca}/${item.id}`} key={index}>
+    <Link href={`/detalhe-arte/${marca?.slug}/${item.id}`} key={index}>
       <div>
         <img
           src={item.images[0].url}

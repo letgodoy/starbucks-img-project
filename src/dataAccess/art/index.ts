@@ -60,8 +60,8 @@ export function useUpdateArt() {
   return useMutation(updateArt);
 }
 
-export function useGetArtByID() {
-  return useMutation(findArtByID);
+export function useGetArtByID(id: string) {
+  return useQuery("findArtByID", () => findArtByID(id));
 }
 
 export function useGetArts(marca: string) {
