@@ -1,6 +1,7 @@
 import { AlertContext, AuthContext, BrandContext, Layout } from "@components";
 import { uploadImage, useCreateArt, useGetCampaigns } from "@dataAccess";
 import { Box, Button, FileUploadInput, Grid, Loading, Select, TextInput, Typography } from "@elements";
+import { colors } from "@mui/material";
 import { IArt, ICampaign, IFileStorage, IStorageImage } from "@types";
 import { extractString } from "@utils";
 import React, { useContext, useState } from "react";
@@ -26,7 +27,7 @@ export const CadastroArte = ({ params }: { params: { marca: string } }) => {
     return listCampaignsSelect.push({ name: item.name, value: item.slug })
   })
 
-  const [files, setFiles] = useState<Array<any> | null>(null);
+  const [files, setFiles] = useState<Array<File> | null>(null);
   const [tags, setTags] = useState<Array<string>>([]);
   const [campaign, setCampaign] = useState<string>("");
   const [loadingFile, setLoadingFile] = useState<boolean>(false)
@@ -203,7 +204,25 @@ export const CadastroArte = ({ params }: { params: { marca: string } }) => {
               onChange={(event) => setCampaign(event.target.value as string)}
               listData={listCampaignsSelect}
             />
-            <FileUploadInput handleChange={handleImage} multiple={true} />
+            <FileUploadInput
+              onChange={(e) => {
+                const fileList = e.target.files;
+
+                if (!fileList) return;
+
+                setFiles(Array.from(fileList));
+              }}
+              multiple={true}
+            />
+
+            {
+              files && <div>
+                <ul style={{ listStyle: 'none', padding: '0' }}>
+                  {files.map((file) => <li style={{ width: '100%', padding: '8px 16px', border: `1px solid ${colors.grey[500]}`, borderRadius: 8, margin: '8px 0' }}><span>{file.name}</span></li>)}
+                </ul>
+              </div>
+            }
+
             {isLoading || loadingFile ? <Loading /> : <Button
               type="submit"
               fullWidth
