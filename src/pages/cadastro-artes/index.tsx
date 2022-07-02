@@ -36,6 +36,7 @@ export const CadastroArte = ({ params }: { params: { marca: string } }) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
     try {
       if (!marca) throw Error("Não foi possível selecionar a marca")
@@ -125,7 +126,12 @@ export const CadastroArte = ({ params }: { params: { marca: string } }) => {
           <Typography component="h1" variant="h5">
             Cadastro de arte
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ mt: 1 }}
+            noValidate
+          >
             <TextInput
               margin="normal"
               required
