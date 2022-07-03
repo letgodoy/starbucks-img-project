@@ -2,6 +2,7 @@ import { AlertContext, AuthContext, Layout } from "@components";
 import { useGetImageByID, useUpdateImage } from "@dataAccess";
 import { Attribute, Box, Button, Grid, Typography } from "@elements";
 import { IImage } from "@types";
+import { saveAs } from "file-saver";
 import { useContext } from "react";
 
 export const ImgDetail = ({ params }: { params: { id: string } }) => {
@@ -16,20 +17,10 @@ export const ImgDetail = ({ params }: { params: { id: string } }) => {
   const { mutateAsync, isLoading } = useUpdateImage()
 
   const downloadFile = async () => {
-    fetch(data?.mainImg.url, {
-      mode: 'no-cors',
-    })
-      .then(response => response.blob())
-      .then(blob => {
-        let blobUrl = window.URL.createObjectURL(blob);
-        let a = document.createElement('a');
-        a.download = data?.mainImg.ref;
-        a.href = blobUrl;
-        a.target = "_blank"
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-      })
+    saveAs(
+      data?.mainImg.url,
+      data?.mainImg.ref
+    )
   }
 
   const changeStatus = (e: any, status: string) => {
@@ -110,9 +101,7 @@ export const ImgDetail = ({ params }: { params: { id: string } }) => {
           <Attribute label="Validade" value={new Date(data?.validate).toLocaleString('pt-BR')} />
           {data?.approvedBy?.name ? <Attribute label="Aprovado por" value={data?.approvedBy?.name} /> : null}
           {data?.refusedBy?.name ? <Attribute label="Recusado por" value={data?.refusedBy?.name} /> : null}
-          {/* <a href={data?.mainImg.url} download={data?.name}> */}
-          <Button onClick={downloadFile} sx={{ marginY: 2 }}>Download</Button>
-          {/* </a> */}
+          <Button type="button" onClick={() => downloadFile()} sx={{ marginY: 2 }}>Download</Button>
         </Box>
       </Grid>
     </Grid>

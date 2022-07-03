@@ -14,6 +14,7 @@
     "axios": "^0.27.2",
     "craco": "^0.0.3",
     "downshift": "^6.1.7",
+    "file-saver": "^2.0.5",
     "firebase": "^9.6.3",
     "image-downloader": "^4.3.0",
     "react": "^18.0.0",
