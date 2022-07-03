@@ -98,6 +98,11 @@ export const SearchImages = ({ params }: { params: { marca: string } }) => {
         listLinks.push({ title: year, items: data.filter((item) => item.year === year) })
       });
 
+      listLinks.push({ title: "Avaliação", divider: true })
+      listLinks.push({ title: "Aprovadas", items: data.filter((item) => typeof item.refusedBy === 'string') })
+      listLinks.push({ title: "Reprovadas", items: data.filter((item) => typeof item.approvedBy === 'string') })
+      listLinks.push({ title: "Sem avaliação", items: data.filter((item) => !item.approvedBy || !item.refusedBy) })
+
       setSearchByList(listLinks)
     }
   }, [data, listProducts])

@@ -1,14 +1,13 @@
 import { BrandContext, Layout } from "@components";
-import { useGetArts, useGetCampaigns, useGetCategories, useGetProducts } from "@dataAccess";
+import { useGetArts, useGetCampaigns } from "@dataAccess";
 import { Box, Grid, Loading, TextInput, Typography } from "@elements";
+import SearchIcon from '@mui/icons-material/Search';
 import { Masonry } from "@mui/lab";
 import { Divider, IconButton, InputAdornment, List, ListItemButton, ListItemText, ListSubheader, Paper } from "@mui/material";
-import { ICategory, IArt, IProduct } from "@types";
+import { IArt, ICategory } from "@types";
+import { extractString } from "@utils";
 import { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { extractString } from "@utils";
-import SearchIcon from '@mui/icons-material/Search';
-import { cp } from "fs";
 
 interface MenuItemList {
   title: string,
@@ -96,11 +95,16 @@ export const SearchArt = ({ params }: { params: { marca: string } }) => {
         listLinks.push({ title: year, items: data.filter((item) => item.year === year) })
       });
 
+      listLinks.push({ title: "Avaliação", divider: true })
+      listLinks.push({ title: "Aprovadas", items: data.filter((item) => typeof item.refusedBy === 'string') })
+      listLinks.push({ title: "Reprovadas", items: data.filter((item) => typeof item.approvedBy === 'string') })
+      listLinks.push({ title: "Sem avaliação", items: data.filter((item) => !item.approvedBy || !item.refusedBy) })
+
       setSearchByList(listLinks)
     }
   }, [data, listCampaigns])
 
-  const Items = searchResult? searchResult.map((item, index) => (
+  const Items = searchResult ? searchResult.map((item, index) => (
     <Link href={`/detalhe-arte/${marca?.slug}/${item.id}`} key={index}>
       <div>
         <img
@@ -172,7 +176,7 @@ export const SearchArt = ({ params }: { params: { marca: string } }) => {
       </List>
     </Paper>
   }
-  
+
   return <Layout title="Busca de imagens" params={params} sx={{ paddingY: 3 }} width="100%">
     <Grid container marginY={2}>
       <Grid item xs={3}>
@@ -180,10 +184,10 @@ export const SearchArt = ({ params }: { params: { marca: string } }) => {
       </Grid>
       <Grid item xs={9}>
         <Grid container padding={2}>
-        {isLoading || searchResult.length < 1 ? <Loading /> :
-          <Masonry columns={3} spacing={2}>
-             {Items}
-          </Masonry>
+          {isLoading || searchResult.length < 1 ? <Loading /> :
+            <Masonry columns={3} spacing={2}>
+              {Items}
+            </Masonry>
           }
         </Grid>
       </Grid>
