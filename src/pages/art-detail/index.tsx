@@ -60,10 +60,6 @@ export const ArtDetail = ({ params }: { params: { id: string } }) => {
     })
   }
 
-  const NextArrow = (props: any) => {
-    return <ArrowForwardIosOutlinedIcon {...props} color="primary" fontSize="large" />
-  }
-
   const settings = {
     dots: true,
     infinite: true,
@@ -71,7 +67,8 @@ export const ArtDetail = ({ params }: { params: { id: string } }) => {
     slidesToShow: 1,
     slidesToScroll: 1,
     prevArrow: <ArrowBackIosOutlinedIcon color="primary" fontSize="medium" />,
-    nextArrow: <ArrowForwardIosOutlinedIcon color="primary" fontSize="medium" />
+    nextArrow: <ArrowForwardIosOutlinedIcon color="primary" fontSize="medium" />,
+    adaptiveHeight: true
   };
 
   return <Layout params={params}>
@@ -96,9 +93,6 @@ export const ArtDetail = ({ params }: { params: { id: string } }) => {
               })}
             </Slider>
           </Box>
-
-
-
         </Box>
       </Grid>
       <Grid item xs={5}>

@@ -98,8 +98,7 @@ export const CadastroArte = ({ params }: { params: { marca: string } }) => {
   }
 
   const handleSelecetedTags = (items: Array<string>) => {
-    // console.log(items);
-    // setTags(items)
+    setTags(items)
   }
 
   const handleImage = async (file: any) => {

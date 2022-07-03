@@ -68,6 +68,8 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
       upload.url = storageFile.url
       upload.ref = storageFile.fileName
 
+      console.log(tags)
+
       if (storageFile.url) {
         const image: IImage = {
           id: storageFile.fileName,
@@ -90,7 +92,6 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
         mutateAsync(image).then(res => {
           console.log(res)
           setOpenSuccess("Imagem salva com sucesso")
-          event.currentTarget.reset()
         }).catch(error => alert("erro: " + error))
       } else {
         setOpenError("Algo de errado aconteceu. Tente novamente")
@@ -100,8 +101,8 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
   }
 
   const handleSelecetedTags = (items: Array<string>) => {
-    console.log(items);
-    // setTags(items)
+    console.log("array", items)
+    setTags(items)
   }
 
   return <Layout params={params}>

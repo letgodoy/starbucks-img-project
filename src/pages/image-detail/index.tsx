@@ -54,7 +54,7 @@ export const ImgDetail = ({ params }: { params: { id: string } }) => {
       setOpenError("Erro ao salvar. Tente novamente.")
     })
   }
-
+  
   return <Layout params={params}>
     <Grid container sx={{ height: '100vh' }}>
       <Grid item xs={7}>

@@ -42,7 +42,6 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Selecione a marca",
     id: 3,
-    visibleMenu: true,
   },
   {
     path: "/cadastro-usuario",
@@ -128,7 +127,6 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "HUB",
     id: 14,
-    visibleMenu: true,
   },
   {
     path: "/busca-imagens/:marca",
