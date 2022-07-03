@@ -3,12 +3,12 @@ import { useGetCategories, useGetImages, useGetProducts } from "@dataAccess";
 import { Box, Grid, TextInput, Typography } from "@elements";
 import SearchIcon from '@mui/icons-material/Search';
 import { Masonry } from "@mui/lab";
-import { Divider, InputAdornment, List, ListItemButton, ListItemText, ListSubheader, Paper } from "@mui/material";
+import { Badge, Divider, InputAdornment, List, ListItemButton, ListItemText, ListSubheader, Paper } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import { ICategory, IImage, IProduct } from "@types";
+import { extractString } from "@utils";
 import { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { extractString } from "@utils";
 
 interface MenuItemList {
   title: string,
@@ -31,6 +31,8 @@ export const SearchImages = ({ params }: { params: { marca: string } }) => {
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null)
   const [searchResult, setSearchResult] = useState<IImage[]>([])
   const [searchByList, setSearchByList] = useState<MenuItemList[]>([])
+
+  const now = new Date().getTime()
 
   const handleListItemClick = ({ title, items }: Omit<MenuItemList, 'divider'>) => {
     if (items) {
@@ -70,7 +72,7 @@ export const SearchImages = ({ params }: { params: { marca: string } }) => {
   useEffect(() => {
     let listLinks: MenuItemList[] = []
 
-    const now = new Date().getTime()
+
 
     if (data) {
       listLinks.push({ title: "Todos", items: data })
@@ -107,23 +109,46 @@ export const SearchImages = ({ params }: { params: { marca: string } }) => {
     }
   }, [data, listProducts])
 
-  const Items = searchResult?.map((item, index) => (
-    <Link href={`/detalhe-imagem/${marca?.slug}/${item.id}`} key={index}>
+  const Items = searchResult?.map((item, index) => {
+
+    const Picture = ({ grayscale = false }) => <img
+      src={item.mainImg.url}
+      alt={item.mainImg.ref}
+      loading="lazy"
+      style={grayscale ? {
+        filter: "grayscale(100%)",
+        opacity: "0.5",
+        borderBottomLeftRadius: 4,
+        borderBottomRightRadius: 4,
+        display: 'block',
+        width: '100%',
+      } : {
+        borderBottomLeftRadius: 4,
+        borderBottomRightRadius: 4,
+        display: 'block',
+        width: '100%',
+      }}
+    />
+
+    return <Link href={`/detalhe-imagem/${marca?.slug}/${item.id}`} key={index}>
       <div>
-        <img
-          src={item.mainImg.url}
-          alt={item.mainImg.ref}
-          loading="lazy"
-          style={{
-            borderBottomLeftRadius: 4,
-            borderBottomRightRadius: 4,
-            display: 'block',
-            width: '100%',
-          }}
-        />
+        {new Date(item.validate).getTime() <= now ?
+          <Badge badgeContent={"Vencida"} color="warning" overlap="circular">
+            <Picture grayscale />
+          </Badge> :
+          typeof item.approvedBy === "string" ?
+            <Badge badgeContent={"Reprovada"} color="error" overlap="circular">
+              <Picture grayscale />
+            </Badge> :
+            !item.approvedBy ?
+              <Badge badgeContent={"N avaliada"} color="info" overlap="circular">
+                <Picture />
+              </Badge> :
+              <Picture />
+        }
       </div>
     </Link>
-  ))
+  })
 
   const SideList = () => {
     return <Paper elevation={3} sx={{ width: "100%", height: "100%", borderRadius: 2, padding: 2, background: "linear-gradient(142deg, #fefefe 0%, #f0f0f0 100%)" }}>

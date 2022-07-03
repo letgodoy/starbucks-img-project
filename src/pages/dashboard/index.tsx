@@ -1,10 +1,11 @@
 import { BrandContext, Layout } from "@components";
-import { useGetImages } from "@dataAccess";
+import { useGetArts, useGetImages } from "@dataAccess";
 import { Box, DataCard } from "@elements";
 import BackupTableIcon from '@mui/icons-material/BackupTable';
 import CropOriginalIcon from '@mui/icons-material/CropOriginal';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import { Masonry } from "@mui/lab";
+import { Badge } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "wouter";
 
@@ -12,60 +13,92 @@ export const Dashboard = ({ params }: { params: { marca: string } }) => {
 
   const marca = useContext(BrandContext)?.selectedBrand?.slug || params.marca
 
-  const { data } = useGetImages(marca)
+  const { data: images } = useGetImages(marca)
+  const { data: arts } = useGetArts(marca)
 
-  const now = new Date()
+  const now = new Date().getTime()
 
   const [unavaliableImg, setUnavaliableImg] = useState(0)
   const [invalidImg, setInvalidImg] = useState(0)
+  const [unavaliableArt, setUnavaliableArt] = useState(0)
 
   useEffect(() => {
-    let countUnavabile = 0
+    let countUnavabileImg = 0
     let countInvalid = 0
+    let countUnavabileArts = 0
 
-    data?.forEach(element => {
-      if (!element.approvedBy) {
-        countUnavabile++
+    images?.forEach(element => {
+      if (!element.approvedBy && new Date(element.validate).getTime() > now) {
+        countUnavabileImg++
       }
 
       if (element.validate) {
         const validade = new Date(element.validate).getTime()
 
-        if (validade < now.getTime()) {
+        if (validade <= now) {
           countInvalid++
         }
       }
     });
 
-    setUnavaliableImg(countUnavabile)
+    arts?.forEach(element => {
+      if (!element.approvedBy) {
+        countUnavabileArts++
+      }
+    });
+
+    setUnavaliableImg(countUnavabileImg)
     setInvalidImg(countInvalid)
+    setUnavaliableArt(countUnavabileArts)
 
-  }, [data])
+  }, [images])
 
-  const Items = data?.map((item, index) => (
-    <Link href={`/detalhe-imagem/${marca}/${item.id}`} key={index}>
+  const Items = images?.map((item, index) => {
+
+    const Picture = ({ grayscale = false }) => <img
+      src={item.mainImg.url}
+      alt={item.mainImg.ref}
+      loading="lazy"
+      style={grayscale ? {
+        filter: "grayscale(100%)",
+        opacity: "0.5",
+        borderBottomLeftRadius: 4,
+        borderBottomRightRadius: 4,
+        display: 'block',
+        width: '100%',
+      } : {
+        borderBottomLeftRadius: 4,
+        borderBottomRightRadius: 4,
+        display: 'block',
+        width: '100%',
+      }}
+    />
+
+    return <Link href={`/detalhe-imagem/${marca}/${item.id}`} key={index}>
       <div>
-        <img
-          src={item.mainImg.url}
-          alt={item.mainImg.ref}
-          loading="lazy"
-          style={{
-            borderBottomLeftRadius: 4,
-            borderBottomRightRadius: 4,
-            display: 'block',
-            width: '100%',
-          }}
-        />
+        {new Date(item.validate).getTime() <= now ?
+          <Badge badgeContent={"Vencida"} color="warning" overlap="circular">
+            <Picture grayscale />
+          </Badge> :
+          typeof item.approvedBy === "string" ?
+            <Badge badgeContent={"Reprovada"} color="error" overlap="circular">
+              <Picture grayscale />
+            </Badge> :
+            !item.approvedBy ?
+              <Badge badgeContent={"N avaliada"} color="info" overlap="circular">
+                <Picture />
+              </Badge> :
+              <Picture />
+        }
       </div>
     </Link>
-
-  ))
+  })
 
   return <Layout title="Inicio" params={params} sx={{ paddingY: 3 }}>
     <Box width={"100%"} display="flex" flexDirection={"row"} flexWrap="wrap">
       <DataCard
         title="Total de imagens"
-        count={data?.length || 0}
+        count={images?.length || 0}
         percentage={[{
           amount: unavaliableImg,
           label: "Imagens sem avaliação"
@@ -79,16 +112,16 @@ export const Dashboard = ({ params }: { params: { marca: string } }) => {
       />
       <DataCard
         title="Total de artes"
-        count={data?.length || 0}
+        count={arts?.length || 0}
         percentage={[{
-          amount: 123,
+          amount: unavaliableArt,
           label: "Artes sem avaliação"
         }]}
         icon={<BackupTableIcon fontSize="large" />}
       />
       <DataCard
         title="Pedidos"
-        count={data?.length || 0}
+        count={0}
         percentage={[{
           amount: 123,
           label: "Pedidos sem aprovação"

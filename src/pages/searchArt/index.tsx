@@ -3,7 +3,7 @@ import { useGetArts, useGetCampaigns } from "@dataAccess";
 import { Box, Grid, Loading, TextInput, Typography } from "@elements";
 import SearchIcon from '@mui/icons-material/Search';
 import { Masonry } from "@mui/lab";
-import { Divider, IconButton, InputAdornment, List, ListItemButton, ListItemText, ListSubheader, Paper } from "@mui/material";
+import { Badge, Divider, IconButton, InputAdornment, List, ListItemButton, ListItemText, ListSubheader, Paper } from "@mui/material";
 import { IArt, ICategory } from "@types";
 import { extractString } from "@utils";
 import { useContext, useEffect, useState } from "react";
@@ -104,23 +104,42 @@ export const SearchArt = ({ params }: { params: { marca: string } }) => {
     }
   }, [data, listCampaigns])
 
-  const Items = searchResult ? searchResult.map((item, index) => (
-    <Link href={`/detalhe-arte/${marca?.slug}/${item.id}`} key={index}>
+  const Items = searchResult?.map((item, index) => {
+
+    const Picture = ({ grayscale = false }) => <img
+      src={item.images[0].url}
+      alt={item.images[0].ref}
+      loading="lazy"
+      style={grayscale ? {
+        filter: "grayscale(100%)",
+        opacity: "0.5",
+        borderBottomLeftRadius: 4,
+        borderBottomRightRadius: 4,
+        display: 'block',
+        width: '100%',
+      } : {
+        borderBottomLeftRadius: 4,
+        borderBottomRightRadius: 4,
+        display: 'block',
+        width: '100%',
+      }}
+    />
+
+    return <Link href={`/detalhe-arte/${marca?.slug}/${item.id}`} key={index}>
       <div>
-        <img
-          src={item.images[0].url}
-          alt={item.images[0].ref}
-          loading="lazy"
-          style={{
-            borderBottomLeftRadius: 4,
-            borderBottomRightRadius: 4,
-            display: 'block',
-            width: '100%',
-          }}
-        />
+        {typeof item.approvedBy === "string" ?
+          <Badge badgeContent={"Reprovada"} color="error" overlap="circular">
+            <Picture grayscale />
+          </Badge> :
+          !item.approvedBy ?
+            <Badge badgeContent={"N avaliada"} color="info" overlap="circular">
+              <Picture />
+            </Badge> :
+            <Picture />
+        }
       </div>
     </Link>
-  )) : <Loading />
+  })
 
   const SideList = () => {
     return <Paper elevation={3} sx={{ width: "100%", height: "100%", borderRadius: 2, padding: 2, background: "linear-gradient(142deg, #fefefe 0%, #f0f0f0 100%)" }}>
