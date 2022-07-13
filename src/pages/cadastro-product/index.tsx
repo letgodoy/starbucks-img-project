@@ -1,11 +1,11 @@
 import { AlertContext, AuthContext, BrandContext, Layout } from "@components";
-import { useCreateCategory, useCreateProduct } from "@dataAccess";
+import { useCreateProduct } from "@dataAccess";
 import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
-import { ICategory, IProduct } from "@types";
+import { IProduct } from "@types";
 import { extractString } from "@utils";
 import React, { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Slugify from "slugify";
-import { useLocation } from "wouter";
 
 export const CadastroProduto = ({ params }: { params: { marca: string } }) => {
 
@@ -13,10 +13,10 @@ export const CadastroProduto = ({ params }: { params: { marca: string } }) => {
 
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
-  const [location, setLocation] = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (!marca) setLocation("/marcas")
+    if (!marca) navigate("/marcas")
   }, [])
 
   const { mutateAsync, isLoading } = useCreateProduct();

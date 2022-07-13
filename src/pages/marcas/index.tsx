@@ -6,20 +6,20 @@ import { List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { IBrand } from "@types";
 import { useContext } from "react";
-import { useLocation } from "wouter";
+import { useNavigate } from "react-router-dom";
 
 export const Marcas = () => {
 
   const { setBrand } = useContext(BrandContext)
 
-  const [location, setLocation] = useLocation()
+  const navigate = useNavigate();
 
   const { data } = useGetBrands()
 
   const handleSelectBrand = (marca: IBrand) => {
 
     setBrand(marca)
-    setLocation("/home/" + marca.slug)
+    navigate("/home/" + marca.slug)
 
   }
 

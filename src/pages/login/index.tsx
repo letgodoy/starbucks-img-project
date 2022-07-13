@@ -6,10 +6,10 @@ import { Box, Button, Grid, TextInput } from "@elements";
 import { IAgency, ICredentials, IStore, IUser } from "@types";
 import { extractString } from "@utils";
 import React, { useContext } from "react";
-import { useLocation } from "wouter";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
-    const [location, setLocation] = useLocation();
+    const navigate = useNavigate();
 
     const { mutateAsync, isLoading } = useLogIn();
 
@@ -51,7 +51,7 @@ export const Login = () => {
 
                 setOpenSuccess(`Bem vindo ${userFind.name}`);
             });
-            setLocation("/hub")
+            navigate("/hub")
         })
 
     }
@@ -132,8 +132,5 @@ export const Login = () => {
             </Box>
         </Grid>
     </Grid>
-}
-function setToken(stsTokenManager: any) {
-    throw new Error("Function not implemented.");
 }
 

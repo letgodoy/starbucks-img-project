@@ -5,7 +5,7 @@ import { colors } from "@mui/material";
 import { ICategory, IFileStorage, IImage, IProduct } from "@types";
 import { extractString } from "@utils";
 import React, { useContext, useState } from "react";
-import { useLocation } from "wouter";
+import { useNavigate } from "react-router-dom";
 import { TagsInput } from "../../elements/tagInput";
 
 export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
@@ -14,9 +14,9 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
   const { user } = useContext(AuthContext)
 
-  const [location, setLocation] = useLocation();
+  const navigate = useNavigate();
 
-  if (!marca) setLocation("/marcas")
+  if (!marca) navigate("/marcas")
 
   const { data: listCategories } = useGetCategories(marca?.slug || "")
   const { data: listProducts } = useGetProducts(marca?.slug || "")
@@ -32,7 +32,6 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
   listProducts?.map((item: IProduct) => {
     return listProductsSelect.push({ name: item.name, value: item.slug })
   })
-  console.log(listProducts)
 
   const [file, setFile] = useState<File | null>(null);
   const [tags, setTags] = useState<Array<string>>([]);
@@ -67,8 +66,6 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
 
       upload.url = storageFile.url
       upload.ref = storageFile.fileName
-
-      console.log(tags)
 
       if (storageFile.url) {
         const image: IImage = {
@@ -180,7 +177,7 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
               autoFocus
             />
             <TagsInput
-              selectedTags={(e) => handleSelecetedTags(e)}
+              selectedTags={handleSelecetedTags}
               fullWidth
               variant="outlined"
               id="tags"

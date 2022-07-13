@@ -7,7 +7,8 @@ import { Badge, Divider, IconButton, InputAdornment, List, ListItemButton, ListI
 import { IArt, ICategory } from "@types";
 import { extractString } from "@utils";
 import { useContext, useEffect, useState } from "react";
-import { Link, useLocation } from "wouter";
+import { useNavigate } from "react-router-dom";
+import { Link } from "wouter";
 
 interface MenuItemList {
   title: string,
@@ -18,9 +19,9 @@ interface MenuItemList {
 export const SearchArt = ({ params }: { params: { marca: string } }) => {
 
   const { selectedBrand: marca } = useContext(BrandContext)
-  const [location, setLocation] = useLocation();
+  const navigate = useNavigate();
 
-  if (!marca) setLocation("/marcas")
+  if (!marca) navigate("/marcas")
 
   const { data, isLoading } = useGetArts(marca?.slug || "")
 

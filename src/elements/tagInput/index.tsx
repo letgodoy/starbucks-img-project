@@ -12,20 +12,20 @@ export const TagsInput: FC<TextFieldProps & {
   const { selectedTags, placeholder, tags, ...other } = props;
 
   const [inputValue, setInputValue] = useState("");
-  const [selectedItem, setSelectedItem] = useState<Array<string>>([]);
+  const [selectedItem, setSelectedItem] = useState<Array<string>>(tags);
 
-  useEffect(() => {
-    setSelectedItem(tags);
-  }, [tags]);
+  // useEffect(() => {
+  //   setSelectedItem(tags);
+  // }, [tags]);
 
   useEffect(() => {
     selectedTags(selectedItem);
   }, [selectedItem, selectedTags]);
 
   const handleKeyDown = (event: any) => {
+    event.preventDefault()
     if (event.key === "Enter") {
       event.preventDefault()
-      console.log('funcionou');
 
       const newSelectedItem = [...selectedItem];
       const duplicatedValues = newSelectedItem.indexOf(
@@ -47,6 +47,7 @@ export const TagsInput: FC<TextFieldProps & {
       !inputValue.length &&
       event.key === "Backspace"
     ) {
+      event.preventDefault()
       setSelectedItem(selectedItem.slice(0, selectedItem.length - 1));
     }
   }
@@ -67,6 +68,7 @@ export const TagsInput: FC<TextFieldProps & {
   };
 
   const handleInputChange = (event: any) => {
+    event.preventDefault()
     setInputValue(event.target.value);
   }
 

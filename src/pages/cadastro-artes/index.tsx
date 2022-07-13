@@ -5,8 +5,8 @@ import { colors } from "@mui/material";
 import { IArt, ICampaign, IFileStorage, IStorageImage } from "@types";
 import { extractString } from "@utils";
 import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Slugify from "slugify";
-import { useLocation } from "wouter";
 import { TagsInput } from "../../elements/tagInput";
 
 export const CadastroArte = ({ params }: { params: { marca: string } }) => {
@@ -15,9 +15,9 @@ export const CadastroArte = ({ params }: { params: { marca: string } }) => {
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
   const { user } = useContext(AuthContext)
 
-  const [location, setLocation] = useLocation();
+  const navigate = useNavigate();
 
-  if (!marca) setLocation("/marcas")
+  if (!marca) navigate("/marcas")
 
   const { data: listCampaigns } = useGetCampaigns(marca?.slug || "")
 
@@ -188,7 +188,7 @@ export const CadastroArte = ({ params }: { params: { marca: string } }) => {
               required
             />
             <TagsInput
-              selectedTags={(e) => handleSelecetedTags(e)}
+              selectedTags={handleSelecetedTags}
               fullWidth
               variant="outlined"
               id="tags"

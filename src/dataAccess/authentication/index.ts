@@ -9,7 +9,7 @@ import { auth } from "@utils";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useContext } from "react";
 import { useMutation } from "react-query";
-import { useLocation } from "wouter";
+import { useNavigate } from "react-router-dom";
 
 const logIn = async ({ email, password }: ICredentials) => {
   return await signInWithEmailAndPassword(auth, email, password)
@@ -86,20 +86,20 @@ const sendEmailPassword = async ({ email }: { email: string }) =>
 //     });
 
 export const requireAuth = ({ isPublic, component }: RoutesList) => {
-  const [location, setLocation] = useLocation();
+  const navigate = useNavigate();
   const authContext = useContext(AuthContext);
 
-  if (
-    location === "/login" &&
-    authContext.token.accessToken &&
-    !authContext.token.isExpired &&
-    authContext.user.role !== ""
-  ) {
-    setLocation("/marcas");
-  }
+  // if (
+  //   location === "/login" &&
+  //   authContext.token.accessToken &&
+  //   !authContext.token.isExpired &&
+  //   authContext.user.role !== ""
+  // ) {
+  //   navigate("/marcas");
+  // }
 
   if (isPublic === false && authContext.token.accessToken === "") {
-    setLocation("/login");
+    navigate("/login");
   }
 
   if (isPublic) {

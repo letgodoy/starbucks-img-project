@@ -1,6 +1,6 @@
+import Background from "@assets/img_southrock_6.png";
 import Logo from "@assets/southrock_preto_1.png";
 import { Box, Button, Grid, Typography } from "@elements";
-import Background from "@assets/img_southrock_6.png"
 
 export const Error404 = () => {
 

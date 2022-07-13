@@ -4,8 +4,8 @@ import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
 import { ICategory } from "@types";
 import { extractString } from "@utils";
 import React, { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Slugify from "slugify";
-import { useLocation } from "wouter";
 
 export const CadastroCategoria = ({ params }: { params: { marca: string } }) => {
 
@@ -13,10 +13,10 @@ export const CadastroCategoria = ({ params }: { params: { marca: string } }) => 
 
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
-  const [location, setLocation] = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (!marca) setLocation("/marcas")
+    if (!marca) navigate("/marcas")
   }, [])
 
   const { mutateAsync, isLoading } = useCreateCategory();

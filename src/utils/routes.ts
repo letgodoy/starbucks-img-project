@@ -11,13 +11,13 @@ import {
   CadastroProduto,
   CadastroUser,
   Dashboard,
-  Error404,
   Hub,
   ImgDetail,
   Login,
   Marcas,
   SearchArt,
   SearchImages,
+  Error404
 } from "@pages";
 import { RoutesList } from "@types";
 
