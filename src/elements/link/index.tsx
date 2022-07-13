@@ -1,7 +1,7 @@
 import UIComponent, { LinkProps } from '@mui/material/Link';
 import { FC } from "react";
-import { Link as WouterLink, LinkProps as LinkPropsWouter } from "wouter";
+import { Link as RouterLink, LinkProps as LinkPropsRouter } from "react-router-dom";
 
-export const Link: FC<LinkProps & LinkPropsWouter> = (props) => {
-  return <WouterLink {...props}><UIComponent {...props} sx={{ textDecoration: "none" }}/></WouterLink>
+export const Link: FC<LinkProps & LinkPropsRouter> = (props) => {
+  return <RouterLink {...props}><UIComponent {...props} sx={{ textDecoration: "none" }}/></RouterLink>
 }

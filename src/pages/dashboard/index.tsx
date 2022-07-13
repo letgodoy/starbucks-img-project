@@ -7,7 +7,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import { Masonry } from "@mui/lab";
 import { Badge } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 
 export const Dashboard = ({ params }: { params: { marca: string } }) => {
 
@@ -74,7 +74,7 @@ export const Dashboard = ({ params }: { params: { marca: string } }) => {
       }}
     />
 
-    return <Link href={`/detalhe-imagem/${marca}/${item.id}`} key={index}>
+    return <Link to={`/detalhe-imagem/${marca}/${item.id}`} key={index}>
       <div>
         {new Date(item.validate).getTime() <= now ?
           <Badge badgeContent={"Vencida"} color="warning" overlap="circular">

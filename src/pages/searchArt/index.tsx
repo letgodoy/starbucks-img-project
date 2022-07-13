@@ -7,8 +7,7 @@ import { Badge, Divider, IconButton, InputAdornment, List, ListItemButton, ListI
 import { IArt, ICategory } from "@types";
 import { extractString } from "@utils";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "wouter";
+import { Link, useNavigate } from "react-router-dom";
 
 interface MenuItemList {
   title: string,
@@ -126,7 +125,7 @@ export const SearchArt = ({ params }: { params: { marca: string } }) => {
       }}
     />
 
-    return <Link href={`/detalhe-arte/${marca?.slug}/${item.id}`} key={index}>
+    return <Link to={`/detalhe-arte/${marca?.slug}/${item.id}`} key={index}>
       <div>
         {typeof item.approvedBy === "string" ?
           <Badge badgeContent={"Reprovada"} color="error" overlap="circular">
