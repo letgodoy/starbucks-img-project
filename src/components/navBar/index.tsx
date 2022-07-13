@@ -9,7 +9,7 @@ export const NavBar = ({ params }: { params?: { marca?: string, campanha?: strin
 
   const context = useContext(AuthContext)
 
-  let { pathname: location } = useLocation();
+  const { pathname: location } = useLocation();
 
   const breadcrumbs = location.split("/").map((path, key) => {
     return path && <Typography key={key} color="text.primary">

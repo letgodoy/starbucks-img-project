@@ -6,7 +6,7 @@ import { Masonry } from "@mui/lab";
 import { Badge, Divider, InputAdornment, List, ListItemButton, ListItemText, ListSubheader, Paper } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import { ICategory, IImage, IProduct } from "@types";
-import { extractString } from "@utils";
+import { extractString, verifyBrand } from "@utils";
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -16,9 +16,12 @@ interface MenuItemList {
   divider?: boolean
 }
 
-export const SearchImages = ({ params }: { params: { marca: string } }) => {
+export const SearchImages = () => {
 
   const { selectedBrand: marca } = useContext(BrandContext)
+
+  verifyBrand()
+  
   const navigate = useNavigate();
 
   if (!marca) navigate("/marcas")
@@ -205,7 +208,7 @@ export const SearchImages = ({ params }: { params: { marca: string } }) => {
     </Paper>
   }
 
-  return <Layout title="Busca de imagens" params={params} sx={{ paddingY: 3 }} width="100%">
+  return <Layout title="Busca de imagens" sx={{ paddingY: 3 }} width="100%">
     <Grid container marginY={2}>
       <Grid item xs={3}>
         <SideList />

@@ -5,18 +5,22 @@ import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import { IArt } from "@types";
 import { useContext } from "react";
+import { useParams } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
+import { verifyBrand } from "../../utils";
 
-export const ArtDetail = ({ params }: { params: { id: string } }) => {
+export const ArtDetail = () => {
 
-  const { id } = params
+  verifyBrand()
+  
+  const { id } = useParams();
 
   const loggedUser = useContext(AuthContext)
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
-  const { data } = useGetArtByID(id)
+  const { data } = useGetArtByID(id || "")
 
   const { mutateAsync, isLoading } = useUpdateArt()
 
@@ -71,7 +75,7 @@ export const ArtDetail = ({ params }: { params: { id: string } }) => {
     adaptiveHeight: true
   };
 
-  return <Layout params={params}>
+  return <Layout>
     <Grid container sx={{ height: '100vh' }}>
       <Grid item xs={7}>
         <Box

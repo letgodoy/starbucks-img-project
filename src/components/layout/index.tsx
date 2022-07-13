@@ -5,7 +5,7 @@ import { AlertContext } from "../contexts/alerts";
 import { NavBar } from "../navBar";
 import { SideMenu } from "../sideMenu";
 
-export const Layout = ({ children, params }: any) => {
+export const Layout = ({ children }: any) => {
 
   const { openError, openInfo, openWarning, openSuccess, setOpenError, setOpenInfo, setOpenSuccess, setOpenWarning } = useContext(AlertContext)
 
@@ -16,7 +16,7 @@ export const Layout = ({ children, params }: any) => {
 
   return <Grid container spacing={3} maxHeight="100vh">
     <Grid item xs={3} maxHeight="100vh">
-      <SideMenu params={params} />
+      <SideMenu />
     </Grid>
     <Grid item xs={9}>
       <Grid container>

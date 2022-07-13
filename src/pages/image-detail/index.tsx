@@ -3,15 +3,19 @@ import { useGetImageByID, useUpdateImage } from "@dataAccess";
 import { Attribute, Box, Button, Grid, Typography } from "@elements";
 import { IImage } from "@types";
 import { useContext } from "react";
+import { useParams } from "react-router-dom";
+import { verifyBrand } from "../../utils";
 
-export const ImgDetail = ({ params }: { params: { id: string } }) => {
+export const ImgDetail = () => {
 
-  const { id } = params
+  verifyBrand()
+  
+  const { id } = useParams()
 
   const loggedUser = useContext(AuthContext)
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
-  const { data } = useGetImageByID(id)
+  const { data } = useGetImageByID(id || "")
 
   const { mutateAsync, isLoading } = useUpdateImage()
 
@@ -54,8 +58,8 @@ export const ImgDetail = ({ params }: { params: { id: string } }) => {
       setOpenError("Erro ao salvar. Tente novamente.")
     })
   }
-  
-  return <Layout params={params}>
+
+  return <Layout>
     <Grid container sx={{ height: '100vh' }}>
       <Grid item xs={7}>
         <Box

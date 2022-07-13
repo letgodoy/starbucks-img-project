@@ -3,15 +3,18 @@ import { uploadImage, useCreateArt, useGetCampaigns } from "@dataAccess";
 import { Box, Button, FileUploadInput, Grid, Loading, Select, TextInput, Typography } from "@elements";
 import { colors } from "@mui/material";
 import { IArt, ICampaign, IFileStorage, IStorageImage } from "@types";
-import { extractString } from "@utils";
+import { extractString, verifyBrand } from "@utils";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Slugify from "slugify";
 import { TagsInput } from "../../elements/tagInput";
 
-export const CadastroArte = ({ params }: { params: { marca: string } }) => {
+export const CadastroArte = () => {
 
   const { selectedBrand: marca } = useContext(BrandContext)
+
+  verifyBrand()
+  
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
   const { user } = useContext(AuthContext)
 
@@ -105,7 +108,7 @@ export const CadastroArte = ({ params }: { params: { marca: string } }) => {
     setFiles(Object.values(file))
   };
 
-  return <Layout params={params}>
+  return <Layout>
     <Grid container sx={{ height: '100vh' }}>
       <Grid item xs={12}>
         <Box

@@ -8,10 +8,13 @@ import { Masonry } from "@mui/lab";
 import { Badge } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { verifyBrand } from "../../utils";
 
-export const Dashboard = ({ params }: { params: { marca: string } }) => {
+export const Dashboard = () => {
 
-  const marca = useContext(BrandContext)?.selectedBrand?.slug || params.marca
+  const marca = useContext(BrandContext)?.selectedBrand?.slug || ""
+
+  verifyBrand()
 
   const { data: images } = useGetImages(marca)
   const { data: arts } = useGetArts(marca)
@@ -94,7 +97,7 @@ export const Dashboard = ({ params }: { params: { marca: string } }) => {
     </Link>
   })
 
-  return <Layout title="Inicio" params={params} sx={{ paddingY: 3 }}>
+  return <Layout title="Inicio" sx={{ paddingY: 3 }}>
     <Box width={"100%"} display="flex" flexDirection={"row"} flexWrap="wrap">
       <DataCard
         title="Total de imagens"

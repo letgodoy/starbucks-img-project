@@ -3,14 +3,17 @@ import { uploadImage, useCreateImage, useGetCategories, useGetProducts } from "@
 import { Box, Button, FileUploadInput, Grid, Loading, Select, TextInput, Typography } from "@elements";
 import { colors } from "@mui/material";
 import { ICategory, IFileStorage, IImage, IProduct } from "@types";
-import { extractString } from "@utils";
+import { extractString, verifyBrand } from "@utils";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TagsInput } from "../../elements/tagInput";
 
-export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
+export const CadastroImagens = () => {
 
   const { selectedBrand: marca } = useContext(BrandContext)
+
+  verifyBrand()
+  
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
   const { user } = useContext(AuthContext)
 
@@ -102,7 +105,7 @@ export const CadastroImagens = ({ params }: { params: { marca: string } }) => {
     setTags(items)
   }
 
-  return <Layout params={params}>
+  return <Layout>
     <Grid container sx={{ height: '100vh' }}>
       <Grid item xs={12}>
         <Box

@@ -6,13 +6,11 @@ import { routes } from "@utils";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const SideMenu = ({ params }: { params?: { campanha: string } }) => {
+export const SideMenu = () => {
 
   const { selectedBrand } = useContext(BrandContext)
 
   const marca = selectedBrand?.slug || "";
-
-  const { campanha } = params || { campanha: "" }
 
   const darkMode = true
 
@@ -33,7 +31,7 @@ export const SideMenu = ({ params }: { params?: { campanha: string } }) => {
 
     if (!visibleMenu) return null
 
-    const redirect = path.replace(":marca", marca).replace(":campanha", campanha)
+    const redirect = path.replace(":marca", marca)
 
     return <ListItemButton
       key={id}

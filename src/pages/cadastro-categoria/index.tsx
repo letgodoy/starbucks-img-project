@@ -2,14 +2,16 @@ import { AlertContext, AuthContext, BrandContext, Layout } from "@components";
 import { useCreateCategory } from "@dataAccess";
 import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
 import { ICategory } from "@types";
-import { extractString } from "@utils";
+import { extractString, verifyBrand } from "@utils";
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Slugify from "slugify";
 
-export const CadastroCategoria = ({ params }: { params: { marca: string } }) => {
+export const CadastroCategoria = () => {
 
   const { selectedBrand: marca } = useContext(BrandContext);
+
+  verifyBrand()
 
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
@@ -48,7 +50,7 @@ export const CadastroCategoria = ({ params }: { params: { marca: string } }) => 
     })
   }
 
-  return <Layout params={params}>
+  return <Layout>
     <Grid container>
       <Grid item xs={12}>
         <Box

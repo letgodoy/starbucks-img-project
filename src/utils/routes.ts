@@ -20,6 +20,9 @@ import {
   Error404
 } from "@pages";
 import { RoutesList } from "@types";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { BrandContext } from "../components";
 
 export const routes: RoutesList[] = [
   {
@@ -168,3 +171,13 @@ export const routes: RoutesList[] = [
     id: 19,
   },
 ];
+
+export const verifyBrand = () => {
+
+  const marca = useContext(BrandContext)?.selectedBrand?.slug
+  const navigate = useNavigate();
+
+  if (!marca) {
+    navigate("/marcas")
+  }
+}

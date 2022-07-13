@@ -1,6 +1,6 @@
 import { routes } from '@utils';
 import { ReactElement } from 'react';
-import { Route, RouteProps, Routes } from 'react-router-dom';
+import { Route, RouteProps, Routes, useLocation } from 'react-router-dom';
 import { ArtDetail, CadastroAgencia, CadastroArte, CadastroCampanha, CadastroCategoria, CadastroFotografo, CadastroImagens, CadastroLoja, CadastroMarca, CadastroProduto, CadastroUser, Dashboard, Error404, Hub, ImgDetail, Login, Marcas, SearchArt, SearchImages } from '../../pages';
 
 const getRouters = (): ReactElement<RouteProps>[] => {
@@ -41,6 +41,9 @@ const getRouters = (): ReactElement<RouteProps>[] => {
 }
 
 export const RouterContext = () => {
+
+  const { pathname: location } = useLocation();
+
   return <Routes>
     <Route path="/" element={<Error404 />} />
     <Route path="/login" element={<Login />} />
@@ -49,38 +52,18 @@ export const RouterContext = () => {
     <Route path="/cadastro-marcas" element={<CadastroMarca />} />
     <Route path="/cadastro-lojas" element={<CadastroLoja />} />
     <Route path="/cadastro-agencia" element={<CadastroAgencia />} />
-    <Route path="/home/:marca" element={<Dashboard params={{
-      marca: ''
-    }} />} />
-    <Route path="/cadastro-campanha/:marca" element={<CadastroCampanha params={{
-      marca: ''
-    }} />} />
-    <Route path="/cadastro-arte/:marca" element={<CadastroArte params={{
-      marca: ''
-    }} />} />
+    <Route path="/home/:marca" element={<Dashboard />} />
+    <Route path="/cadastro-campanha/:marca" element={<CadastroCampanha />} />
+    <Route path="/cadastro-arte/:marca" element={<CadastroArte />} />
     <Route path="/cadastro-fotografo" element={<CadastroFotografo />} />
-    <Route path="/cadastro-imagem/:marca" element={<CadastroImagens params={{
-      marca: ''
-    }} />} />
-    <Route path="/detalhe-imagem/:marca/:id" element={<ImgDetail params={{
-      id: ''
-    }} />} />
+    <Route path="/cadastro-imagem/:marca" element={<CadastroImagens />} />
+    <Route path="/detalhe-imagem/:marca/:id" element={<ImgDetail />} />
     <Route path="/hub" element={<Hub />} />
-    <Route path="/busca-imagens/:marca" element={<SearchImages params={{
-      marca: ''
-    }} />} />
-    <Route path="/cadastro-categoria/:marca" element={<CadastroCategoria params={{
-      marca: ''
-    }} />} />
-    <Route path="/cadastro-produto/:marca" element={<CadastroProduto params={{
-      marca: ''
-    }} />} />
-    <Route path="/busca-artes/:marca" element={<SearchArt params={{
-      marca: ''
-    }} />} />
-    <Route path="/detalhe-arte/:marca/:id" element={<ArtDetail params={{
-      id: ''
-    }} />} />
+    <Route path="/busca-imagens/:marca" element={<SearchImages />} />
+    <Route path="/cadastro-categoria/:marca" element={<CadastroCategoria />} />
+    <Route path="/cadastro-produto/:marca" element={<CadastroProduto />} />
+    <Route path="/busca-artes/:marca" element={<SearchArt />} />
+    <Route path="/detalhe-arte/:marca/:id" element={<ArtDetail />} />
   </Routes>
 }
 
