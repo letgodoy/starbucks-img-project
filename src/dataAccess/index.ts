@@ -10,3 +10,4 @@ export * from "./marca";
 export * from "./product";
 export * from "./storage-image";
 export * from "./user";
+export * from "./event";

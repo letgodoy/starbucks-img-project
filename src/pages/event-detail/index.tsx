@@ -1,8 +1,9 @@
 import { AlertContext, AuthContext, Layout } from "@components";
-import { useGetArtByID, useUpdateArt } from "@dataAccess";
+import { useGetEventByID, useUpdateEvent } from "@dataAccess";
 import { Attribute, Box, Button, Grid, Typography } from "@elements";
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
+import { Masonry } from "@mui/lab";
 import { IArt } from "@types";
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
@@ -11,18 +12,18 @@ import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import { verifyBrand } from "../../utils";
 
-export const ArtDetail = () => {
+export const EventDetail = () => {
 
   verifyBrand()
-  
+
   const { id } = useParams();
 
   const loggedUser = useContext(AuthContext)
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
-  const { data } = useGetArtByID(id || "")
+  const { data } = useGetEventByID(id || "")
 
-  const { mutateAsync, isLoading } = useUpdateArt()
+  const { mutateAsync, isLoading } = useUpdateEvent()
 
   const downloadFile = async () => {
     fetch(data?.images[0].url, {
@@ -91,11 +92,11 @@ export const ArtDetail = () => {
             {data?.name}
           </Typography>
           <Box width={"100%"} color="black" style={{ color: "black !important" }}>
-            <Slider {...settings}>
+            <Masonry columns={2} spacing={1}>
               {data?.images?.map((img: any, i: any) => {
                 return <Box key={i} component="img" src={img.url} alt={img.ref} width="100%" marginY={4} />
               })}
-            </Slider>
+            </Masonry>
           </Box>
         </Box>
       </Grid>
@@ -123,13 +124,9 @@ export const ArtDetail = () => {
             </Box>
           }
           <Attribute label="Nome" value={data?.name} />
-          <Attribute label="Observação" value={data?.observation} />
-          <Attribute label="Tipo" value={data?.type} />
+          <Attribute label="Descrição" value={data?.description} />
           <Attribute label="Ano" value={data?.year} />
-          <Attribute label="Especificação" value={data?.specification} />
           <Attribute label="Tags" value={data?.tags} />
-          <Attribute label="Formato" value={data?.format} />
-          <Attribute label="Campanha" value={data?.campaign.name} />
           <Attribute label="Data do carregamento" value={new Date(data?.createdAt).toLocaleString('pt-BR')} />
           <Attribute label="Autor" value={data?.createdBy?.name} />
           {data?.approvedBy?.name ? <Attribute label="Aprovado por" value={data?.approvedBy?.name} /> : null}

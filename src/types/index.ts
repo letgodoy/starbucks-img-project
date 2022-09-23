@@ -12,3 +12,4 @@ export * from "./product";
 export * from "./store";
 export * from "./user";
 export * from "./utils";
+export * from "./event";

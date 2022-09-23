@@ -4,6 +4,7 @@ import {
   CadastroArte,
   CadastroCampanha,
   CadastroCategoria,
+  CadastroEventos,
   CadastroFotografo,
   CadastroImagens,
   CadastroLoja,
@@ -11,13 +12,14 @@ import {
   CadastroProduto,
   CadastroUser,
   Dashboard,
+  Error404,
   Hub,
   ImgDetail,
   Login,
   Marcas,
   SearchArt,
+  SearchEvent,
   SearchImages,
-  Error404
 } from "@pages";
 import { RoutesList } from "@types";
 import { useContext } from "react";
@@ -170,14 +172,29 @@ export const routes: RoutesList[] = [
     title: "Detalhe da Arte",
     id: 19,
   },
+  {
+    path: "/cadastro-evento/:marca",
+    component: CadastroEventos,
+    isPublic: true,
+    title: "Cadastro de Eventos",
+    id: 20,
+    visibleMenu: true,
+  },
+  {
+    path: "/busca-evento/:marca",
+    component: SearchEvent,
+    isPublic: true,
+    title: "Busca de Eventos",
+    id: 21,
+    visibleMenu: true,
+  },
 ];
 
 export const verifyBrand = () => {
-
-  const marca = useContext(BrandContext)?.selectedBrand?.slug
+  const marca = useContext(BrandContext)?.selectedBrand?.slug;
   const navigate = useNavigate();
 
   if (!marca) {
-    navigate("/marcas")
+    navigate("/marcas");
   }
-}
+};
