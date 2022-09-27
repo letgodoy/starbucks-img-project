@@ -20,3 +20,4 @@ export * from "./searchArt";
 export * from "./searchEvent";
 export * from "./art-detail";
 export * from "./event-detail";
+export * from "./pedidos";

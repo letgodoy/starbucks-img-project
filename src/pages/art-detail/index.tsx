@@ -4,12 +4,14 @@ import { Attribute, Box, Button, Grid, Typography } from "@elements";
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import { IArt } from "@types";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import { verifyBrand } from "../../utils";
+import Lightbox from "react-awesome-lightbox";
+import "react-awesome-lightbox/build/style.css";
 
 export const ArtDetail = () => {
 
@@ -17,29 +19,14 @@ export const ArtDetail = () => {
   
   const { id } = useParams();
 
+  const [openLightbox, setOpenLightbox] = useState(0)
+
   const loggedUser = useContext(AuthContext)
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
   const { data } = useGetArtByID(id || "")
 
   const { mutateAsync, isLoading } = useUpdateArt()
-
-  const downloadFile = async () => {
-    fetch(data?.images[0].url, {
-      mode: 'no-cors',
-    })
-      .then(response => response.blob())
-      .then(blob => {
-        let blobUrl = window.URL.createObjectURL(blob);
-        let a = document.createElement('a');
-        a.download = data?.images[0].ref;
-        a.href = blobUrl;
-        a.target = "_blank"
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-      })
-  }
 
   const changeStatus = (e: any, status: string) => {
     e.preventDefault()
@@ -75,6 +62,13 @@ export const ArtDetail = () => {
     adaptiveHeight: true
   };
 
+  const images = data?.images?.map((img: any) => {
+    return {
+      url: img.url,
+      title: img.ref
+    }
+  })
+
   return <Layout>
     <Grid container sx={{ height: '100vh' }}>
       <Grid item xs={7}>
@@ -93,9 +87,10 @@ export const ArtDetail = () => {
           <Box width={"100%"} color="black" style={{ color: "black !important" }}>
             <Slider {...settings}>
               {data?.images?.map((img: any, i: any) => {
-                return <Box key={i} component="img" src={img.url} alt={img.ref} width="100%" marginY={4} />
+                return <Box key={i} component="img" src={img.url} alt={img.ref} width="100%" marginY={4} onClick={() => setOpenLightbox(i+1)} />
               })}
             </Slider>
+            {openLightbox ? <Lightbox images={images} onClose={() => setOpenLightbox(0)} startIndex={openLightbox - 1} /> : null}
           </Box>
         </Box>
       </Grid>
@@ -134,9 +129,6 @@ export const ArtDetail = () => {
           <Attribute label="Autor" value={data?.createdBy?.name} />
           {data?.approvedBy?.name ? <Attribute label="Aprovado por" value={data?.approvedBy?.name} /> : null}
           {data?.refusedBy?.name ? <Attribute label="Recusado por" value={data?.refusedBy?.name} /> : null}
-          {/* <a href={data?.images[0].url} download={data?.name}> */}
-          <Button onClick={downloadFile} sx={{ marginY: 2 }}>Download</Button>
-          {/* </a> */}
         </Box>
       </Grid>
     </Grid>

@@ -17,6 +17,7 @@ import {
   ImgDetail,
   Login,
   Marcas,
+  Orders,
   SearchArt,
   SearchEvent,
   SearchImages,
@@ -54,7 +55,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de usuário",
     id: 4,
-    visibleMenu: true,
+    visibleMenu: false,
   },
   {
     path: "/cadastro-marcas",
@@ -62,7 +63,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de marca",
     id: 5,
-    visibleMenu: true,
+    visibleMenu: false,
   },
   {
     path: "/cadastro-lojas",
@@ -70,7 +71,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de lojas",
     id: 6,
-    visibleMenu: true,
+    visibleMenu: false,
   },
   {
     path: "/cadastro-agencia",
@@ -78,7 +79,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de agência",
     id: 7,
-    visibleMenu: true,
+    visibleMenu: false,
   },
   {
     path: "/home/:marca",
@@ -93,7 +94,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de campanha",
     id: 9,
-    visibleMenu: true,
+    visibleMenu: false,
   },
   {
     path: "/cadastro-arte/:marca",
@@ -101,7 +102,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de arte",
     id: 10,
-    visibleMenu: true,
+    visibleMenu: false,
   },
   {
     path: "/cadastro-fotografo",
@@ -109,7 +110,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de agência de fotografia",
     id: 11,
-    visibleMenu: true,
+    visibleMenu: false,
   },
   {
     path: "/cadastro-imagem/:marca",
@@ -117,7 +118,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de Imagens",
     id: 12,
-    visibleMenu: true,
+    visibleMenu: false,
   },
   {
     path: "/detalhe-imagem/:marca/:id",
@@ -147,7 +148,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro categoria",
     id: 16,
-    visibleMenu: true,
+    visibleMenu: false,
   },
   {
     path: "/cadastro-produto/:marca",
@@ -155,7 +156,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro produto",
     id: 17,
-    visibleMenu: true,
+    visibleMenu: false,
   },
   {
     path: "/busca-artes/:marca",
@@ -186,6 +187,14 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Busca de Eventos",
     id: 21,
+    visibleMenu: true,
+  },
+  {
+    path: "/pedido/:marca",
+    component: Orders,
+    isPublic: true,
+    title: "Pedidos",
+    id: 22,
     visibleMenu: true,
   },
 ];
