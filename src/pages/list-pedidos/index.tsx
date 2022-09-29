@@ -2,19 +2,19 @@ import { AlertContext, AuthContext, BrandContext, Layout } from "@components";
 import { useCreateOrder, useGetArts } from "@dataAccess";
 import { Box, Button, Grid, Typography } from "@elements";
 import { DataGrid, GridColDef, GridRenderCellParams, GridToolbar, GridValueGetterParams } from '@mui/x-data-grid';
-import { IArt, IOrder, IOrderArt } from "@types";
+import { IArt, IOrder } from "@types";
 import { verifyBrand } from "@utils";
-import { useContext, useEffect, useState } from "react";
+import { SetStateAction, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
-export const Orders = () => {
+export const ListOrders = () => {
 
   const { selectedBrand: marca } = useContext(BrandContext)
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
   const { user, store } = useContext(AuthContext)
 
-  const [selectedArts, setSelectedArts] = useState<Array<IOrderArt>>([])
+  const [selectedArts, setSelectedArts] = useState<Array<IArt>>([])
 
   verifyBrand()
 
@@ -61,15 +61,12 @@ export const Orders = () => {
 
   const handleSelectedArts = (ids: Array<any>) => {
 
-    const arts: IOrderArt[] = []
+    const arts: SetStateAction<IArt[]> = []
 
     ids.map((id) => {
-      data?.filter((item: IArt) => {
+      data?.filter((item) => {
         if (item.id === id) {
-          arts.push({
-            art: item,
-            qnt: 1
-          })
+          arts.push(item)
         }
       })
     })
@@ -85,60 +82,57 @@ export const Orders = () => {
       if (!marca) throw "Não foi possível selecionar a marca"
       if (!store) throw "Não foi possível selecionar a loja"
 
-      if (selectedArts.length > 0) {
-        const order: IOrder = {
-          id: uuidv4(),
-          arts: selectedArts,
-          createdAt: new Date().toISOString(),
-          createdBy: user,
-          marca,
-          marcaSlug: marca.slug,
-          store,
-          isClosed: false
-        }
+//       if (selectedArts.length > 0) {
+//         const order: IOrder = {
+//           id: uuidv4(),
+//           arts: selectedArts,
+//           createdAt: new Date().toISOString(),
+//           createdBy: user,
+//           marca,
+//           marcaSlug: marca.slug,
+//           store
+//         }
+// // 2247058293 protocolo enel
 
-
-        mutateAsync(order).then((res: any) => {
-          setOpenSuccess("Cadastrado com sucesso.")
-          console.log(res)
-          navigate(`/pedido/cart/${res.id}`)
-        }).catch((error: string) => {
-          console.warn("erro: " + error)
-          throw "Erro ao salvar. Tente novamente."
-        })
-      } else {
-        throw "Selecione quais artes deseja pedir."
-      }
+//         mutateAsync(order).then((res: any) => {
+//           setOpenSuccess("Cadastrado com sucesso.")
+//         }).catch((error: string) => {
+//           console.warn("erro: " + error)
+//           throw "Erro ao salvar. Tente novamente."
+//         })
+//       } else {
+//         throw "Selecione quais artes deseja pedir."
+//       }
     } catch (e) {
       setOpenError(e as string)
-    }
   }
+}
 
-  return <Layout title="Pedido" sx={{ paddingY: 3 }} width="100%">
-    <Grid container>
-      <Box display="flex" flexDirection="column" alignItems="center" justifyContent={"center"} width="100%" gap={2} >
-        <Typography component="h1" variant="h5">
-          Faça seu pedido
-        </Typography>
-        <Typography component="p">
-          Selecione quais artes deseja fazer o pedido.
-        </Typography>
-      </Box>
-      <Box width="100%" height='70vh' paddingY={2}>
-        <DataGrid
-          loading={rows.length === 0 || isLoading}
-          rows={rows}
-          columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[5, 10, 20, 50, 100]}
-          checkboxSelection
-          components={{ Toolbar: GridToolbar }}
-          onSelectionModelChange={(e) => handleSelectedArts(e)}
-        />
-      </Box>
-      <Box width="100%" paddingY={2}>
-        <Button onClick={(e) => createOrder(e)} >Salvar</Button>
-      </Box>
-    </Grid>
-  </Layout >
+return <Layout title="Pedido" sx={{ paddingY: 3 }} width="100%">
+  <Grid container>
+    <Box display="flex" flexDirection="column" alignItems="center" justifyContent={"center"} width="100%" gap={2} >
+      <Typography component="h1" variant="h5">
+        Faça seu pedido
+      </Typography>
+      <Typography component="p">
+        Selecione quais artes deseja fazer o pedido.
+      </Typography>
+    </Box>
+    <Box width="100%" height='70vh' paddingY={2}>
+      <DataGrid
+        loading={rows.length === 0 || isLoading}
+        rows={rows}
+        columns={columns}
+        pageSize={5}
+        rowsPerPageOptions={[5]}
+        checkboxSelection
+        components={{ Toolbar: GridToolbar }}
+        onSelectionModelChange={(e) => handleSelectedArts(e)}
+      />
+    </Box>
+    <Box width="100%" paddingY={2}>
+      <Button onClick={(e) => createOrder(e)} >Salvar</Button>
+    </Box>
+  </Grid>
+</Layout >
 }

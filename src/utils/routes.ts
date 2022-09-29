@@ -11,6 +11,7 @@ import {
   CadastroMarca,
   CadastroProduto,
   CadastroUser,
+  Cart,
   Dashboard,
   Error404,
   Hub,
@@ -195,6 +196,14 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Pedidos",
     id: 22,
+    visibleMenu: true,
+  },
+  {
+    path: "/pedido/cart/2d849907-cf74-407e-97c6-e8db8fadf014",
+    component: Cart,
+    isPublic: true,
+    title: "Carrinho",
+    id: 23,
     visibleMenu: true,
   },
 ];

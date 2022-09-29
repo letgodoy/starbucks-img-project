@@ -42,11 +42,11 @@ export const CadastroArte = () => {
 
     const data = new FormData(event.currentTarget);
     try {
-      if (!marca) throw Error("Não foi possível selecionar a marca")
+      if (!marca) throw "Não foi possível selecionar a marca"
 
       const campanha = listCampaigns?.find(item => item.slug = campaign)
 
-      if (!campanha) throw Error("Não foi possível selecionar a campanha")
+      if (!campanha) throw "Não foi possível selecionar a campanha"
 
       if (files) {
         setLoadingFile(true)

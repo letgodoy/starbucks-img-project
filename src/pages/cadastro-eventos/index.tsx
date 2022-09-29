@@ -33,7 +33,7 @@ export const CadastroEventos = () => {
 
     const data = new FormData(event.currentTarget);
     try {
-      if (!marca) throw Error("Não foi possível selecionar a marca")
+      if (!marca) throw "Não foi possível selecionar a marca"
 
       if (files) {
         setLoadingFile(true)

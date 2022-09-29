@@ -29,7 +29,7 @@ export const CadastroCategoria = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    if (!marca) throw Error("Não foi possível selecionar a marca")
+    if (!marca) throw "Não foi possível selecionar a marca"
 
     const category: ICategory = {
       name: extractString(data.get('name') as string),

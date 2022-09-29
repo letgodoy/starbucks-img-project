@@ -1,5 +1,7 @@
-import { IBrandContext } from "@types";
-import { Context, createContext, useState } from "react";
+import { IBrand, IBrandContext } from "@types";
+import { Context, createContext, useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useGetBrandByID } from "../../dataAccess";
 
 const DEFAULT_VALUE: IBrandContext = {
   selectedBrand: null,
@@ -17,3 +19,19 @@ export const BrandContextProvider = ({ children }: any) => {
     {children}
   </BrandContext.Provider>;
 };
+
+export const checkBrand = () => {
+  const { selectedBrand: marca, setBrand } = useContext(BrandContext)
+  const params = useParams();
+  const { mutateAsync, data } = useGetBrandByID()
+
+  if (!marca && params.marca) {
+    mutateAsync(params.marca)
+  }
+
+  useEffect(() => {
+    if (data) {
+      setBrand(data as IBrand)
+    }
+  },[data])
+}

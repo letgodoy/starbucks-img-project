@@ -1,7 +1,7 @@
 import { routes } from '@utils';
 import { ReactElement } from 'react';
 import { Route, RouteProps, Routes, useLocation } from 'react-router-dom';
-import { ArtDetail, CadastroAgencia, CadastroArte, CadastroCampanha, CadastroCategoria, CadastroEventos, CadastroFotografo, CadastroImagens, CadastroLoja, CadastroMarca, CadastroProduto, CadastroUser, Dashboard, Error404, EventDetail, Hub, ImgDetail, Login, Marcas, Orders, SearchArt, SearchEvent, SearchImages } from '../../pages';
+import { ArtDetail, CadastroAgencia, CadastroArte, CadastroCampanha, CadastroCategoria, CadastroEventos, CadastroFotografo, CadastroImagens, CadastroLoja, CadastroMarca, CadastroProduto, CadastroUser, Cart, Dashboard, Error404, EventDetail, Hub, ImgDetail, Login, Marcas, Orders, SearchArt, SearchEvent, SearchImages } from '../../pages';
 
 const getRouters = (): ReactElement<RouteProps>[] => {
 
@@ -68,6 +68,7 @@ export const RouterContext = () => {
     <Route path="/busca-evento/:marca" element={<SearchEvent />} />
     <Route path="/detalhe-evento/:marca/:id" element={<EventDetail />} />
     <Route path="/pedido/:marca" element={<Orders />} />
+    <Route path="/pedido/cart/:id" element={<Cart />} />
   </Routes>
 }
 

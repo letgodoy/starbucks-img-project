@@ -48,13 +48,13 @@ export const CadastroImagens = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    if (!marca) throw Error("Não foi possível selecionar a marca")
+    if (!marca) throw "Não foi possível selecionar a marca"
 
     const categoria = listCategories?.find(item => item.slug = category)
     const produto = listProducts?.find(item => item.slug = product)
 
-    if (!categoria) throw Error("Não foi possível selecionar a categoria")
-    if (!produto) throw Error("Não foi possível selecionar o produto")
+    if (!categoria) throw "Não foi possível selecionar a categoria"
+    if (!produto) throw "Não foi possível selecionar o produto"
 
     let upload = {
       url: "",

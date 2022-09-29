@@ -21,9 +21,9 @@ const logIn = async ({ email, password }: ICredentials) => {
       var errorCode = error.code;
       var errorMessage = error.message;
       if (errorCode === "auth/wrong-password") {
-        throw new Error("Senha errada");
+        throw "Senha errada";
       }
-      throw new Error("Aconteceu alguma coisa. Tente novamente");
+      throw "Aconteceu alguma coisa. Tente novamente";
       console.log(error);
     });
   // .then((userCredential) => {
