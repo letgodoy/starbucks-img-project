@@ -1,13 +1,13 @@
-import { BrandContext, Layout } from "@components";
+import { BrandContext, checkBrand, Layout } from "@components";
 import { useGetEvents } from "@dataAccess";
 import { Box, Grid, Loading, TextInput, Typography } from "@elements";
 import SearchIcon from '@mui/icons-material/Search';
 import { Masonry } from "@mui/lab";
 import { Badge, Divider, IconButton, InputAdornment, List, ListItemButton, ListItemText, ListSubheader, Paper } from "@mui/material";
 import { IEvent } from "@types";
-import { extractString, verifyBrand } from "@utils";
+import { extractString } from "@utils";
 import { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface MenuItemList {
   title: string,
@@ -19,11 +19,7 @@ export const SearchEvent = () => {
 
   const { selectedBrand: marca } = useContext(BrandContext)
 
-  verifyBrand()
-
-  const navigate = useNavigate();
-
-  if (!marca) navigate("/marcas")
+  checkBrand()
 
   const { data, isLoading } = useGetEvents(marca?.slug || "")
 

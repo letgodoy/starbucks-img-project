@@ -11,6 +11,10 @@ export interface IOrder {
   marca: IBrand;
   marcaSlug: string;
   isClosed: boolean;
+  toProduction?: {
+    date: string,
+    by: IUser
+  };
 }
 
 export interface IOrderArt {

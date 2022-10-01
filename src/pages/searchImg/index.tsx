@@ -1,4 +1,4 @@
-import { BrandContext, Layout } from "@components";
+import { BrandContext, checkBrand, Layout } from "@components";
 import { useGetCategories, useGetImages, useGetProducts } from "@dataAccess";
 import { Box, Grid, TextInput, Typography } from "@elements";
 import SearchIcon from '@mui/icons-material/Search';
@@ -6,9 +6,9 @@ import { Masonry } from "@mui/lab";
 import { Badge, Divider, InputAdornment, List, ListItemButton, ListItemText, ListSubheader, Paper } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import { ICategory, IImage, IProduct } from "@types";
-import { extractString, verifyBrand } from "@utils";
+import { extractString } from "@utils";
 import { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface MenuItemList {
   title: string,
@@ -20,11 +20,7 @@ export const SearchImages = () => {
 
   const { selectedBrand: marca } = useContext(BrandContext)
 
-  verifyBrand()
-  
-  const navigate = useNavigate();
-
-  if (!marca) navigate("/marcas")
+  checkBrand()
 
   const { data } = useGetImages(marca?.slug || "")
 

@@ -1,4 +1,4 @@
-import { BrandContext, Layout } from "@components";
+import { BrandContext, checkBrand, Layout } from "@components";
 import { useGetArts, useGetImages } from "@dataAccess";
 import { Box, DataCard } from "@elements";
 import BackupTableIcon from '@mui/icons-material/BackupTable';
@@ -8,13 +8,12 @@ import { Masonry } from "@mui/lab";
 import { Badge } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { verifyBrand } from "../../utils";
 
 export const Dashboard = () => {
 
   const marca = useContext(BrandContext)?.selectedBrand?.slug || ""
 
-  verifyBrand()
+  checkBrand()
 
   const { data: images } = useGetImages(marca)
   const { data: arts } = useGetArts(marca)

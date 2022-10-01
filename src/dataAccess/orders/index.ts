@@ -18,7 +18,6 @@ const createOrder = async (order: IOrder) => {
 
   return await setDoc(target, order)
     .then((res) => {
-      console.log(res)
       return res;
     })
     .catch((error) => error);

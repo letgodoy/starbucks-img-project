@@ -1,22 +1,21 @@
-import { AlertContext, AuthContext, Layout } from "@components";
+import { AlertContext, AuthContext, checkBrand, Layout } from "@components";
 import { useGetArtByID, useUpdateArt } from "@dataAccess";
 import { Attribute, Box, Button, Grid, Typography } from "@elements";
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import { IArt } from "@types";
 import { useContext, useState } from "react";
+import Lightbox from "react-awesome-lightbox";
+import "react-awesome-lightbox/build/style.css";
 import { useParams } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
-import { verifyBrand } from "../../utils";
-import Lightbox from "react-awesome-lightbox";
-import "react-awesome-lightbox/build/style.css";
 
 export const ArtDetail = () => {
 
-  verifyBrand()
-  
+  checkBrand()
+
   const { id } = useParams();
 
   const [openLightbox, setOpenLightbox] = useState(0)
@@ -87,7 +86,7 @@ export const ArtDetail = () => {
           <Box width={"100%"} color="black" style={{ color: "black !important" }}>
             <Slider {...settings}>
               {data?.images?.map((img: any, i: any) => {
-                return <Box key={i} component="img" src={img.url} alt={img.ref} width="100%" marginY={4} onClick={() => setOpenLightbox(i+1)} />
+                return <Box key={i} component="img" src={img.url} alt={img.ref} width="100%" marginY={4} onClick={() => setOpenLightbox(i + 1)} />
               })}
             </Slider>
             {openLightbox ? <Lightbox images={images} onClose={() => setOpenLightbox(0)} startIndex={openLightbox - 1} /> : null}

@@ -9,7 +9,7 @@ import { theme } from "./theme";
 
 export { AlertContext } from "./alerts";
 export { AuthContext } from "./auth";
-export { BrandContext } from "./brand";
+export { BrandContext, checkBrand } from "./brand";
 
 const queryClient = new QueryClient();
 

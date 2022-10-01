@@ -1,19 +1,18 @@
-import { AlertContext, AuthContext, Layout } from "@components";
+import { AlertContext, AuthContext, checkBrand, Layout } from "@components";
 import { useGetEventByID, useUpdateEvent } from "@dataAccess";
 import { Attribute, Box, Button, Grid, Typography } from "@elements";
 import { Masonry } from "@mui/lab";
 import { IArt } from "@types";
 import { useContext, useState } from "react";
+import Lightbox from "react-awesome-lightbox";
+import "react-awesome-lightbox/build/style.css";
 import { useParams } from "react-router-dom";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
-import { verifyBrand } from "../../utils";
-import Lightbox from "react-awesome-lightbox";
-import "react-awesome-lightbox/build/style.css";
 
 export const EventDetail = () => {
 
-  verifyBrand()
+  checkBrand()
 
   const [openLightbox, setOpenLightbox] = useState(0)
 
@@ -74,10 +73,10 @@ export const EventDetail = () => {
           <Box width={"100%"} color="black" style={{ color: "black !important" }}>
             <Masonry columns={2} spacing={1}>
               {data?.images?.map((img: any, i: any) => {
-                return <Box key={i} component="img" src={img.url} alt={img.ref} width="100%" marginY={4} onClick={() => setOpenLightbox(i+1)} />
+                return <Box key={i} component="img" src={img.url} alt={img.ref} width="100%" marginY={4} onClick={() => setOpenLightbox(i + 1)} />
               })}
             </Masonry>
-            {openLightbox ? <Lightbox images={images} onClose={() => setOpenLightbox(0)} startIndex={openLightbox-1} /> : null}
+            {openLightbox ? <Lightbox images={images} onClose={() => setOpenLightbox(0)} startIndex={openLightbox - 1} /> : null}
           </Box>
         </Box>
       </Grid>

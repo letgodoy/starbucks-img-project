@@ -1,15 +1,14 @@
-import { AlertContext, AuthContext, Layout } from "@components";
+import { AlertContext, AuthContext, checkBrand, Layout } from "@components";
 import { useGetImageByID, useUpdateImage } from "@dataAccess";
 import { Attribute, Box, Button, Grid, Typography } from "@elements";
 import { IImage } from "@types";
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
-import { verifyBrand } from "../../utils";
 
 export const ImgDetail = () => {
 
-  verifyBrand()
-  
+  checkBrand()
+
   const { id } = useParams()
 
   const loggedUser = useContext(AuthContext)

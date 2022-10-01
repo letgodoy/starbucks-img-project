@@ -1,9 +1,9 @@
-import { AlertContext, AuthContext, BrandContext, Layout } from "@components";
+import { AlertContext, AuthContext, BrandContext, checkBrand, Layout } from "@components";
 import { useCreateCategory } from "@dataAccess";
 import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
 import { ICategory } from "@types";
-import { extractString, verifyBrand } from "@utils";
-import React, { useContext, useEffect } from "react";
+import { extractString } from "@utils";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Slugify from "slugify";
 
@@ -11,15 +11,9 @@ export const CadastroCategoria = () => {
 
   const { selectedBrand: marca } = useContext(BrandContext);
 
-  verifyBrand()
+  checkBrand()
 
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!marca) navigate("/marcas")
-  }, [])
 
   const { mutateAsync, isLoading } = useCreateCategory();
 

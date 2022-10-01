@@ -1,9 +1,8 @@
-import { AlertContext, AuthContext, BrandContext, Layout } from "@components";
+import { AlertContext, AuthContext, BrandContext, checkBrand, Layout } from "@components";
 import { useCreateOrder, useGetArts } from "@dataAccess";
 import { Box, Button, Grid, Typography } from "@elements";
 import { DataGrid, GridColDef, GridRenderCellParams, GridToolbar, GridValueGetterParams } from '@mui/x-data-grid';
 import { IArt, IOrder, IOrderArt } from "@types";
-import { verifyBrand } from "@utils";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -16,15 +15,13 @@ export const Orders = () => {
 
   const [selectedArts, setSelectedArts] = useState<Array<IOrderArt>>([])
 
-  verifyBrand()
+  checkBrand()
 
   const navigate = useNavigate();
 
-  if (!marca) navigate("/marcas")
-
   const { data, isLoading } = useGetArts(marca?.slug || "")
 
-  const { mutateAsync, isLoading: saving } = useCreateOrder()
+  const { mutateAsync, isLoading: saving, data: result } = useCreateOrder()
 
   const [rows, setRows] = useState<IArt[]>([])
 
@@ -37,6 +34,10 @@ export const Orders = () => {
       }))
     }
   }, [data])
+
+  useEffect(() => {
+    if (result) navigate(`/pedido/${marca}/cart/${result.id}`)
+  }, [result])
 
   const columns: GridColDef[] = [
     {
@@ -99,9 +100,7 @@ export const Orders = () => {
 
 
         mutateAsync(order).then((res: any) => {
-          setOpenSuccess("Cadastrado com sucesso.")
-          console.log(res)
-          navigate(`/pedido/cart/${res.id}`)
+          setOpenSuccess("Pedido criado com sucesso.")
         }).catch((error: string) => {
           console.warn("erro: " + error)
           throw "Erro ao salvar. Tente novamente."

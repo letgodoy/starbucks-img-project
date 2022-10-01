@@ -1,25 +1,20 @@
-import { AlertContext, AuthContext, BrandContext, Layout } from "@components";
+import { AlertContext, AuthContext, BrandContext, checkBrand, Layout } from "@components";
 import { uploadImage, useCreateImage, useGetCategories, useGetProducts } from "@dataAccess";
 import { Box, Button, FileUploadInput, Grid, Loading, Select, TextInput, Typography } from "@elements";
 import { colors } from "@mui/material";
 import { ICategory, IFileStorage, IImage, IProduct } from "@types";
-import { extractString, verifyBrand } from "@utils";
+import { extractString } from "@utils";
 import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { TagsInput } from "../../elements/tagInput";
 
 export const CadastroImagens = () => {
 
   const { selectedBrand: marca } = useContext(BrandContext)
 
-  verifyBrand()
-  
+  checkBrand()
+
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
   const { user } = useContext(AuthContext)
-
-  const navigate = useNavigate();
-
-  if (!marca) navigate("/marcas")
 
   const { data: listCategories } = useGetCategories(marca?.slug || "")
   const { data: listProducts } = useGetProducts(marca?.slug || "")

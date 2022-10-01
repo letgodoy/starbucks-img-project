@@ -1,8 +1,8 @@
-import { AlertContext, AuthContext, BrandContext, Layout } from "@components";
+import { AlertContext, AuthContext, BrandContext, checkBrand, Layout } from "@components";
 import { useCreateCampaign } from "@dataAccess";
 import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
 import { ICampaign } from "@types";
-import { extractString, verifyBrand } from "@utils";
+import { extractString } from "@utils";
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Slugify from "slugify";
@@ -11,15 +11,9 @@ export const CadastroCampanha = () => {
 
   const { selectedBrand: marca } = useContext(BrandContext);
 
-  verifyBrand()
+  checkBrand()
 
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!marca) navigate("/marcas")
-  }, [])
 
   const { mutateAsync, isLoading } = useCreateCampaign();
 

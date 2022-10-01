@@ -16,8 +16,10 @@ import {
   Error404,
   Hub,
   ImgDetail,
+  ListOrders,
   Login,
   Marcas,
+  OrderDetail,
   Orders,
   SearchArt,
   SearchEvent,
@@ -199,20 +201,27 @@ export const routes: RoutesList[] = [
     visibleMenu: true,
   },
   {
-    path: "/pedido/cart/2d849907-cf74-407e-97c6-e8db8fadf014",
+    path: "/pedido/:marca/cart/2d849907-cf74-407e-97c6-e8db8fadf014",
     component: Cart,
     isPublic: true,
     title: "Carrinho",
     id: 23,
     visibleMenu: true,
   },
+  {
+    path: "/pedido/:marca/lista",
+    component: ListOrders,
+    isPublic: true,
+    title: "Lista de pedidos",
+    id: 24,
+    visibleMenu: true,
+  },
+  {
+    path: "/pedido/:marca/:id",
+    component: OrderDetail,
+    isPublic: true,
+    title: "Detalhe de pedido",
+    id: 25,
+    visibleMenu: true,
+  },
 ];
-
-export const verifyBrand = () => {
-  const marca = useContext(BrandContext)?.selectedBrand?.slug;
-  const navigate = useNavigate();
-
-  if (!marca) {
-    navigate("/marcas");
-  }
-};
