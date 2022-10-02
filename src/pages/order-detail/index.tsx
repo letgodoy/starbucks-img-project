@@ -1,10 +1,12 @@
-import { AlertContext, BrandContext, checkBrand, Layout } from "@components";
+import { AlertContext, AuthContext, BrandContext, checkBrand, Layout } from "@components";
 import { useCreateOrder, useGetArts, useGetOrderByIDAsync } from "@dataAccess";
 import { Box, Button, Grid, TextInput, Typography } from "@elements";
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import { Modal } from "@mui/material";
+import { IconButton, Modal, Paper, Stack, styled, Tooltip } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams, GridToolbar, GridValueGetterParams } from '@mui/x-data-grid';
-import { IArt, IOrder, IOrderArt } from "@types";
+import { IArt, IOrder, IOrderArt, IUser } from "@types";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { extractString } from "../../utils";
@@ -15,6 +17,7 @@ export const OrderDetail = () => {
 
   const { selectedBrand: marca } = useContext(BrandContext)
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
+  const { user } = useContext(AuthContext)
 
   const navigate = useNavigate();
 
@@ -22,17 +25,40 @@ export const OrderDetail = () => {
 
   const { data: allArts, isLoading } = useGetArts(marca?.slug || params?.marca || "")
   const { mutateAsync: getOrder, data, isLoading: loadingOrder } = useGetOrderByIDAsync()
-  const { mutateAsync: updateOrder, isLoading: saving, data: result } = useCreateOrder()
+  const { mutateAsync, isLoading: saving, data: result } = useCreateOrder()
 
 
   const [rows, setRows] = useState<Array<IOrderArt>>([])
   const [rowsArts, setRowsArts] = useState<IArt[]>([])
   const [isEditable, setIsEditable] = useState(false)
   const [open, setOpen] = useState(false);
+  const [isFinished, setIsFinished] = useState(true)
+  const [status, setStatus] = useState<{
+    status?: string,
+    user?: IUser,
+    production?: any
+  }>({})
 
   useEffect(() => {
     if (data) {
       setRows(data.arts)
+
+      if (!data.isClosed) {
+        setIsFinished(false)
+      } else {
+        if (typeof data.approvedBy === "object") {
+          setStatus({
+            status: "Aprovado por: ",
+            user: data.approvedBy,
+            // production: data.toProduction
+          })
+        } else if (typeof data.refusedBy === "object") {
+          setStatus({
+            status: "Recusado por: ",
+            user: data.refusedBy
+          })
+        }
+      }
     }
   }, [data])
 
@@ -40,9 +66,9 @@ export const OrderDetail = () => {
     if (allArts && data) {
       let allArtsList = allArts.filter((item) => {
         // if (item.approvedBy && typeof item.approvedBy !== 'string') {
-          return !data.arts.some((art: IOrderArt) => {
-            return art.art.id === item.id
-          })
+        return !data.arts.some((art: IOrderArt) => {
+          return art.art.id === item.id
+        })
         // }
       })
 
@@ -60,17 +86,10 @@ export const OrderDetail = () => {
     if (result) navigate(`/pedido/${marca}/lista`)
   }, [result])
 
-  const saveOrder = (event: any) => {
-    event.preventDefault()
+  const saveOrder = (order: IOrder) => {
 
     try {
-      const order: IOrder = {
-        ...data as IOrder,
-        arts: rows,
-        isClosed: true
-      }
-
-      updateOrder(order).then((res: any) => {
+      mutateAsync(order).then((res: any) => {
         setOpenSuccess("Pedido realizado com sucesso.")
       }).catch((error: string) => {
         console.warn("erro: " + error)
@@ -221,15 +240,80 @@ export const OrderDetail = () => {
     p: 4,
   };
 
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  }));
+
+  const updateOrder = (e: any) => {
+    e.preventDefault()
+
+    const order: IOrder = {
+      ...data as IOrder,
+      arts: rows,
+      isClosed: true
+    }
+
+    saveOrder(order)
+  }
+
+  const approveOrder = (e: any, action: string) => {
+    e.preventDefault()
+
+    let order: IOrder = data as IOrder
+
+    if (action === "approve") {
+      order = {
+        ...order,
+        approvedBy: user,
+        refusedBy: "approved"
+      }
+    } else if (action === "refuse") {
+      order = {
+        ...order,
+        refusedBy: user,
+        approvedBy: "refused"
+      }
+    }
+
+    saveOrder(order)
+  }
+
+  const productOrder = (e: any) => {
+    e.preventDefault()
+
+    const order: IOrder = {
+      ...data as IOrder,
+      toProduction: {
+        date: new Date().toISOString(),
+        by: user
+      }
+    }
+
+    saveOrder(order)
+  }
+
   return <Layout title="Pedido" sx={{ paddingY: 3 }} width="100%">
     <Grid container>
       <Box display="flex" flexDirection="column" alignItems="center" justifyContent={"center"} width="100%" gap={2} >
         <Typography component="h1" variant="h5">
-          Editar seu pedido
+          {isFinished ? "Detalhes do pedido" : "Editar seu pedido"}
         </Typography>
-        <Typography component="p">
-          Confira, altere as quantidades e adicione observações antes de fechar o pedido.
-        </Typography>
+        <Stack
+          direction={{ sm: 'column', md: 'row' }}
+          spacing={2}
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Item>Loja: {data?.store.name}</Item>
+          <Item>Criado por: {data?.createdBy.name}</Item>
+          <Item>Data: {new Date(data?.createdAt).toLocaleString("pt-BR")}</Item>
+          {status.status && <Item>{status.status}{status.user?.name}</Item>}
+          {status.production && <Item>Enviado p/ prod. em: {new Date(status.production.date).toLocaleString("pt-BR")}</Item>}
+        </Stack>
       </Box>
       <Box width="100%" height='70vh' paddingY={2}>
         <DataGrid
@@ -240,13 +324,36 @@ export const OrderDetail = () => {
           rowsPerPageOptions={[5, 10, 20, 50, 100]}
           components={{ Toolbar: GridToolbar }}
           getRowId={(row) => row.art.id}
+          columnVisibilityModel={{
+            delete: !isFinished,
+          }}
         />
       </Box>
-      <Box width="100%" paddingY={2} gap={2} display="inline-flex" justifyContent={"end"}>
+      {!isFinished ? <Box width="100%" paddingY={2} gap={2} display="inline-flex" justifyContent={"end"}>
         <Button onClick={() => setOpen(true)} color="secondary">Adicionar artes</Button>
         <Button onClick={() => setIsEditable(!isEditable)} color="secondary">Editar</Button>
-        <Button onClick={(e) => saveOrder(e)}>Finalizar</Button>
-      </Box>
+        <Button onClick={(e) => updateOrder(e)}>Finalizar</Button>
+      </Box> : null}
+      {isFinished && !status.status ? <Box width="100%" paddingY={2} gap={2} display="inline-flex" justifyContent={"end"}>
+        <Tooltip title="Aprovar pedido" arrow>
+          <Button
+            onClick={(e) => approveOrder(e, "approve")}
+          >Aprovar</Button>
+        </Tooltip>
+        <Tooltip title="Recusar pedido" arrow>
+          <Button
+            onClick={(e) => approveOrder(e, "refuse")}
+            variant="outlined"
+          >Recusar</Button>
+        </Tooltip>
+      </Box> : null}
+      {isFinished && !status.production && status.status === "Aprovado por: " ? <Box width="100%" paddingY={2} gap={2} display="inline-flex" justifyContent={"end"}>
+        <Tooltip title="Aprovar pedido" arrow>
+          <Button
+            onClick={(e) => productOrder(e)}
+          >Enviar para produção</Button>
+        </Tooltip>
+      </Box> : null}
       <Modal
         open={open}
         onClose={() => setOpen(false)}
@@ -273,8 +380,8 @@ export const OrderDetail = () => {
               />
             </Box>
             <Box width="100%" paddingY={2}>
-            <Button onClick={() => setOpen(false)}>Concluído</Button>
-          </Box>
+              <Button onClick={() => setOpen(false)}>Concluído</Button>
+            </Box>
           </Grid>
         </Box>
       </Modal>
