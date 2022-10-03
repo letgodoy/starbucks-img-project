@@ -5,6 +5,7 @@ import {
   CadastroCampanha,
   CadastroCategoria,
   CadastroEventos,
+  CadastroFornecedor,
   CadastroFotografo,
   CadastroImagens,
   CadastroLoja,
@@ -222,6 +223,14 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Detalhe de pedido",
     id: 25,
+    visibleMenu: true,
+  },
+  {
+    path: "/cadastro-fornecedor/:marca",
+    component: CadastroFornecedor,
+    isPublic: true,
+    title: "Cadastro de fornecedor",
+    id: 26,
     visibleMenu: true,
   },
 ];

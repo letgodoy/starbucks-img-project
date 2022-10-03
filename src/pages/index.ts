@@ -23,4 +23,5 @@ export * from "./event-detail";
 export * from "./pedidos";
 export * from "./list-pedidos";
 export * from "./cart";
-export * from "./order-detail"
+export * from "./order-detail";
+export * from "./cadastro-fornecedor";

@@ -12,3 +12,4 @@ export * from "./storage-image";
 export * from "./user";
 export * from "./event";
 export * from "./orders";
+export * from "./fornecedor";

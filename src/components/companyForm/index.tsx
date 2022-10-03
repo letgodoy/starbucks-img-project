@@ -4,10 +4,12 @@ import { IAddress } from "@types";
 import { extractString, getAddressByCep } from "@utils";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import Slugify from "slugify";
-import { AuthContext, BrandContext } from "../contexts";
+import { AuthContext, BrandContext, checkBrand } from "../contexts";
 
 export const CompanyForm = ({ handleSubmit, isLoading, isStore }: { handleSubmit: any, isLoading: boolean, isStore?: boolean }) => {
   const darkMode = false
+
+  checkBrand()
 
   const loggedUser = useContext(AuthContext)
   const { selectedBrand: marca } = useContext(BrandContext);
@@ -105,7 +107,7 @@ export const CompanyForm = ({ handleSubmit, isLoading, isStore }: { handleSubmit
     const form: Record<string, any> = {
       slug: Slugify(extractString(data.get('name') as string)),
       name: extractString(data.get('name') as string),
-      cnpj: extractString(data.get('cnpj') as string),
+      cnpj: extractString(data.get('cnpj') as string).replace(/\D/g, ""),
       address: address,
       manager: extractString(data.get('manager') as string),
       managerPhone: extractString(data.get('managerPhone') as string),
