@@ -36,7 +36,7 @@ export const OrderDetail = () => {
   const [isEditable, setIsEditable] = useState(false)
   const [open, setOpen] = useState(false);
   const [openProviders, setOpenProviders] = useState(false);
-  const [openPDFPreview, setOpenPDFPreview] = useState(true);
+  const [openPDFPreview, setOpenPDFPreview] = useState(false);
   const [isFinished, setIsFinished] = useState(true)
   const [isCarrinho, setIsCarrinho] = useState(false)
   const [selectProvider, setSelectProvider] = useState<IProvider>()
