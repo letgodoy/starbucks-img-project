@@ -12,7 +12,6 @@ import {
   CadastroMarca,
   CadastroProduto,
   CadastroUser,
-  Cart,
   Dashboard,
   Error404,
   Hub,
@@ -27,9 +26,6 @@ import {
   SearchImages,
 } from "@pages";
 import { RoutesList } from "@types";
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { BrandContext } from "../components";
 
 export const routes: RoutesList[] = [
   {
@@ -197,16 +193,8 @@ export const routes: RoutesList[] = [
     path: "/pedido/:marca",
     component: Orders,
     isPublic: true,
-    title: "Pedidos",
+    title: "Fazer pedido",
     id: 22,
-    visibleMenu: true,
-  },
-  {
-    path: "/pedido/:marca/cart/2d849907-cf74-407e-97c6-e8db8fadf014",
-    component: Cart,
-    isPublic: true,
-    title: "Carrinho",
-    id: 23,
     visibleMenu: true,
   },
   {
@@ -214,7 +202,7 @@ export const routes: RoutesList[] = [
     component: ListOrders,
     isPublic: true,
     title: "Lista de pedidos",
-    id: 24,
+    id: 23,
     visibleMenu: true,
   },
   {
@@ -222,7 +210,7 @@ export const routes: RoutesList[] = [
     component: OrderDetail,
     isPublic: true,
     title: "Detalhe de pedido",
-    id: 25,
+    id: 24,
     visibleMenu: true,
   },
   {
@@ -230,7 +218,7 @@ export const routes: RoutesList[] = [
     component: CadastroFornecedor,
     isPublic: true,
     title: "Cadastro de fornecedor",
-    id: 26,
+    id: 25,
     visibleMenu: true,
   },
 ];

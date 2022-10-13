@@ -1,6 +1,6 @@
 import { AlertContext, AuthContext, BrandContext, checkBrand, Layout } from "@components";
 import { useCreateOrder, useGetArts } from "@dataAccess";
-import { Box, Button, Grid, Typography } from "@elements";
+import { Box, Button, Grid, Loading, Typography } from "@elements";
 import { DataGrid, GridColDef, GridRenderCellParams, GridToolbar, GridValueGetterParams } from '@mui/x-data-grid';
 import { IArt, IOrder, IOrderArt } from "@types";
 import { useContext, useEffect, useState } from "react";
@@ -14,6 +14,7 @@ export const Orders = () => {
   const { user, store } = useContext(AuthContext)
 
   const [selectedArts, setSelectedArts] = useState<Array<IOrderArt>>([])
+  const [orderCreated, setOrderCreated] = useState<IOrder>()
 
   checkBrand()
 
@@ -28,16 +29,18 @@ export const Orders = () => {
   useEffect(() => {
     if (data) {
       setRows(data?.filter((item) => {
-        // if (item.approvedBy && typeof item.approvedBy !== 'string') {
-        return item
-        // }
+        if (item.approvedBy && typeof item.approvedBy !== 'string') {
+          return item
+        }
       }))
     }
   }, [data])
 
   useEffect(() => {
-    if (result) navigate(`/pedido/${marca}/cart/${result.id}`)
-  }, [result])
+    if (orderCreated) {
+      navigate(`/pedido/${marca?.slug}/${orderCreated.id}?carrinho=true`)
+    }
+  }, [orderCreated])
 
   const columns: GridColDef[] = [
     {
@@ -99,8 +102,9 @@ export const Orders = () => {
         }
 
 
-        mutateAsync(order).then((res: any) => {
-          setOpenSuccess("Pedido criado com sucesso.")
+        mutateAsync(order).then(() => {
+          setOpenSuccess("Pedido criado com sucesso. Aguarde a produção")
+          setOrderCreated(order)
         }).catch((error: string) => {
           console.warn("erro: " + error)
           throw "Erro ao salvar. Tente novamente."
@@ -112,6 +116,8 @@ export const Orders = () => {
       setOpenError(e as string)
     }
   }
+
+  if (isLoading) return <Loading />
 
   return <Layout title="Pedido" sx={{ paddingY: 3 }} width="100%">
     <Grid container>
@@ -136,7 +142,7 @@ export const Orders = () => {
         />
       </Box>
       <Box width="100%" paddingY={2}>
-        <Button onClick={(e) => createOrder(e)} >Salvar</Button>
+        {saving ? <Loading /> : <Button onClick={(e) => createOrder(e)}>Finalizar pedido</Button>}
       </Box>
     </Grid>
   </Layout >

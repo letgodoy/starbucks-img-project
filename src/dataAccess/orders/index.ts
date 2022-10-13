@@ -17,9 +17,7 @@ const createOrder = async (order: IOrder) => {
   const target = doc(db, collectionName, order.id);
 
   return await setDoc(target, order)
-    .then((res) => {
-      return res;
-    })
+    .then((res) => res)
     .catch((error) => error);
 };
 

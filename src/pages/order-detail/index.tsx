@@ -1,15 +1,17 @@
 import { AlertContext, AuthContext, BrandContext, checkBrand, Layout } from "@components";
-import { useCreateOrder, useGetArts, useGetOrderByIDAsync } from "@dataAccess";
-import { Box, Button, Grid, TextInput, Typography } from "@elements";
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
+import { useCreateOrder, useGetArts, useGetOrderByIDAsync, useGetProviders } from "@dataAccess";
+import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import { IconButton, Modal, Paper, Stack, styled, Tooltip } from "@mui/material";
+import { Modal, Paper, Stack, styled, Tooltip } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams, GridToolbar, GridValueGetterParams } from '@mui/x-data-grid';
-import { IArt, IOrder, IOrderArt, IUser } from "@types";
-import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { extractString } from "../../utils";
+import { IArt, IOrder, IOrderArt, IProvider, IUser } from "@types";
+import { extractString } from "@utils";
+import htmlToPdfmake from 'html-to-pdfmake';
+import jsPDF from "jspdf";
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { JSXElementConstructor, Key, ReactElement, ReactFragment, ReactPortal, useContext, useEffect, useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 export const OrderDetail = () => {
 
@@ -22,17 +24,22 @@ export const OrderDetail = () => {
   const navigate = useNavigate();
 
   const params = useParams();
+  const [searchParams] = useSearchParams();
 
   const { data: allArts, isLoading } = useGetArts(marca?.slug || params?.marca || "")
-  const { mutateAsync: getOrder, data, isLoading: loadingOrder } = useGetOrderByIDAsync()
-  const { mutateAsync, isLoading: saving, data: result } = useCreateOrder()
-
+  const { data: allProviders, isLoading: loadingProviders } = useGetProviders()
+  const { mutateAsync: getOrder, data, isLoading: loadingOrder, } = useGetOrderByIDAsync()
+  const { mutateAsync, isLoading: saving } = useCreateOrder()
 
   const [rows, setRows] = useState<Array<IOrderArt>>([])
   const [rowsArts, setRowsArts] = useState<IArt[]>([])
   const [isEditable, setIsEditable] = useState(false)
   const [open, setOpen] = useState(false);
+  const [openProviders, setOpenProviders] = useState(false);
+  const [openPDFPreview, setOpenPDFPreview] = useState(true);
   const [isFinished, setIsFinished] = useState(true)
+  const [isCarrinho, setIsCarrinho] = useState(false)
+  const [selectProvider, setSelectProvider] = useState<IProvider>()
   const [status, setStatus] = useState<{
     status?: string,
     user?: IUser,
@@ -65,11 +72,11 @@ export const OrderDetail = () => {
   useEffect(() => {
     if (allArts && data) {
       let allArtsList = allArts.filter((item) => {
-        // if (item.approvedBy && typeof item.approvedBy !== 'string') {
-        return !data.arts.some((art: IOrderArt) => {
-          return art.art.id === item.id
-        })
-        // }
+        if (item.approvedBy && typeof item.approvedBy !== 'string') {
+          return !data.arts.some((art: IOrderArt) => {
+            return art.art.id === item.id
+          })
+        }
       })
 
       setRowsArts(allArtsList)
@@ -83,14 +90,19 @@ export const OrderDetail = () => {
   }, [params])
 
   useEffect(() => {
-    if (result) navigate(`/pedido/${marca}/lista`)
-  }, [result])
+    if (searchParams.get("carrinho") === "true" && isFinished === false) {
+      setIsCarrinho(true)
+    } else {
+      setIsCarrinho(false)
+    }
+  }, [searchParams, isFinished])
 
   const saveOrder = (order: IOrder) => {
 
     try {
-      mutateAsync(order).then((res: any) => {
+      mutateAsync(order).then(() => {
         setOpenSuccess("Pedido realizado com sucesso.")
+        navigate(`/pedido/${marca?.slug}/lista`)
       }).catch((error: string) => {
         console.warn("erro: " + error)
         throw "Erro ao salvar. Tente novamente."
@@ -116,6 +128,19 @@ export const OrderDetail = () => {
     })
 
     setRows([...rows, ...arts])
+  }
+
+  const handleSelectedProvider = (ids: Array<any>) => {
+
+    const provider: IProvider[] = []
+
+    allProviders?.filter((item) => {
+      if (item.cnpj === ids[0]) {
+        provider.push(item as IProvider)
+      }
+    })
+
+    setSelectProvider(provider[0])
   }
 
   const handleDeleteClick = (event: any, id: string) => {
@@ -228,6 +253,20 @@ export const OrderDetail = () => {
     },
   ];
 
+  const columnsProviders: GridColDef[] = [
+    { field: 'name', headerName: 'Nome', width: 250, filterable: true },
+    { field: 'cnpj', headerName: 'CNPJ', width: 150, filterable: true },
+    { field: 'manager', headerName: 'Gerente', width: 150, filterable: true },
+    {
+      field: 'address', headerName: 'Endereço', width: 380, filterable: true, valueGetter: (params: GridValueGetterParams) => {
+        return `${params.row.address.logradouro}, ${params.row.address.numero} - ${params.row.address.localidade} - ${params.row.address.uf}`
+      },
+    },
+    { field: 'managerPhone', headerName: 'Contato do gerente', width: 150, filterable: true },
+    { field: 'managerEmail', headerName: 'E-mail do gerente', width: 250, filterable: true },
+    { field: 'productionEmail', headerName: 'E-mail para produção', width: 250, filterable: true },
+  ];
+
   const styleModal = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -282,27 +321,64 @@ export const OrderDetail = () => {
     saveOrder(order)
   }
 
+  const printDocument = () => {
+    //const input = document.getElementById('divToPrint');
+
+    const doc = new jsPDF();
+
+    //get table html
+    const pdfPrint = document.getElementById('divToPrint');
+    //html to pdf format
+    let html = htmlToPdfmake(`${pdfPrint?.innerHTML}`);
+    pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+    const documentDefinition = { content: html };
+    pdfMake.createPdf(documentDefinition).download();
+
+  }
+
   const productOrder = (e: any) => {
     e.preventDefault()
 
-    const order: IOrder = {
-      ...data as IOrder,
-      toProduction: {
-        date: new Date().toISOString(),
-        by: user
-      }
-    }
+    if (!selectProvider) {
+      setOpenError("Selecione um fornecedor")
+    } else {
 
-    saveOrder(order)
+      // criar pdf
+
+      printDocument()
+
+      // salva pdf
+
+      // gerar zip
+
+      // salva zip
+
+      //manda email
+
+      //salva que foi enviado
+      const order: IOrder = {
+        ...data as IOrder,
+        toProduction: {
+          date: new Date().toISOString(),
+          provider: selectProvider,
+          by: user
+        }
+      }
+
+      saveOrder(order)
+    }
   }
+
+  if (isLoading) return <Loading />
 
   return <Layout title="Pedido" sx={{ paddingY: 3 }} width="100%">
     <Grid container>
       <Box display="flex" flexDirection="column" alignItems="center" justifyContent={"center"} width="100%" gap={2} >
         <Typography component="h1" variant="h5">
-          {isFinished ? "Detalhes do pedido" : "Editar seu pedido"}
+          {isFinished ? "Detalhes do pedido" : isCarrinho ? "Carrinho" : "Editar seu pedido"}
         </Typography>
-        <Stack
+        {isCarrinho ? null : <Stack
           direction={{ sm: 'column', md: 'row' }}
           spacing={2}
           justifyContent="center"
@@ -313,7 +389,7 @@ export const OrderDetail = () => {
           <Item>Data: {new Date(data?.createdAt).toLocaleString("pt-BR")}</Item>
           {status.status && <Item>{status.status}{status.user?.name}</Item>}
           {status.production && <Item>Enviado p/ prod. em: {new Date(status.production.date).toLocaleString("pt-BR")}</Item>}
-        </Stack>
+        </Stack>}
       </Box>
       <Box width="100%" height='70vh' paddingY={2}>
         <DataGrid
@@ -329,12 +405,12 @@ export const OrderDetail = () => {
           }}
         />
       </Box>
-      {!isFinished ? <Box width="100%" paddingY={2} gap={2} display="inline-flex" justifyContent={"end"}>
+      {loadingOrder || saving ? <Loading /> : !isFinished ? <Box width="100%" paddingY={2} gap={2} display="inline-flex" justifyContent={"end"}>
         <Button onClick={() => setOpen(true)} color="secondary">Adicionar artes</Button>
         <Button onClick={() => setIsEditable(!isEditable)} color="secondary">Editar</Button>
         <Button onClick={(e) => updateOrder(e)}>Finalizar</Button>
       </Box> : null}
-      {isFinished && !status.status ? <Box width="100%" paddingY={2} gap={2} display="inline-flex" justifyContent={"end"}>
+      {loadingOrder || saving ? <Loading /> : isFinished && !status.status ? <Box width="100%" paddingY={2} gap={2} display="inline-flex" justifyContent={"end"}>
         <Tooltip title="Aprovar pedido" arrow>
           <Button
             onClick={(e) => approveOrder(e, "approve")}
@@ -347,13 +423,14 @@ export const OrderDetail = () => {
           >Recusar</Button>
         </Tooltip>
       </Box> : null}
-      {isFinished && !status.production && status.status === "Aprovado por: " ? <Box width="100%" paddingY={2} gap={2} display="inline-flex" justifyContent={"end"}>
+      {loadingOrder || saving ? <Loading /> : isFinished && !status.production && status.status === "Aprovado por: " ? <Box width="100%" paddingY={2} gap={2} display="inline-flex" justifyContent={"end"}>
         <Tooltip title="Aprovar pedido" arrow>
           <Button
             onClick={(e) => productOrder(e)}
           >Enviar para produção</Button>
         </Tooltip>
       </Box> : null}
+
       <Modal
         open={open}
         onClose={() => setOpen(false)}
@@ -385,6 +462,104 @@ export const OrderDetail = () => {
           </Grid>
         </Box>
       </Modal>
-    </Grid>
+
+      <Modal
+        open={openProviders}
+        onClose={() => setOpenProviders(false)}
+        aria-labelledby="Selecione o fornecedor"
+        title="Selecione o fornecedor"
+      >
+        <Box sx={styleModal} paper={2}>
+          <Grid container>
+            <Box display="flex" flexDirection="column" alignItems="center" justifyContent={"center"} width="100%" gap={2} >
+              <Typography component="h1" variant="h5">
+                Selecione apenas 1 fornecedor
+              </Typography>
+            </Box>
+            <Box width="100%" height='70vh' paddingY={2}>
+              <DataGrid
+                loading={loadingProviders}
+                rows={allProviders || []}
+                columns={columnsProviders}
+                pageSize={5}
+                rowsPerPageOptions={[5, 10, 20, 50, 100]}
+                checkboxSelection
+                components={{ Toolbar: GridToolbar }}
+                getRowId={(row) => row.cnpj}
+                onSelectionModelChange={(e) => handleSelectedProvider(e)}
+              />
+            </Box>
+            <Box width="100%" paddingY={2}>
+              <Button variant="outlined" sx={{ marginX: "1rem" }} onClick={() => setOpenProviders(false)}>Cancelar</Button>
+              <Button onClick={(e) => productOrder(e)}>Enviar</Button>
+            </Box>
+          </Grid>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openPDFPreview}
+        onClose={() => setOpenPDFPreview(false)}
+        aria-labelledby="Selecione o fornecedor"
+        title="Selecione o fornecedor"
+      >
+        <Box sx={styleModal} paper={2}>
+          <Grid container>
+            <Box display="flex" flexDirection="column" alignItems="center" justifyContent={"center"} width="100%" gap={2} >
+              <Typography component="h1" variant="h5">
+                Revise seu pedido
+              </Typography>
+            </Box>
+            <Box width="100%" height='70vh' paddingY={2} id="divToPrint">
+              <div style={{ width: "100%", padding: "30px" }}>
+                <h3 style={{ textAlign: "center" }}>
+                  Pedido {data?.id}
+                </h3>
+                <div style={{ width: "100%", display: "flex" }}>
+                  <div style={{ width: "50%" }}>
+                    <p>Loja: {data?.store.name}</p>
+                    <p>Gerente: {data?.store.manager} - {data?.store.managerPhone}</p>
+                    <p>Endereço: {data?.store.address.logradouro}, {data?.store.address.numero} - {data?.store.address.complemento}</p>
+                    <p>{data?.store.address.bairro} - {data?.store.address.localidade} - {data?.store.address.uf}</p>
+                  </div>
+                  <div style={{ width: "50%", textAlign: "right" }}>
+                    <p>Marca: {data?.marca.name}</p>
+                    {/* {data?.marca.avatar ? <img src={data?.marca.avatar} alt={data?.marca.name} style={{ width: "100px" }} /> : null} */}
+                    <p>Pedido por: {data?.createdBy.name}</p>
+                    <p>Aprovado por: {data?.approvedBy.name}</p>
+                    <p>Data de criação do pedido: {new Date(data?.createdAt).toLocaleString("pt-BR")}</p>
+                    <p>Data do envio para produção: {new Date().toLocaleString("pt-BR")}</p>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <table style={{ width: "100%", border: "1px solid black", borderCollapse: "collapse"}}>
+                  <thead>
+                    <tr>
+                      <th scope="col" style={{ border: "1px solid black"}}>Quantidade</th>
+                      <th scope="col" style={{ border: "1px solid black"}}>Arte</th>
+                      <th scope="col" style={{ border: "1px solid black"}}>Observação</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data?.arts.map((row: IOrderArt, i: Key | null | undefined) => {
+                      return <tr key={i}>
+                      <td data-title="Quantidade" style={{ border: "1px solid black", textAlign: "center"}}>{row.qnt}</td>
+                      <td data-title="Arte" style={{ border: "1px solid black"}}>{row.art.name} - id: {row.art.id}</td>
+                      <td data-title="Observação" style={{ border: "1px solid black"}}>{row.observation}</td>
+                    </tr>
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </Box>
+            <Box width="100%" paddingY={2}>
+              <Button variant="outlined" sx={{ marginX: "1rem" }} onClick={() => setOpenPDFPreview(false)}>Cancelar</Button>
+              <Button onClick={() => printDocument()}>Finalizar pedido</Button>
+            </Box>
+          </Grid>
+        </Box>
+      </Modal >
+    </Grid >
   </Layout >
 }

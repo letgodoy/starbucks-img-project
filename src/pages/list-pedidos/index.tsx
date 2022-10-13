@@ -1,14 +1,14 @@
 import { AlertContext, AuthContext, BrandContext, checkBrand, Layout } from "@components";
-import { useCreateOrder, useGetOrders } from "@dataAccess";
+import { useCreateOrder, useGetOrders, useGetProviders } from "@dataAccess";
 import { Box, Button, Grid, Typography } from "@elements";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 import TaskIcon from '@mui/icons-material/Task';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { IconButton, Tooltip } from "@mui/material";
+import { IconButton, Modal, Tooltip } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams, GridToolbar, GridValueGetterParams } from '@mui/x-data-grid';
-import { IOrder } from "@types";
+import { IOrder, IProvider } from "@types";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -25,10 +25,13 @@ export const ListOrders = () => {
 
   const { data, isLoading } = useGetOrders(marca?.slug || params?.marca || "")
   const { mutateAsync: updateOrder, isLoading: saving, data: result } = useCreateOrder()
+  const { data: allProviders, isLoading: loadingProviders } = useGetProviders()
 
   const [rows, setRows] = useState<Array<IOrder>>([])
   const [showAll, setShowAll] = useState(false)
   const [showProduction, setShowProduction] = useState(false)
+  const [selectProvider, setSelectProvider] = useState<IProvider>()
+  const [openProviders, setOpenProviders] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -37,7 +40,7 @@ export const ListOrders = () => {
   }, [data])
 
   useEffect(() => {
-    if (result) navigate(`/pedido/${marca}/lista`)
+    if (result) navigate(`/pedido/${marca?.slug}/lista`)
   }, [result])
 
   const showAllOrders = (e: any) => {
@@ -107,18 +110,36 @@ export const ListOrders = () => {
     saveOrder(order)
   }
 
-  const productOrder = (e: any, row: IOrder) => {
+  const productOrder = (e: any, row?: IOrder) => {
     e.preventDefault()
 
-    const order: IOrder = {
-      ...row,
-      toProduction: {
-        date: new Date().toISOString(),
-        by: user
-      },
-    }
+    if (!selectProvider) {
+      setOpenError("Selecione um fornecedor")
+    } else {
+      const order: IOrder = {
+        ...row as IOrder,
+        toProduction: {
+          date: new Date().toISOString(),
+          provider: selectProvider,
+          by: user
+        }
+      }
 
-    saveOrder(order)
+      saveOrder(order)
+    }
+  }
+
+  const handleSelectedProvider = (ids: Array<any>) => {
+
+    const provider: IProvider[] = []
+
+    allProviders?.filter((item) => {
+      if (item.cnpj === ids[0]) {
+        provider.push(item as IProvider)
+      }
+    })
+
+    setSelectProvider(provider[0])
   }
 
   const columns: GridColDef[] = [
@@ -195,6 +216,32 @@ export const ListOrders = () => {
     },
   ];
 
+  const columnsProviders: GridColDef[] = [
+    { field: 'name', headerName: 'Nome', width: 250, filterable: true },
+    { field: 'cnpj', headerName: 'CNPJ', width: 150, filterable: true },
+    { field: 'manager', headerName: 'Gerente', width: 150, filterable: true },
+    {
+      field: 'address', headerName: 'Endereço', width: 380, filterable: true, valueGetter: (params: GridValueGetterParams) => {
+        return `${params.row.address.logradouro}, ${params.row.address.numero} - ${params.row.address.localidade} - ${params.row.address.uf}`
+      },
+    },
+    { field: 'managerPhone', headerName: 'Contato do gerente', width: 150, filterable: true },
+    { field: 'managerEmail', headerName: 'E-mail do gerente', width: 250, filterable: true },
+    { field: 'productionEmail', headerName: 'E-mail para produção', width: 250, filterable: true },
+  ];
+
+  const styleModal = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: "80vw",
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    borderRadius: 4,
+    p: 4,
+  };
+
   return <Layout title="Pedido" sx={{ paddingY: 3 }} width="100%">
     <Grid container>
       <Box display="flex" flexDirection="column" alignItems="center" justifyContent={"center"} width="100%" gap={2} >
@@ -216,7 +263,39 @@ export const ListOrders = () => {
           components={{ Toolbar: GridToolbar }}
         />
       </Box>
-
+      <Modal
+        open={openProviders}
+        onClose={() => setOpenProviders(false)}
+        aria-labelledby="Selecione o fornecedor"
+        title="Selecione o fornecedor"
+      >
+        <Box sx={styleModal} paper={2}>
+          <Grid container>
+            <Box display="flex" flexDirection="column" alignItems="center" justifyContent={"center"} width="100%" gap={2} >
+              <Typography component="h1" variant="h5">
+                Selecione apenas 1 fornecedor
+              </Typography>
+            </Box>
+            <Box width="100%" height='70vh' paddingY={2}>
+              <DataGrid
+                loading={loadingProviders}
+                rows={allProviders || []}
+                columns={columnsProviders}
+                pageSize={5}
+                rowsPerPageOptions={[5, 10, 20, 50, 100]}
+                checkboxSelection
+                components={{ Toolbar: GridToolbar }}
+                getRowId={(row) => row.cnpj}
+                onSelectionModelChange={(e) => handleSelectedProvider(e)}
+              />
+            </Box>
+            <Box width="100%" paddingY={2}>
+              <Button variant="outlined" sx={{marginX: "1rem"}} onClick={() => setOpenProviders(false)}>Cancelar</Button>
+              <Button onClick={(e) => productOrder(e)}>Enviar</Button>
+            </Box>
+          </Grid>
+        </Box>
+      </Modal>
     </Grid>
   </Layout >
 }

@@ -1,4 +1,4 @@
-import { IArt, IBrand, IStore, IUser } from ".";
+import { IArt, IBrand, IProvider, IStore, IUser } from ".";
 
 export interface IOrder {
   id: string;
@@ -12,9 +12,12 @@ export interface IOrder {
   marcaSlug: string;
   isClosed: boolean;
   toProduction?: {
-    date: string,
-    by: IUser
+    date: string;
+    provider: IProvider;
+    by: IUser;
   };
+  pdfLink?: string;
+  zipFile?: string;
 }
 
 export interface IOrderArt {
