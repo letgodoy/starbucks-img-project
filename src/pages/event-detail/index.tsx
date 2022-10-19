@@ -1,6 +1,6 @@
 import { AlertContext, AuthContext, checkBrand, Layout } from "@components";
 import { useGetEventByID, useUpdateEvent, zipFile } from "@dataAccess";
-import { Attribute, Box, Button, Grid, Typography } from "@elements";
+import { Attribute, Box, Button, Grid, Loading, Typography } from "@elements";
 import { Masonry } from "@mui/lab";
 import { IEvent, IStorageImage } from "@types";
 import { useContext, useState } from "react";
@@ -23,7 +23,9 @@ export const EventDetail = () => {
 
   const { data } = useGetEventByID(id || "")
 
-  const { mutateAsync, isLoading } = useUpdateEvent()
+  const { mutateAsync } = useUpdateEvent()
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const changeStatus = (e: any, status: string) => {
     e.preventDefault()
@@ -53,6 +55,8 @@ export const EventDetail = () => {
 
     if (data?.zipFile) return window.open(data.zipFile, '_blank');
 
+    setIsLoading(true)
+
     let files: Array<string> = []
 
     data?.images.map((img: IStorageImage) => {
@@ -74,9 +78,11 @@ export const EventDetail = () => {
 
     mutateAsync(newData).then(res => {
       setOpenSuccess("Download pronto.")
+      setIsLoading(false)
     }).catch((e) => {
       console.warn("erro: " + e)
       setOpenError("Erro ao salvar. Tente novamente.")
+      setIsLoading(false)
     })
   }
 
@@ -143,7 +149,7 @@ export const EventDetail = () => {
           <Attribute label="Autor" value={data?.createdBy?.name} />
           {data?.approvedBy?.name ? <Attribute label="Aprovado por" value={data?.approvedBy?.name} /> : null}
           {data?.refusedBy?.name ? <Attribute label="Recusado por" value={data?.refusedBy?.name} /> : null}
-          <Button onClick={(e) => handleDownload(e)} sx={{ marginY: "1rem" }}>Download</Button>
+          {isLoading ? <Loading /> : <Button onClick={(e) => handleDownload(e)} sx={{ marginY: "1rem" }}>Download</Button>}
         </Box>
       </Grid>
     </Grid>

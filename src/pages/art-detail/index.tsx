@@ -1,6 +1,6 @@
 import { AlertContext, AuthContext, checkBrand, Layout } from "@components";
 import { useGetArtByID, useUpdateArt, zipFile } from "@dataAccess";
-import { Attribute, Box, Button, Grid, Typography } from "@elements";
+import { Attribute, Box, Button, Grid, Loading, Typography } from "@elements";
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import { IArt, IStorageImage } from "@types";
@@ -25,7 +25,9 @@ export const ArtDetail = () => {
 
   const { data } = useGetArtByID(id || "")
 
-  const { mutateAsync, isLoading } = useUpdateArt()
+  const { mutateAsync } = useUpdateArt()
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const changeStatus = (e: any, status: string) => {
     e.preventDefault()
@@ -55,6 +57,8 @@ export const ArtDetail = () => {
 
     if (data?.zipFile) return window.open(data.zipFile, '_blank');
 
+    setIsLoading(true)
+
     let files: Array<string> = []
 
     data?.images.map((img: IStorageImage) => {
@@ -76,9 +80,11 @@ export const ArtDetail = () => {
 
     mutateAsync(newData).then(res => {
       setOpenSuccess("Download pronto.")
+      setIsLoading(false)
     }).catch((e) => {
       console.warn("erro: " + e)
       setOpenError("Erro ao salvar. Tente novamente.")
+      setIsLoading(false)
     })
   }
 
@@ -160,7 +166,7 @@ export const ArtDetail = () => {
           <Attribute label="Autor" value={data?.createdBy?.name} />
           {data?.approvedBy?.name ? <Attribute label="Aprovado por" value={data?.approvedBy?.name} /> : null}
           {data?.refusedBy?.name ? <Attribute label="Recusado por" value={data?.refusedBy?.name} /> : null}
-          <Button onClick={(e) => handleDownload(e)} sx={{ marginY: "1rem" }}>Download</Button>
+          {isLoading ? <Loading /> : <Button onClick={(e) => handleDownload(e)} sx={{ marginY: "1rem" }}>Download</Button>}
         </Box>
       </Grid>
     </Grid>
