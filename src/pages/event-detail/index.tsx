@@ -79,6 +79,7 @@ export const EventDetail = () => {
     mutateAsync(newData).then(res => {
       setOpenSuccess("Download pronto.")
       setIsLoading(false)
+      return window.open(zipUrl, '_blank');
     }).catch((e) => {
       console.warn("erro: " + e)
       setOpenError("Erro ao salvar. Tente novamente.")
