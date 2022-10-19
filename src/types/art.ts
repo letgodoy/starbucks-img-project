@@ -17,6 +17,7 @@ export interface IArt {
   year: string;
   format: string;
   specification: string;
+  zipFile?: string;
 }
 
 export interface IStorageImage {

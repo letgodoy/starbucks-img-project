@@ -18,21 +18,10 @@ export const ImgDetail = () => {
 
   const { mutateAsync, isLoading } = useUpdateImage()
 
-  const downloadFile = async () => {
-    fetch(data?.mainImg.url, {
-      mode: 'no-cors',
-    })
-      .then(response => response.blob())
-      .then(blob => {
-        let blobUrl = window.URL.createObjectURL(blob);
-        let a = document.createElement('a');
-        a.download = data?.mainImg.ref;
-        a.href = blobUrl;
-        a.target = "_blank"
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-      })
+  const handleDownload = (e: any) => {
+    e.preventDefault()
+
+    return window.open(data?.mainImg, '_blank');
   }
 
   const changeStatus = (e: any, status: string) => {
@@ -113,9 +102,7 @@ export const ImgDetail = () => {
           <Attribute label="Validade" value={new Date(data?.validate).toLocaleString('pt-BR')} />
           {data?.approvedBy?.name ? <Attribute label="Aprovado por" value={data?.approvedBy?.name} /> : null}
           {data?.refusedBy?.name ? <Attribute label="Recusado por" value={data?.refusedBy?.name} /> : null}
-          {/* <a href={data?.mainImg.url} download={data?.name}> */}
-          <Button onClick={downloadFile} sx={{ marginY: 2 }}>Download</Button>
-          {/* </a> */}
+          <Button onClick={(e) => handleDownload(e)} sx={{ marginY: "1rem" }}>Download</Button>
         </Box>
       </Grid>
     </Grid>

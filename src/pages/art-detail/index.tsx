@@ -1,9 +1,9 @@
 import { AlertContext, AuthContext, checkBrand, Layout } from "@components";
-import { useGetArtByID, useUpdateArt } from "@dataAccess";
+import { useGetArtByID, useUpdateArt, zipFile } from "@dataAccess";
 import { Attribute, Box, Button, Grid, Typography } from "@elements";
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
-import { IArt } from "@types";
+import { IArt, IStorageImage } from "@types";
 import { useContext, useState } from "react";
 import Lightbox from "react-awesome-lightbox";
 import "react-awesome-lightbox/build/style.css";
@@ -46,6 +46,38 @@ export const ArtDetail = () => {
       setOpenSuccess("Atualizado com sucesso.")
     }).catch(error => {
       console.warn("erro: " + error)
+      setOpenError("Erro ao salvar. Tente novamente.")
+    })
+  }
+
+  const handleDownload = async (e: any) => {
+    e.preventDefault()
+
+    if (data?.zipFile) return window.open(data.zipFile, '_blank');
+
+    let files: Array<string> = []
+
+    data?.images.map((img: IStorageImage) => {
+      files.push(img.url.split("?alt=")[0])
+    })
+
+    const zipfolder = `art/${data?.id}.zip`
+
+    const zipUrl = await zipFile(files, zipfolder).then(res => res.url)
+
+
+    const newData = data as IArt
+
+    if (typeof zipUrl === "string") {
+      newData.zipFile = zipUrl
+    } else {
+      return setOpenError("Erro ao salvar. Tente novamente.")
+    }
+
+    mutateAsync(newData).then(res => {
+      setOpenSuccess("Download pronto.")
+    }).catch((e) => {
+      console.warn("erro: " + e)
       setOpenError("Erro ao salvar. Tente novamente.")
     })
   }
@@ -128,6 +160,7 @@ export const ArtDetail = () => {
           <Attribute label="Autor" value={data?.createdBy?.name} />
           {data?.approvedBy?.name ? <Attribute label="Aprovado por" value={data?.approvedBy?.name} /> : null}
           {data?.refusedBy?.name ? <Attribute label="Recusado por" value={data?.refusedBy?.name} /> : null}
+          <Button onClick={(e) => handleDownload(e)} sx={{ marginY: "1rem" }}>Download</Button>
         </Box>
       </Grid>
     </Grid>

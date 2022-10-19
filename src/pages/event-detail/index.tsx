@@ -1,8 +1,8 @@
 import { AlertContext, AuthContext, checkBrand, Layout } from "@components";
-import { useGetEventByID, useUpdateEvent } from "@dataAccess";
+import { useGetEventByID, useUpdateEvent, zipFile } from "@dataAccess";
 import { Attribute, Box, Button, Grid, Typography } from "@elements";
 import { Masonry } from "@mui/lab";
-import { IArt } from "@types";
+import { IEvent, IStorageImage } from "@types";
 import { useContext, useState } from "react";
 import Lightbox from "react-awesome-lightbox";
 import "react-awesome-lightbox/build/style.css";
@@ -30,7 +30,7 @@ export const EventDetail = () => {
 
     if (!data) return null
 
-    const imgUpdated = data as IArt
+    const imgUpdated = data as IEvent
 
     if (status === "approve") {
       imgUpdated.approvedBy = loggedUser.user
@@ -44,6 +44,38 @@ export const EventDetail = () => {
       setOpenSuccess("Atualizado com sucesso.")
     }).catch(error => {
       console.warn("erro: " + error)
+      setOpenError("Erro ao salvar. Tente novamente.")
+    })
+  }
+
+  const handleDownload = async (e: any) => {
+    e.preventDefault()
+
+    if (data?.zipFile) return window.open(data.zipFile, '_blank');
+
+    let files: Array<string> = []
+
+    data?.images.map((img: IStorageImage) => {
+      files.push(img.url.split("?alt=")[0])
+    })
+
+    const zipfolder = `events/${data?.id}.zip`
+
+    const zipUrl = await zipFile(files, zipfolder).then(res => res.url)
+
+
+    const newData = data as IEvent
+
+    if (typeof zipUrl === "string") {
+      newData.zipFile = zipUrl
+    } else {
+      return setOpenError("Erro ao salvar. Tente novamente.")
+    }
+
+    mutateAsync(newData).then(res => {
+      setOpenSuccess("Download pronto.")
+    }).catch((e) => {
+      console.warn("erro: " + e)
       setOpenError("Erro ao salvar. Tente novamente.")
     })
   }
@@ -111,6 +143,7 @@ export const EventDetail = () => {
           <Attribute label="Autor" value={data?.createdBy?.name} />
           {data?.approvedBy?.name ? <Attribute label="Aprovado por" value={data?.approvedBy?.name} /> : null}
           {data?.refusedBy?.name ? <Attribute label="Recusado por" value={data?.refusedBy?.name} /> : null}
+          <Button onClick={(e) => handleDownload(e)} sx={{ marginY: "1rem" }}>Download</Button>
         </Box>
       </Grid>
     </Grid>

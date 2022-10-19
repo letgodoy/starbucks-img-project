@@ -18,6 +18,7 @@ export interface IImage {
   marca: IBrand;
   marcaSlug: string;
   mainImg: IStorageImage;
+  zipFile?: string;
 }
 
 export interface IFile {

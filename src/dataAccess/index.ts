@@ -13,3 +13,4 @@ export * from "./user";
 export * from "./event";
 export * from "./orders";
 export * from "./fornecedor";
+export * from "./zipFile";

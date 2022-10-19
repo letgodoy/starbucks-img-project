@@ -14,4 +14,5 @@ export interface IEvent {
   marcaSlug: string;
   cover?: IStorageImage;
   images: Array<IStorageImage>;
+  zipFile?: string;
 }
