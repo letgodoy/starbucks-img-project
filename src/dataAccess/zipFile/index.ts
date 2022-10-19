@@ -5,8 +5,8 @@ export const zipFile = async (files: Array<string>, zipName: string) => {
   // const { token } = useContext(AuthContext)
   
   const response = await fetch(
-    // "https://us-central1-starbucks-119c1.cloudfunctions.net/downloadFiles",
-    "http://localhost:5001/starbucks-119c1/us-central1/downloadFiles",
+    "https://us-central1-starbucks-119c1.cloudfunctions.net/downloadFiles",
+    // "http://localhost:5001/starbucks-119c1/us-central1/downloadFiles",
     {
       method: "POST",
       headers: {
