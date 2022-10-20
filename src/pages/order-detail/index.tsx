@@ -56,7 +56,7 @@ export const OrderDetail = () => {
           setStatus({
             status: "Aprovado por: ",
             user: data.approvedBy,
-            // production: data.toProduction
+            production: data.toProduction
           })
         } else if (typeof data.refusedBy === "object") {
           setStatus({
@@ -567,7 +567,7 @@ export const OrderDetail = () => {
                     <p>Marca: {data?.marca.name}</p>
                     {/* {data?.marca.avatar ? <img src={data?.marca.avatar} alt={data?.marca.name} style={{ width: "100px" }} /> : null} */}
                     <p>Pedido por: {data?.createdBy.name}</p>
-                    <p>Aprovado por: {data?.approvedBy.name}</p>
+                    <p>Aprovado por: {data?.approvedBy.name || ""}</p>
                     <p>Data de criação do pedido: {new Date(data?.createdAt).toLocaleString("pt-BR")}</p>
                     <p>Data do envio para produção: {new Date().toLocaleString("pt-BR")}</p>
                   </div>

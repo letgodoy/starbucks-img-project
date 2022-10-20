@@ -1,48 +1,46 @@
 import { ArtDetail, CadastroAgencia, CadastroArte, CadastroCampanha, CadastroCategoria, CadastroEventos, CadastroFornecedor, CadastroFotografo, CadastroImagens, CadastroLoja, CadastroMarca, CadastroProduto, CadastroUser, Dashboard, Error404, EventDetail, Hub, ImgDetail, ListOrders, Login, Marcas, OrderDetail, Orders, SearchArt, SearchEvent, SearchImages } from '@pages';
-import { routes } from '@utils';
-import { ReactElement } from 'react';
-import { Route, RouteProps, Routes, useLocation } from 'react-router-dom';
+// import { routes } from '@utils';
+// import { ReactElement } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
-const getRouters = (): ReactElement<RouteProps>[] => {
+// const getRouters = (): ReactElement<RouteProps>[] => {
 
-  const elements = routes.map((route): ReactElement<RouteProps> => {
+//   const elements = routes.map((route): ReactElement<RouteProps> => {
 
-    // const authContext = useContext(AuthContext);
+//     // const authContext = useContext(AuthContext);
 
-    // if (
-    //   location === "/login" &&
-    //   authContext.token.accessToken &&
-    //   !authContext.token.isExpired &&
-    //   authContext.user.role !== ""
-    // ) {
-    //   navigate("/marcas");
-    // }
+//     // if (
+//     //   location === "/login" &&
+//     //   authContext.token.accessToken &&
+//     //   !authContext.token.isExpired &&
+//     //   authContext.user.role !== ""
+//     // ) {
+//     //   navigate("/marcas");
+//     // }
 
-    // if (route.isPublic === false && authContext.token.accessToken === "") {
-    //   navigate("/login");
-    // }
+//     // if (route.isPublic === false && authContext.token.accessToken === "") {
+//     //   navigate("/login");
+//     // }
 
-    // if (route.isPublic) {
-    //   return <Route key={route.path} path={route.path} element={route.component} />;
-    // }
+//     // if (route.isPublic) {
+//     //   return <Route key={route.path} path={route.path} element={route.component} />;
+//     // }
 
-    // if (
-    //   authContext.token.accessToken &&
-    //   !authContext.token.isExpired
-    //   // authContext.user.role !== ""
-    // ) {
-    //   return <Route key={route.path} path={route.path} element={route.component} />;
-    // }
+//     // if (
+//     //   authContext.token.accessToken &&
+//     //   !authContext.token.isExpired
+//     //   // authContext.user.role !== ""
+//     // ) {
+//     //   return <Route key={route.path} path={route.path} element={route.component} />;
+//     // }
 
-    return <Route key={route.path} path={route.path} element={route.component} />
-  })
+//     return <Route key={route.path} path={route.path} element={route.component} />
+//   })
 
-  return elements
-}
+//   return elements
+// }
 
 export const RouterContext = () => {
-
-  const { pathname: location } = useLocation();
 
   return <Routes>
     <Route path="/" element={<Error404 />} />

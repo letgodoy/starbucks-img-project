@@ -211,7 +211,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Detalhe de pedido",
     id: 24,
-    visibleMenu: true,
+    visibleMenu: false,
   },
   {
     path: "/cadastro-fornecedor/:marca",
