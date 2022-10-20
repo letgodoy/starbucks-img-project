@@ -1,16 +1,13 @@
 import { AlertContext, AuthContext, BrandContext, checkBrand, Layout } from "@components";
-import { useCreateOrder, useGetArts, useGetOrderByIDAsync, useGetProviders } from "@dataAccess";
-import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
+import { generatePDFAndSave, useCreateOrder, useGetArts, useGetOrderByIDAsync, useGetProviders, zipFile } from "@dataAccess";
+import { Box, Button, Grid, Loading, LoadingModal, TextInput, Typography } from "@elements";
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { Modal, Paper, Stack, styled, Tooltip } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams, GridToolbar, GridValueGetterParams } from '@mui/x-data-grid';
-import { IArt, IOrder, IOrderArt, IProvider, IUser } from "@types";
+import { IArt, IOrder, IOrderArt, IProvider, IStorageImage, IUser } from "@types";
 import { extractString } from "@utils";
-import htmlToPdfmake from 'html-to-pdfmake';
-import jsPDF from "jspdf";
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { JSXElementConstructor, Key, ReactElement, ReactFragment, ReactPortal, useContext, useEffect, useState } from "react";
+
+import { Key, useContext, useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 export const OrderDetail = () => {
@@ -39,6 +36,7 @@ export const OrderDetail = () => {
   const [openPDFPreview, setOpenPDFPreview] = useState(false);
   const [isFinished, setIsFinished] = useState(true)
   const [isCarrinho, setIsCarrinho] = useState(false)
+  const [isGenerating, setIsGenerating] = useState(false)
   const [selectProvider, setSelectProvider] = useState<IProvider>()
   const [status, setStatus] = useState<{
     status?: string,
@@ -47,6 +45,7 @@ export const OrderDetail = () => {
   }>({})
 
   useEffect(() => {
+    console.log(data)
     if (data) {
       setRows(data.arts)
 
@@ -97,12 +96,12 @@ export const OrderDetail = () => {
     }
   }, [searchParams, isFinished])
 
-  const saveOrder = (order: IOrder) => {
+  const saveOrder = (order: IOrder, successMessage?: string) => {
 
     try {
       mutateAsync(order).then(() => {
-        setOpenSuccess("Pedido realizado com sucesso.")
-        navigate(`/pedido/${marca?.slug}/lista`)
+        setOpenSuccess(successMessage ? successMessage : "Pedido realizado com sucesso.")
+        // navigate(`/pedido/${marca?.slug}/lista`)
       }).catch((error: string) => {
         console.warn("erro: " + error)
         throw "Erro ao salvar. Tente novamente."
@@ -277,6 +276,7 @@ export const OrderDetail = () => {
     boxShadow: 24,
     borderRadius: 4,
     p: 4,
+    overflow: "auto"
   };
 
   const Item = styled(Paper)(({ theme }) => ({
@@ -321,21 +321,49 @@ export const OrderDetail = () => {
     saveOrder(order)
   }
 
-  const printDocument = () => {
-    //const input = document.getElementById('divToPrint');
+  const printDocument = () => new Promise(async (resolve) => {
 
-    const doc = new jsPDF();
-
-    //get table html
     const pdfPrint = document.getElementById('divToPrint');
-    //html to pdf format
-    let html = htmlToPdfmake(`${pdfPrint?.innerHTML}`);
-    pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-    const documentDefinition = { content: html };
-    pdfMake.createPdf(documentDefinition).download();
+    const pdfUrl = await generatePDFAndSave(`${pdfPrint?.innerHTML}`, data?.id)
 
-  }
+    const order: IOrder = {
+      ...data as IOrder,
+      pdfLink: pdfUrl as string
+    }
+
+    resolve(saveOrder(order, "PDF gerado com sucesso!"))
+
+  })
+
+  const generateZip = () => new Promise(async (resolve) => {
+    let files: Array<string> = []
+
+    data?.arts.map((img: IOrderArt) => {
+      if (img.art.zipFile) {
+        files.push(img.art.zipFile.split("?alt=")[0])
+      } else {
+        img.art.images.map((item: IStorageImage) => {
+          files.push(item.url.split("?alt=")[0])
+        })
+      }
+    })
+    files.push(data?.pdfLink.split("?alt=")[0])
+
+    const zipfolder = `orders/${data?.id}.zip`
+
+    const zipUrl = await zipFile(files, zipfolder).then(res => res.url)
+
+    const newData = data as IOrder
+
+    if (typeof zipUrl === "string") {
+      newData.zipFile = zipUrl
+    } else {
+      return setOpenError("Erro ao salvar. Tente novamente.")
+    }
+
+    resolve(saveOrder(newData, "Arquivos gerados com sucesso!"))
+  })
 
   const productOrder = (e: any) => {
     e.preventDefault()
@@ -344,29 +372,37 @@ export const OrderDetail = () => {
       setOpenError("Selecione um fornecedor")
     } else {
 
-      // criar pdf
+      setIsGenerating(true)
+      setOpenPDFPreview(false)
+      setOpenProviders(false)
 
       printDocument()
+        .then(() => generateZip())
+        // .then(() => sendEmail())
+        .then(() =>
+          new Promise((resolve) => {
+            const order: IOrder = {
+              ...data as IOrder,
+              toProduction: {
+                date: new Date().toISOString(),
+                provider: selectProvider,
+                by: user
+              }
+            }
 
-      // salva pdf
+            resolve(saveOrder(order))
+          })
+        )
+        .then(() => setIsGenerating(false))
+    }
+  }
 
-      // gerar zip
-
-      // salva zip
-
-      //manda email
-
-      //salva que foi enviado
-      const order: IOrder = {
-        ...data as IOrder,
-        toProduction: {
-          date: new Date().toISOString(),
-          provider: selectProvider,
-          by: user
-        }
-      }
-
-      saveOrder(order)
+  const handleProviders = (e: any) => {
+    if (!selectProvider) {
+      setOpenError("Selecione um fornecedor")
+    } else {
+      setOpenProviders(false)
+      setOpenPDFPreview(true)
     }
   }
 
@@ -423,13 +459,18 @@ export const OrderDetail = () => {
           >Recusar</Button>
         </Tooltip>
       </Box> : null}
-      {loadingOrder || saving ? <Loading /> : isFinished && !status.production && status.status === "Aprovado por: " ? <Box width="100%" paddingY={2} gap={2} display="inline-flex" justifyContent={"end"}>
-        <Tooltip title="Aprovar pedido" arrow>
-          <Button
-            onClick={(e) => productOrder(e)}
-          >Enviar para produção</Button>
-        </Tooltip>
-      </Box> : null}
+      <Box width="100%" paddingY={2} gap={2} display="inline-flex" justifyContent={"end"}>
+        {loadingOrder || saving ? <Loading /> : (isFinished && !status.production && status.status === "Aprovado por: ") ?
+          <Tooltip title="Clique para enviar um e-mail com os arquivos para o fornecedor" arrow>
+            <Button
+              onClick={() => setOpenProviders(true)}
+            >Enviar para produção</Button>
+          </Tooltip>
+          : null}
+        {data?.zipFile ? <Button
+          onClick={() => window.open(data?.zipFile, '_blank')}
+        >Download do pedido</Button> : null}
+      </Box>
 
       <Modal
         open={open}
@@ -491,7 +532,7 @@ export const OrderDetail = () => {
             </Box>
             <Box width="100%" paddingY={2}>
               <Button variant="outlined" sx={{ marginX: "1rem" }} onClick={() => setOpenProviders(false)}>Cancelar</Button>
-              <Button onClick={(e) => productOrder(e)}>Enviar</Button>
+              <Button onClick={(e) => handleProviders(e)}>Enviar</Button>
             </Box>
           </Grid>
         </Box>
@@ -503,14 +544,14 @@ export const OrderDetail = () => {
         aria-labelledby="Selecione o fornecedor"
         title="Selecione o fornecedor"
       >
-        <Box sx={styleModal} paper={2}>
+        <Box sx={styleModal} paper={2} height='80vh'>
           <Grid container>
             <Box display="flex" flexDirection="column" alignItems="center" justifyContent={"center"} width="100%" gap={2} >
               <Typography component="h1" variant="h5">
                 Revise seu pedido
               </Typography>
             </Box>
-            <Box width="100%" height='70vh' paddingY={2} id="divToPrint">
+            <Box width="100%" paddingY={2} id="divToPrint">
               <div style={{ width: "100%", padding: "30px" }}>
                 <h3 style={{ textAlign: "center" }}>
                   Pedido {data?.id}
@@ -533,21 +574,21 @@ export const OrderDetail = () => {
                 </div>
               </div>
               <div>
-                <table style={{ width: "100%", border: "1px solid black", borderCollapse: "collapse"}}>
+                <table style={{ width: "100%", border: "1px solid black", borderCollapse: "collapse" }}>
                   <thead>
                     <tr>
-                      <th scope="col" style={{ border: "1px solid black"}}>Quantidade</th>
-                      <th scope="col" style={{ border: "1px solid black"}}>Arte</th>
-                      <th scope="col" style={{ border: "1px solid black"}}>Observação</th>
+                      <th scope="col" style={{ border: "1px solid black" }}>Quantidade</th>
+                      <th scope="col" style={{ border: "1px solid black" }}>Arte</th>
+                      <th scope="col" style={{ border: "1px solid black" }}>Observação</th>
                     </tr>
                   </thead>
                   <tbody>
                     {data?.arts.map((row: IOrderArt, i: Key | null | undefined) => {
                       return <tr key={i}>
-                      <td data-title="Quantidade" style={{ border: "1px solid black", textAlign: "center"}}>{row.qnt}</td>
-                      <td data-title="Arte" style={{ border: "1px solid black"}}>{row.art.name} - id: {row.art.id}</td>
-                      <td data-title="Observação" style={{ border: "1px solid black"}}>{row.observation}</td>
-                    </tr>
+                        <td data-title="Quantidade" style={{ border: "1px solid black", textAlign: "center" }}>{row.qnt}</td>
+                        <td data-title="Arte" style={{ border: "1px solid black" }}>{row.art.name} - id: {row.art.id}</td>
+                        <td data-title="Observação" style={{ border: "1px solid black" }}>{row.observation}</td>
+                      </tr>
                     })}
                   </tbody>
                 </table>
@@ -555,11 +596,13 @@ export const OrderDetail = () => {
             </Box>
             <Box width="100%" paddingY={2}>
               <Button variant="outlined" sx={{ marginX: "1rem" }} onClick={() => setOpenPDFPreview(false)}>Cancelar</Button>
-              <Button onClick={() => printDocument()}>Finalizar pedido</Button>
+              <Button onClick={(e) => productOrder(e)}>Finalizar pedido</Button>
             </Box>
           </Grid>
         </Box>
       </Modal >
+
+      <LoadingModal open={isGenerating} onClose={() => setIsGenerating(false)} />
     </Grid >
   </Layout >
 }
