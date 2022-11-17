@@ -1,3 +1,5 @@
+import { ROLES } from "../types";
+
 export const fileTypes = ["jpg", "png", "gif", "jpeg"];
 
 export const userType = [
@@ -7,34 +9,34 @@ export const userType = [
   },
   {
     name: "Administrador",
-    value: "admin"
+    value: ROLES.admin
   },
   {
     name: "Gerente geral de operações",
-    value: "operationManager"
+    value: ROLES.operationManager
   },
   {
     name: "Gerente de distrito",
-    value: "districtManager"
+    value: ROLES.districtManager
   },
   {
     name: "Gerente de loja",
-    value: "managerStore"
+    value: ROLES.managerStore
   },
   {
     name: "Gerente de agência",
-    value: "managerAgency"
+    value: ROLES.managerAgency
   },
   {
     name: "Gerente de fotógrafos",
-    value: "managerPhoto"
+    value: ROLES.managerPhoto
   },
   {
     name: "Usuário de agência",
-    value: "userAgency"
+    value: ROLES.userAgency
   },
   {
     name: "Usuário de fotógrafos",
-    value: "userPhoto"
+    value: ROLES.userPhoto
   }
 ]

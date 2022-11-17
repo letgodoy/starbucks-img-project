@@ -46,14 +46,14 @@ export const RouterContext = () => {
     <Route path="/" element={<Error404 />} />
     <Route path="/login" element={<Login />} />
     <Route path="/marcas" element={<Marcas />} />
-    <Route path="/cadastro-usuario" element={<CadastroUser />} />
-    <Route path="/cadastro-marcas" element={<CadastroMarca />} />
-    <Route path="/cadastro-lojas" element={<CadastroLoja />} />
-    <Route path="/cadastro-agencia" element={<CadastroAgencia />} />
+    <Route path="/cadastro-usuario/:marca" element={<CadastroUser />} />
+    <Route path="/cadastro-marcas/:marca" element={<CadastroMarca />} />
+    <Route path="/cadastro-lojas/:marca" element={<CadastroLoja />} />
+    <Route path="/cadastro-agencia/:marca" element={<CadastroAgencia />} />
     <Route path="/home/:marca" element={<Dashboard />} />
     <Route path="/cadastro-campanha/:marca" element={<CadastroCampanha />} />
     <Route path="/cadastro-arte/:marca" element={<CadastroArte />} />
-    <Route path="/cadastro-fotografo" element={<CadastroFotografo />} />
+    <Route path="/cadastro-fotografo/:marca" element={<CadastroFotografo />} />
     <Route path="/cadastro-imagem/:marca" element={<CadastroImagens />} />
     <Route path="/detalhe-imagem/:marca/:id" element={<ImgDetail />} />
     <Route path="/hub" element={<Hub />} />

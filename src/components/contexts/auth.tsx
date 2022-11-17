@@ -1,4 +1,4 @@
-import { IAuthContext } from "@types";
+import { IAuthContext, ROLES } from "@types";
 import { Context, createContext, useState } from "react";
 
 const DEFAULT_VALUE: IAuthContext = {
@@ -7,7 +7,7 @@ const DEFAULT_VALUE: IAuthContext = {
     name: "tewste",
     email: "teste@teste",
     avatar: "",
-    role: "admin test",
+    role: ROLES.admin,
     store: null,
     cargo: "aaa",
     phone: "3333",
@@ -46,7 +46,7 @@ const DEFAULT_VALUE: IAuthContext = {
       name: "tewste",
       email: "teste@teste",
       avatar: "",
-      role: "admin test",
+      role: ROLES.admin,
       store: null,
       cargo: "aaa",
       phone: "3333",

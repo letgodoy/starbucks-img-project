@@ -27,3 +27,16 @@ export interface IAuthContext {
   setStore: Dispatch<SetStateAction<IStore | null>>;
   setPhotographer: Dispatch<SetStateAction<IPhotographer | null>>;
 };
+
+
+export enum ROLES {
+  all = "all",
+  admin = "admin",
+  operationManager = "operationManager",
+  districtManager = "districtManager",
+  managerStore = "managerStore",
+  managerAgency = "managerAgency",
+  userAgency = "userAgency",
+  managerPhoto = "managerPhoto",
+  userPhoto = "userPhoto",
+}
