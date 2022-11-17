@@ -1,4 +1,4 @@
-import { IAgency, ICredentials, IPhotographer, IStore } from ".";
+import { IAgency, ICredentials, IPhotographer, IStore, ROLES } from ".";
 
 export interface ICreateUser extends ICredentials, Omit<IUser, "uid"> {
   password: string;
@@ -9,7 +9,7 @@ export interface IUser {
   name: string;
   email: string;
   avatar: string;
-  role: string;
+  role: ROLES;
   store?: IStore | null;
   phone: string;
   cargo: string;

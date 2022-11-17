@@ -2,7 +2,7 @@ import { AlertContext, AuthContext, Layout } from "@components";
 import { useCreateUser, useGetAgencies, useGetPhotographers, useGetStores } from "@dataAccess";
 import { Box, Button, Grid, Loading, MaskedInput, TextInput, Typography } from "@elements";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { IAgency, ICreateUser, IPhotographer, IStore } from "@types";
+import { IAgency, ICreateUser, IPhotographer, IStore, ROLES } from "@types";
 import { extractString, userType } from "@utils";
 import React, { Dispatch, ReactElement, SetStateAction, useContext, useEffect, useState } from "react";
 
@@ -13,7 +13,7 @@ export const CadastroUser = ({ params }: any) => {
   const { data: listAgencies } = useGetAgencies()
   const { data: listPhotography } = useGetPhotographers()
 
-  const [role, setRole] = useState<string>("")
+  const [role, setRole] = useState<ROLES | null>(null)
   const [form, setForm] = useState<ReactElement | null>(null)
   const [store, setStore] = useState<IStore | null>(null)
   const [agency, setAgency] = useState<IAgency | null>(null)
@@ -24,6 +24,9 @@ export const CadastroUser = ({ params }: any) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!role) throw new Error("Selecione um tipo de usuário");
+    
     const data = new FormData(event.currentTarget);
 
     const now = new Date().toISOString()
@@ -53,9 +56,18 @@ export const CadastroUser = ({ params }: any) => {
     })
   }
 
-  const handleCompany = (value: string | null, list: IStore[] | IAgency[] | IPhotographer[] | undefined, setCompany: Dispatch<SetStateAction<IStore | IAgency | IPhotographer | null>>) => {
-    const company: IStore | IAgency | IPhotographer | null = value ? list?.find(item => item.slug = value) || null : null
-    setCompany(company)
+  const handleCompany = (
+    value: string | null, list: IStore[] | IAgency[] | IPhotographer[] | undefined, 
+    setCompany: Dispatch<SetStateAction<IStore | IAgency | IPhotographer | null>>
+    ) => {
+
+      if (value) {
+        const company: IStore | IAgency | IPhotographer | null = list?.find(item => item.slug = value) || null
+        setCompany(company)
+      } else {
+        setCompany(null)
+      }
+    
   }
 
   const BasicFields = <>
@@ -104,7 +116,7 @@ export const CadastroUser = ({ params }: any) => {
     />
   </>
 
-  const SelectStoreElement = <FormControl fullWidth sx={{ marginY: 3 }}>
+  const SelectStoreElement = listStores ? <FormControl fullWidth sx={{ marginY: 3 }}>
     <InputLabel id="selectStore">Selecione a loja</InputLabel>
     <Select
       labelId="selectStore"
@@ -117,9 +129,9 @@ export const CadastroUser = ({ params }: any) => {
         return <MenuItem key={index} value={item.slug}>{item.name}</MenuItem>
       })}
     </Select>
-  </FormControl>
+  </FormControl> : null
 
-  const SelectAgencyElement = <FormControl fullWidth sx={{ marginY: 3 }}>
+  const SelectAgencyElement = listAgencies ? <FormControl fullWidth sx={{ marginY: 3 }}>
     <InputLabel id="selectAgency">Selecione a agência</InputLabel>
     <Select
       labelId="selectAgency"
@@ -132,9 +144,9 @@ export const CadastroUser = ({ params }: any) => {
         return <MenuItem key={index} value={item.slug}>{item.name}</MenuItem>
       })}
     </Select>
-  </FormControl>
+  </FormControl> : null
 
-  const SelectPhotographyElement = <FormControl fullWidth sx={{ marginY: 3 }}>
+  const SelectPhotographyElement = listPhotography ? <FormControl fullWidth sx={{ marginY: 3 }}>
     <InputLabel id="selectPhotography">Selecione a agência de fotografia</InputLabel>
     <Select
       labelId="selectPhotography"
@@ -147,27 +159,27 @@ export const CadastroUser = ({ params }: any) => {
         return <MenuItem key={index} value={item.slug}>{item.name}</MenuItem>
       })}
     </Select>
-  </FormControl>
+  </FormControl> : null
 
   useEffect(() => {
     switch (role) {
-      case "admin":
-      case "operationManager":
-      case "districtManager":
+      case ROLES.admin:
+      case ROLES.operationManager:
+      case ROLES.districtManager:
         return setForm(BasicFields)
-      case "managerStore":
+      case ROLES.managerStore:
         return setForm(<>
           {SelectStoreElement}
           {BasicFields}
         </>)
-      case "managerAgency":
-      case "userAgency":
+      case ROLES.managerAgency:
+      case ROLES.userAgency:
         return setForm(<>
           {SelectAgencyElement}
           {BasicFields}
         </>)
-      case "managerPhoto":
-      case "userPhoto":
+      case ROLES.managerPhoto:
+      case ROLES.userPhoto:
         return setForm(<>
           {SelectPhotographyElement}
           {BasicFields}
@@ -176,6 +188,15 @@ export const CadastroUser = ({ params }: any) => {
         setForm(null)
     }
   }, [role])
+
+  const setRoleForm = (value: string | null) => {
+    if (!value || value === "") setRole(null)
+
+    if (value) {
+      // @ts-ignore
+      setRole(ROLES[value])
+    }
+  }
 
   return <Layout params={params}>
     <Grid container>
@@ -198,10 +219,10 @@ export const CadastroUser = ({ params }: any) => {
               labelId="selectType"
               id="selectTypeElement"
               value={role}
-              onChange={(event) => setRole(event.target.value)}
+              onChange={(event) => setRoleForm(event.target.value)}
               label="Tipo de usuário"
             >
-              {userType.map((item, key) => {
+              {userType?.map((item, key) => {
                 return <MenuItem key={key} value={item.value}>{item.name}</MenuItem>
               })}
             </Select>
