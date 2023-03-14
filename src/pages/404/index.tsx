@@ -3,7 +3,6 @@ import Logo from "@assets/southrock_preto_1.png";
 import { Box, Button, Grid, Typography } from "@elements";
 
 export const Error404 = () => {
-
     return <Grid container={true} sx={{ height: '100vh' }}>
         <Grid
             item
@@ -40,8 +39,6 @@ export const Error404 = () => {
                     Pagina não encontrada
                 </Typography>
                 <Button href="/login">Ir para login</Button>
-
-                <Button href="/hub" sx={{ marginTop: 4 }}>Simular login</Button>
             </Box>
         </Grid>
     </Grid>
