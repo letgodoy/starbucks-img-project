@@ -1,4 +1,4 @@
-import { ArtDetail, CadastroAgencia, CadastroArte, CadastroCampanha, CadastroCategoria, CadastroEventos, CadastroFornecedor, CadastroFotografo, CadastroImagens, CadastroLoja, CadastroMarca, CadastroProduto, CadastroUser, Dashboard, Error404, EventDetail, Hub, ImgDetail, ListOrders, ListUser, Login, Marcas, OrderDetail, Orders, SearchArt, SearchEvent, SearchImages } from '@pages';
+import { ArtDetail, CadastroAgencia, CadastroArte, CadastroCampanha, CadastroCategoria, CadastroEventos, CadastroFornecedor, CadastroFotografo, CadastroImagens, CadastroLoja, CadastroMarca, CadastroProduto, CadastroUser, Dashboard, EditUser, Error404, EventDetail, Hub, ImgDetail, ListOrders, ListUser, Login, Marcas, OrderDetail, Orders, SearchArt, SearchEvent, SearchImages } from '@pages';
 // import { routes } from '@utils';
 // import { ReactElement } from 'react';
 import { Route, Routes } from 'react-router-dom';
@@ -47,6 +47,7 @@ export const RouterContext = () => {
     <Route path="/login" element={<Login />} />
     <Route path="/marcas" element={<Marcas />} />
     <Route path="/listagem-usuario" element={<ListUser />} />
+    <Route path="/editar-usuario/:id" element={<EditUser />} />
     <Route path="/cadastro-usuario" element={<CadastroUser />} />
     <Route path="/cadastro-marcas" element={<CadastroMarca />} />
     <Route path="/cadastro-lojas" element={<CadastroLoja />} />

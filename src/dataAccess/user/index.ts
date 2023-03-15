@@ -65,6 +65,20 @@ export const toggleBlockUser = async (id: string) => {
   }
 };
 
+export const editUser = async (user: Omit<IUser, 'createdAt' | 'createdBy'>) => {
+  const docRef = doc(db, collectionName, user.uid);
+
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    await updateDoc(docRef, {
+      ...user,
+    });
+
+    return user;
+  }
+};
+
 
 export function useCreateUser() {
   return useMutation(createUser);
@@ -81,3 +95,14 @@ export function useGetAllUsers() {
 export function useToggleBlockUser() {
   return useMutation(toggleBlockUser);
 }
+
+export function useFindUser(id?: string) {
+  return useQuery(['findUser', id], () => findUserByID(id!), {
+    enabled: !!id,
+  });
+}
+
+export function useEditUser() {
+  return useMutation(editUser);
+}
+

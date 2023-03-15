@@ -13,6 +13,7 @@ export * from "./cadastro-marcas";
 export * from "./cadastro-product";
 export * from "./cadastro-user";
 export * from "./dashboard";
+export * from "./edit-user";
 export * from "./event-detail";
 export * from "./hub";
 export * from "./image-detail";

@@ -1,11 +1,14 @@
 import BlockIcon from '@mui/icons-material/Block';
 import EditIcon from '@mui/icons-material/Edit';
 import PlayIcon from '@mui/icons-material/PlayCircleOutline';
-import { IconButton, Skeleton, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { Box, Button, IconButton, Skeleton, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
 import { Layout } from "../../components";
 import { useGetAllUsers, useToggleBlockUser } from "../../dataAccess";
 
+
 export const ListUser = ({ params }: any) => {
+  const navigate = useNavigate();
   const { data, status: getUserStatus } = useGetAllUsers();
   const { mutateAsync, status: toggleBlockStatus } = useToggleBlockUser();
 
@@ -22,6 +25,9 @@ export const ListUser = ({ params }: any) => {
 
   return (
     <Layout params={params}>
+      <Box component="div" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button variant="contained" onClick={() => navigate('/cadastro-usuario')}>Criar usuário</Button>
+      </Box>
       {canRenderTable &&
         <Table>
           <TableHead>
@@ -33,11 +39,11 @@ export const ListUser = ({ params }: any) => {
           </TableHead>
           <TableBody>
             {data?.map((u) => (
-              <TableRow>
+              <TableRow key={u.uid}>
                 <TableCell>{u.name}</TableCell>
                 <TableCell>{u.email}</TableCell>
                 <TableCell>
-                  <IconButton edge="end" aria-label="edit">
+                  <IconButton edge="end" aria-label="edit" onClick={() => navigate(`/editar-usuario/${u.uid}`)}>
                     <EditIcon />
                   </IconButton>
                   {u.isBlocked ? (
