@@ -17,6 +17,7 @@ export * from "./event-detail";
 export * from "./hub";
 export * from "./image-detail";
 export * from "./list-pedidos";
+export * from "./list-user";
 export * from "./login";
 export * from "./marcas";
 export * from "./order-detail";
@@ -24,3 +25,4 @@ export * from "./pedidos";
 export * from "./searchArt";
 export * from "./searchEvent";
 export * from "./searchImg";
+

@@ -1,10 +1,10 @@
 import { IAuthContext } from "@types";
-import { Context, createContext, useState } from "react";
+import { Context, createContext, useContext, useState } from "react";
 
 const DEFAULT_VALUE: IAuthContext = {
   user: {
     uid: "aaaa",
-    name: "tewste",
+    name: "teste",
     email: "teste@teste",
     avatar: "",
     role: "admin test",
@@ -59,11 +59,11 @@ const DEFAULT_VALUE: IAuthContext = {
     lastUpdated: "2002-02-12",
   },
   photographer: null,
-  setUser: () => { },
-  setToken: () => { },
-  setAgency: () => { },
-  setStore: () => { },
-  setPhotographer: () => { },
+  setUser: () => {},
+  setToken: () => {},
+  setAgency: () => {},
+  setStore: () => {},
+  setPhotographer: () => {},
 };
 
 export const AuthContext: Context<IAuthContext> = createContext<IAuthContext>(DEFAULT_VALUE);
@@ -81,3 +81,14 @@ export const AuthContextProvider = ({ children }: any) => {
     {children}
   </AuthContext.Provider>;
 };
+
+export function useAuth(): IAuthContext {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthContext.Provider');
+  }
+
+  return context;
+}
+

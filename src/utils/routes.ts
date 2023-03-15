@@ -23,7 +23,7 @@ import {
   Orders,
   SearchArt,
   SearchEvent,
-  SearchImages,
+  SearchImages
 } from "@pages";
 import { RoutesList } from "@types";
 
@@ -55,7 +55,7 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de usuário",
     id: 4,
-    visibleMenu: false,
+    visibleMenu: true,
   },
   {
     path: "/cadastro-marcas",
