@@ -3,12 +3,20 @@ import { useCreateStore } from "@dataAccess";
 import { Box, Grid, Typography } from "@elements";
 import { IStore } from "@types";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserRoles } from "../../enums/UserRoles";
+import { useValidateUserRole } from "../../hooks/useValidateUserRole";
 
 export const CadastroLoja = ({ params }: any) => {
+  const canCreate = useValidateUserRole([UserRoles.ADMIN, UserRoles.DISTRICTMANAGER]);
+
+  const navigate = useNavigate();
 
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
   const { mutateAsync, isLoading } = useCreateStore()
+
+  if (!canCreate) navigate("/marcas");
 
   const handleSubmit = async (store: IStore) => {
     mutateAsync(store).then(res => {

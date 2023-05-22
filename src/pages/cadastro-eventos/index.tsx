@@ -5,10 +5,16 @@ import { colors } from "@mui/material";
 import { IEvent, IFileStorage, IStorageImage } from "@types";
 import { extractString } from "@utils";
 import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Slugify from "slugify";
 import { TagsInput } from "../../elements/tagInput";
+import { UserRoles } from "../../enums/UserRoles";
+import { useValidateUserRole } from "../../hooks/useValidateUserRole";
 
 export const CadastroEventos = () => {
+  const canCreate = useValidateUserRole([UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERAGENCY, UserRoles.MANAGERSTORE, UserRoles.OPERATIONMANAGER]);
+
+  const navigate = useNavigate();
 
   const { selectedBrand: marca } = useContext(BrandContext)
 
@@ -21,7 +27,9 @@ export const CadastroEventos = () => {
   const [tags, setTags] = useState<Array<string>>([]);
   const [loadingFile, setLoadingFile] = useState<boolean>(false)
 
-  const { mutateAsync, isLoading } = useCreateEvent()
+  const { mutateAsync, isLoading } = useCreateEvent();
+
+  if (!canCreate) navigate("/marcas");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

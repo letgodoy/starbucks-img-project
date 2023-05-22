@@ -6,8 +6,13 @@ import { extractString } from "@utils";
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Slugify from "slugify";
+import { UserRoles } from "../../enums/UserRoles";
+import { useValidateUserRole } from "../../hooks/useValidateUserRole";
 
 export const CadastroCategoria = () => {
+  const canCreate = useValidateUserRole([UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERAGENCY]);
+
+  const navigate = useNavigate();
 
   const { selectedBrand: marca } = useContext(BrandContext);
 
@@ -17,7 +22,9 @@ export const CadastroCategoria = () => {
 
   const { mutateAsync, isLoading } = useCreateCategory();
 
-  const { user } = useContext(AuthContext)
+  const { user } = useContext(AuthContext);
+
+  if (!canCreate) navigate("/marcas");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

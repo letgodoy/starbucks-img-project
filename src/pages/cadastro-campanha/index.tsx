@@ -3,11 +3,17 @@ import { useCreateCampaign } from "@dataAccess";
 import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
 import { ICampaign } from "@types";
 import { extractString } from "@utils";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Slugify from "slugify";
+import { UserRoles } from "../../enums/UserRoles";
+import { useValidateUserRole } from "../../hooks/useValidateUserRole";
 
 export const CadastroCampanha = () => {
+  // TODO: validar com a Le sobre quais users podem acessar aqui
+  const canCreate = useValidateUserRole([UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERAGENCY, UserRoles.MANAGERSTORE, UserRoles.OPERATIONMANAGER]);
+
+  const navigate = useNavigate();
 
   const { selectedBrand: marca } = useContext(BrandContext);
 
@@ -17,7 +23,9 @@ export const CadastroCampanha = () => {
 
   const { mutateAsync, isLoading } = useCreateCampaign();
 
-  const { user, agency, photographer } = useContext(AuthContext)
+  const { user, agency, photographer } = useContext(AuthContext);
+
+  if (!canCreate) navigate("/marcas");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

@@ -3,11 +3,20 @@ import { useCreatePhotographer } from "@dataAccess";
 import { Box, Grid, Typography } from "@elements";
 import { IPhotographer } from "@types";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserRoles } from "../../enums/UserRoles";
+import { useValidateUserRole } from "../../hooks/useValidateUserRole";
 
 export const CadastroFotografo = ({ params }: any) => {
+  const canCreate = useValidateUserRole([UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERAGENCY]);
+
+  const navigate = useNavigate();
+
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
   const { mutateAsync, isLoading } = useCreatePhotographer()
+
+  if (!canCreate) navigate("/marcas");
 
   const handleSubmit = async (photographer: IPhotographer) => {
 

@@ -5,8 +5,16 @@ import { FormControl, FormControlLabel, Modal } from "@mui/material";
 import { IProvider } from "@types";
 import { extractString } from "@utils";
 import { FormEvent, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserRoles } from "../../enums/UserRoles";
+import { useValidateUserRole } from "../../hooks/useValidateUserRole";
 
 export const CadastroFornecedor = ({ params }: any) => {
+  // TODO: ver com a le
+  const canCreate = useValidateUserRole([UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERAGENCY]);
+
+  const navigate = useNavigate();
+
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
   const { mutateAsync, isLoading } = useCreateProvider()
@@ -14,6 +22,8 @@ export const CadastroFornecedor = ({ params }: any) => {
   const [open, setOpen] = useState(false);
   const [stdForm, setStdForm] = useState<IProvider | null>();
   const [productionEmail, setProductionEmail] = useState<string | null>();
+
+  if (!canCreate) navigate("/marcas");
 
   const handleSubmit = async (provider: IProvider) => {
 
@@ -38,7 +48,7 @@ export const CadastroFornecedor = ({ params }: any) => {
     const email = extractString(data.get('productionEmail') as string)
 
     if (stdForm) {
-      handleSubmit({...stdForm, productionEmail: email})
+      handleSubmit({ ...stdForm, productionEmail: email })
       setOpen(false)
     }
   }
