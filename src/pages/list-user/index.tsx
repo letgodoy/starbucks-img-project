@@ -5,9 +5,13 @@ import { Box, Button, IconButton, Skeleton, Table, TableBody, TableCell, TableHe
 import { useNavigate } from 'react-router-dom';
 import { Layout } from "../../components";
 import { useGetAllUsers, useToggleBlockUser } from "../../dataAccess";
+import { UserRoles } from '../../enums/UserRoles';
+import { useValidateUserRole } from '../../hooks/useValidateUserRole';
 
 
 export const ListUser = ({ params }: any) => {
+  const canCreate = useValidateUserRole([UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERAGENCY, UserRoles.MANAGERPHOTO, UserRoles.MANAGERSTORE, UserRoles.OPERATIONMANAGER]);
+
   const navigate = useNavigate();
   const { data, status: getUserStatus } = useGetAllUsers();
   const { mutateAsync, status: toggleBlockStatus } = useToggleBlockUser();
@@ -25,9 +29,11 @@ export const ListUser = ({ params }: any) => {
 
   return (
     <Layout params={params}>
-      <Box component="div" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Button variant="contained" onClick={() => navigate('/cadastro-usuario')}>Criar usuário</Button>
-      </Box>
+      {canCreate &&
+        <Box component="div" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button variant="contained" onClick={() => navigate('/cadastro-usuario')}>Criar usuário</Button>
+        </Box>
+      }
       {canRenderTable &&
         <Table>
           <TableHead>

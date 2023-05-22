@@ -7,7 +7,7 @@ const DEFAULT_VALUE: IAuthContext = {
     name: "teste",
     email: "teste@teste",
     avatar: "",
-    role: "admin test",
+    role: "admin",
     store: null,
     cargo: "aaa",
     phone: "3333",

@@ -5,10 +5,15 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { IAgency, ICreateUser, IPhotographer, IStore } from "@types";
 import { extractString } from "@utils";
 import React, { Dispatch, ReactElement, SetStateAction, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserRoles } from "../../enums/UserRoles";
+import { useValidateUserRole } from "../../hooks/useValidateUserRole";
 import { userTypeFilteredByRole } from "../../utils/userTypeFilteredByRole";
 
 export const CadastroUser = ({ params }: any) => {
+  const canCreate = useValidateUserRole([UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERAGENCY, UserRoles.MANAGERPHOTO, UserRoles.MANAGERSTORE, UserRoles.OPERATIONMANAGER]);
 
+  const navigate = useNavigate();
   const { mutateAsync, isLoading } = useCreateUser()
   const { data: listStores } = useGetStores()
   const { data: listAgencies } = useGetAgencies()
@@ -22,6 +27,8 @@ export const CadastroUser = ({ params }: any) => {
 
   const loggedUser = useContext(AuthContext)
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
+
+  if (!canCreate) navigate('/marcas');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

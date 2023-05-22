@@ -1,15 +1,21 @@
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import { Dispatch, ReactElement, SetStateAction, useContext, useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { AlertContext, AuthContext, Layout } from "../../components"
 import { useEditUser, useFindUser, useGetAgencies, useGetPhotographers, useGetStores } from "../../dataAccess"
 import { Loading, MaskedInput, TextInput } from "../../elements"
+import { UserRoles } from "../../enums/UserRoles"
+import { useValidateUserRole } from "../../hooks/useValidateUserRole"
 import { IAgency, IPhotographer, IStore, IUser } from "../../types"
 import { extractString } from "../../utils"
 import { userTypeFilteredByRole } from "../../utils/userTypeFilteredByRole"
 
 export const EditUser = () => {
+  const canCreate = useValidateUserRole([UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERAGENCY, UserRoles.MANAGERPHOTO, UserRoles.MANAGERSTORE, UserRoles.OPERATIONMANAGER]);
+
+  const navigate = useNavigate();
+
   const params = useParams();
 
   const { data: selectedUser, status } = useFindUser(params.id);
@@ -27,6 +33,8 @@ export const EditUser = () => {
 
   const loggedUser = useContext(AuthContext)
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
+
+  if (!canCreate) navigate('/marcas');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

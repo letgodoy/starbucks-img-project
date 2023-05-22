@@ -5,9 +5,11 @@ import { Divider, List, ListItemButton, ListItemText, Paper } from "@mui/materia
 import { routes } from "@utils";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { validateUserRoles } from "../../utils/validateUserRoles";
+import { useAuth } from "../contexts/auth";
 
 export const SideMenu = () => {
-
+  const { user } = useAuth();
   const { selectedBrand } = useContext(BrandContext)
 
   const marca = selectedBrand?.slug || "";
@@ -27,11 +29,11 @@ export const SideMenu = () => {
     navigate(path)
   };
 
-  const renderRoutes = routes.map(({ path, title, id, visibleMenu }) => {
-
-    if (!visibleMenu) return null
+  const renderRoutes = routes.filter(o => o.visibleMenu).map(({ path, title, id, roles }) => {
 
     const redirect = path.replace(":marca", marca)
+
+    if (!validateUserRoles({ roles, currentUser: user })) return <></>;
 
     return <ListItemButton
       key={id}
@@ -44,6 +46,7 @@ export const SideMenu = () => {
       <ListItemText primary={title} />
     </ListItemButton>
   });
+
 
   return <Paper elevation={3} sx={{ position: "fixed", color: "white", height: "96vh", margin: 2, borderRadius: 2, padding: 2, background: "linear-gradient(142deg, #0a0a0a 0%, #202020 100%)" }}>
     <Box display="flex" alignItems="center" justifyContent={"center"} gap={1} >
