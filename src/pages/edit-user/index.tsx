@@ -6,7 +6,8 @@ import { AlertContext, AuthContext, Layout } from "../../components"
 import { useEditUser, useFindUser, useGetAgencies, useGetPhotographers, useGetStores } from "../../dataAccess"
 import { Loading, MaskedInput, TextInput } from "../../elements"
 import { IAgency, IPhotographer, IStore, IUser } from "../../types"
-import { extractString, userType } from "../../utils"
+import { extractString } from "../../utils"
+import { userTypeFilteredByRole } from "../../utils/userTypeFilteredByRole"
 
 export const EditUser = () => {
   const params = useParams();
@@ -212,7 +213,7 @@ export const EditUser = () => {
                 onChange={(event) => setRole(event.target.value)}
                 label="Tipo de usuário"
               >
-                {userType.map((item, key) => {
+                {userTypeFilteredByRole(loggedUser.user.role).map((item, key) => {
                   return <MenuItem key={key} value={item.value}>{item.name}</MenuItem>
                 })}
               </Select>

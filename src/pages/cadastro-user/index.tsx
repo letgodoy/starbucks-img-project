@@ -3,8 +3,9 @@ import { useCreateUser, useGetAgencies, useGetPhotographers, useGetStores } from
 import { Box, Button, Grid, Loading, MaskedInput, TextInput, Typography } from "@elements";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { IAgency, ICreateUser, IPhotographer, IStore } from "@types";
-import { extractString, userType } from "@utils";
+import { extractString } from "@utils";
 import React, { Dispatch, ReactElement, SetStateAction, useContext, useEffect, useState } from "react";
+import { userTypeFilteredByRole } from "../../utils/userTypeFilteredByRole";
 
 export const CadastroUser = ({ params }: any) => {
 
@@ -201,7 +202,7 @@ export const CadastroUser = ({ params }: any) => {
               onChange={(event) => setRole(event.target.value)}
               label="Tipo de usuário"
             >
-              {userType.map((item, key) => {
+              {userTypeFilteredByRole(loggedUser.user.role).map((item, key) => {
                 return <MenuItem key={key} value={item.value}>{item.name}</MenuItem>
               })}
             </Select>
