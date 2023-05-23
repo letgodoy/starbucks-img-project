@@ -18,4 +18,5 @@ export interface IUser {
   createdBy: IUser | null;
   lastUpdated: string;
   photographer?: IPhotographer | null;
+  isBlocked?: boolean;
 }

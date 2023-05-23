@@ -1,4 +1,5 @@
-import { ReactElement } from 'react';
+import { UserRoles } from "../enums/UserRoles";
+
 export interface RoutesList {
   path: string;
   component: any;
@@ -7,4 +8,5 @@ export interface RoutesList {
   visibleRole?: string[];
   id: number;
   visibleMenu?: boolean;
+  roles?: UserRoles[];
 }

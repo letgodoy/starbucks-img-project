@@ -1,20 +1,26 @@
-import { AlertContext, AuthContext, Layout } from "@components";
-import { useCreateUser, useGetAgencies, useGetPhotographers, useGetStores } from "@dataAccess";
-import { Box, Button, Grid, Loading, MaskedInput, TextInput, Typography } from "@elements";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { IAgency, ICreateUser, IPhotographer, IStore } from "@types";
-import { extractString } from "@utils";
-import React, { Dispatch, ReactElement, SetStateAction, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { UserRoles } from "../../enums/UserRoles";
-import { useValidateUserRole } from "../../hooks/useValidateUserRole";
-import { userTypeFilteredByRole } from "../../utils/userTypeFilteredByRole";
+import { Button, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from "@mui/material"
+import { Box } from "@mui/system"
+import { Dispatch, ReactElement, SetStateAction, useContext, useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import { AlertContext, AuthContext, Layout } from "../../components"
+import { useEditUser, useFindUser, useGetAgencies, useGetPhotographers, useGetStores } from "../../dataAccess"
+import { Loading, MaskedInput, TextInput } from "../../elements"
+import { UserRoles } from "../../enums/UserRoles"
+import { useValidateUserRole } from "../../hooks/useValidateUserRole"
+import { IAgency, IPhotographer, IStore, IUser } from "../../types"
+import { extractString } from "../../utils"
+import { userTypeFilteredByRole } from "../../utils/userTypeFilteredByRole"
 
-export const CadastroUser = ({ params }: any) => {
+export const EditUser = () => {
   const canCreate = useValidateUserRole([UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERAGENCY, UserRoles.MANAGERPHOTO, UserRoles.MANAGERSTORE, UserRoles.OPERATIONMANAGER]);
 
   const navigate = useNavigate();
-  const { mutateAsync, isLoading } = useCreateUser()
+
+  const params = useParams();
+
+  const { data: selectedUser, status } = useFindUser(params.id);
+
+  const { mutateAsync, isLoading } = useEditUser()
   const { data: listStores } = useGetStores()
   const { data: listAgencies } = useGetAgencies()
   const { data: listPhotography } = useGetPhotographers()
@@ -36,24 +42,24 @@ export const CadastroUser = ({ params }: any) => {
 
     const now = new Date().toISOString()
 
-    const user: ICreateUser = {
+    const user: Omit<IUser, 'createdAt' | 'createdBy'> = {
       email: extractString(data.get('email') as string),
-      password: extractString(data.get('password') as string),
       name: extractString(data.get('name') as string),
       avatar: extractString(data.get('avatar') as string),
       role: role,
-      store: store,
-      agency: agency,
-      photographer: photography,
+      store: store || null,
+      agency: agency || null,
+      photographer: photography || null,
       phone: extractString(data.get('phone') as string),
       cargo: extractString(data.get('cargo') as string),
-      createdAt: now,
-      createdBy: loggedUser.user,
-      lastUpdated: now
+      lastUpdated: now,
+      uid: selectedUser?.uid
     }
 
+    console.log(user)
+
     mutateAsync(user).then(res => {
-      setOpenSuccess("Cadastrado com sucesso.")
+      setOpenSuccess("Editado com sucesso.")
       event.currentTarget.reset()
     }).catch(error => {
       console.warn("erro: " + error)
@@ -75,6 +81,7 @@ export const CadastroUser = ({ params }: any) => {
       label="Nome"
       name="name"
       autoComplete="name"
+      defaultValue={selectedUser?.name}
       autoFocus
     />
     <TextInput
@@ -84,6 +91,7 @@ export const CadastroUser = ({ params }: any) => {
       id="cargo"
       label="Cargo"
       name="cargo"
+      defaultValue={selectedUser?.cargo}
     />
     <MaskedInput
       margin="normal"
@@ -93,6 +101,7 @@ export const CadastroUser = ({ params }: any) => {
       label="Telefone"
       name="phone"
       mask="(99) 99999-9999"
+      defaultValue={selectedUser?.phone}
     />
     <TextInput
       margin="normal"
@@ -101,14 +110,7 @@ export const CadastroUser = ({ params }: any) => {
       id="email"
       label="E-mail"
       name="email"
-    />
-    <TextInput
-      margin="normal"
-      required
-      fullWidth
-      id="password"
-      label="Senha"
-      name="password"
+      defaultValue={selectedUser?.email}
     />
   </>
 
@@ -158,6 +160,15 @@ export const CadastroUser = ({ params }: any) => {
   </FormControl>
 
   useEffect(() => {
+    if (selectedUser && status === "success") {
+      setRole(selectedUser.role)
+      setAgency(selectedUser.agency)
+      setStore(selectedUser.store)
+      setPhotography(selectedUser.photographer)
+    }
+  }, [selectedUser, status])
+
+  useEffect(() => {
     switch (role) {
       case "admin":
       case "operationManager":
@@ -185,47 +196,49 @@ export const CadastroUser = ({ params }: any) => {
     }
   }, [role])
 
-  return <Layout params={params}>
-    <Grid container>
-      <Grid item xs={12}>
-        <Box
-          sx={{
-            my: 8,
-            mx: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Typography component="h1" variant="h5">
-            Cadastro de usuário
-          </Typography>
-          <FormControl fullWidth sx={{ marginY: 3 }}>
-            <InputLabel id="selectType">Tipo de usuário</InputLabel>
-            <Select
-              labelId="selectType"
-              id="selectTypeElement"
-              value={role}
-              onChange={(event) => setRole(event.target.value)}
-              label="Tipo de usuário"
-            >
-              {userTypeFilteredByRole(loggedUser.user.role).map((item, key) => {
-                return <MenuItem key={key} value={item.value}>{item.name}</MenuItem>
-              })}
-            </Select>
-          </FormControl>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            {form}
-            {form && (isLoading ? <Loading /> : <Button
-              type="submit"
-              fullWidth
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Salvar
-            </Button>)}
+  return (
+    <Layout>
+      <Grid container>
+        <Grid item xs={12}>
+          <Box
+            sx={{
+              my: 8,
+              mx: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Typography component="h1" variant="h5">
+              Editar usuário
+            </Typography>
+            <FormControl fullWidth sx={{ marginY: 3 }}>
+              <InputLabel id="selectType">Tipo de usuário</InputLabel>
+              <Select
+                labelId="selectType"
+                id="selectTypeElement"
+                value={role}
+                onChange={(event) => setRole(event.target.value)}
+                label="Tipo de usuário"
+              >
+                {userTypeFilteredByRole(loggedUser.user.role).map((item, key) => {
+                  return <MenuItem key={key} value={item.value}>{item.name}</MenuItem>
+                })}
+              </Select>
+            </FormControl>
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              {form}
+              {form && (isLoading ? <Loading /> : <Button
+                type="submit"
+                fullWidth
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Editar
+              </Button>)}
+            </Box>
           </Box>
-        </Box>
+        </Grid>
       </Grid>
-    </Grid>
-  </Layout>
+    </Layout>
+  )
 }

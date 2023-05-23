@@ -3,14 +3,21 @@ import { useCreateAgency } from "@dataAccess";
 import { Box, Grid, Typography } from "@elements";
 import { IAgency } from "@types";
 import { useCallback, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserRoles } from "../../enums/UserRoles";
+import { useValidateUserRole } from "../../hooks/useValidateUserRole";
 
 export const CadastroAgencia = ({ params }: any) => {
+  const canCreate = useValidateUserRole([UserRoles.ADMIN]);
+
+  const navigate = useNavigate();
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 
   const { mutateAsync, isLoading } = useCreateAgency()
 
-  const handleSubmit = useCallback(async (agency: IAgency) => {
+  if (!canCreate) navigate("/marcas");
 
+  const handleSubmit = useCallback(async (agency: IAgency) => {
     mutateAsync(agency).then(res => {
       setOpenSuccess("Loja salva com sucesso.")
     }).catch(error => {

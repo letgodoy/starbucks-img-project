@@ -4,14 +4,22 @@ import { Box, Button, Grid, Loading, TextInput, Typography } from "@elements";
 import { IBrand } from "@types";
 import { extractString } from "@utils";
 import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import Slugify from "slugify";
+import { UserRoles } from "../../enums/UserRoles";
+import { useValidateUserRole } from "../../hooks/useValidateUserRole";
 
 export const CadastroMarca = ({ params }: any) => {
+  const canCreate = useValidateUserRole([UserRoles.ADMIN, UserRoles.DISTRICTMANAGER]);
+
+  const navigate = useNavigate();
 
   const { mutateAsync, isLoading } = useCreateBrand()
 
   const loggedUser = useContext(AuthContext)
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
+
+  if (!canCreate) navigate("/marcas");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
