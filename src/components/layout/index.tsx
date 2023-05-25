@@ -14,8 +14,8 @@ export const Layout = ({ children }: any) => {
   const handleCloseWarning = () => setOpenWarning(false)
   const handleCloseInfo = () => setOpenInfo(false)
 
-  return <Grid container spacing={3} maxHeight="100vh">
-    <Grid item xs={3} maxHeight="100vh">
+  return <Grid container spacing={3} sx={{ height: '100vh', overflow: 'hidden' }}>
+    <Grid item xs={3} sx={{ height: '100%', maxWidth: '100px' }}>
       <SideMenu />
     </Grid>
     <Grid item xs={9}>

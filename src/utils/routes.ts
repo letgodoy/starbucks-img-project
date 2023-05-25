@@ -10,7 +10,8 @@ import {
   CadastroImagens,
   CadastroLoja,
   CadastroMarca,
-  CadastroProduto, Dashboard,
+  CadastroProduto,
+  Dashboard,
   Error404,
   Hub,
   ImgDetail,
@@ -22,10 +23,18 @@ import {
   Orders,
   SearchArt,
   SearchEvent,
-  SearchImages
+  SearchImages,
 } from "@pages";
 import { RoutesList } from "@types";
 import { UserRoles } from "../enums/UserRoles";
+
+export enum menuCategory {
+  UserRegister = "Cadastros de usuários",
+  BrandRegister = "Cadastros de items da marca",
+  Images = "Imagens",
+  Art = "Artes",
+  Events = "Eventos",
+}
 
 export const routes: RoutesList[] = [
   {
@@ -56,7 +65,15 @@ export const routes: RoutesList[] = [
     title: "Listagem de usuário",
     id: 4,
     visibleMenu: true,
-    roles: [UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERAGENCY, UserRoles.MANAGERPHOTO, UserRoles.MANAGERSTORE, UserRoles.OPERATIONMANAGER]
+    roles: [
+      UserRoles.ADMIN,
+      UserRoles.DISTRICTMANAGER,
+      UserRoles.MANAGERAGENCY,
+      UserRoles.MANAGERPHOTO,
+      UserRoles.MANAGERSTORE,
+      UserRoles.OPERATIONMANAGER,
+    ],
+    category: menuCategory.UserRegister,
   },
   {
     path: "/cadastro-marcas",
@@ -64,7 +81,8 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de marca",
     id: 5,
-    visibleMenu: false,
+    visibleMenu: true,
+    category: menuCategory.BrandRegister,
   },
   {
     path: "/cadastro-lojas",
@@ -72,7 +90,8 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de lojas",
     id: 6,
-    visibleMenu: false,
+    visibleMenu: true,
+    category: menuCategory.UserRegister,
   },
   {
     path: "/cadastro-agencia",
@@ -80,7 +99,8 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de agência",
     id: 7,
-    visibleMenu: false,
+    visibleMenu: true,
+    category: menuCategory.UserRegister,
   },
   {
     path: "/home/:marca",
@@ -95,7 +115,8 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de campanha",
     id: 9,
-    visibleMenu: false,
+    visibleMenu: true,
+    category: menuCategory.BrandRegister,
   },
   {
     path: "/cadastro-arte/:marca",
@@ -103,7 +124,8 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de arte",
     id: 10,
-    visibleMenu: false,
+    visibleMenu: true,
+    category: menuCategory.Art,
   },
   {
     path: "/cadastro-fotografo",
@@ -111,7 +133,8 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de agência de fotografia",
     id: 11,
-    visibleMenu: false,
+    visibleMenu: true,
+    category: menuCategory.UserRegister,
   },
   {
     path: "/cadastro-imagem/:marca",
@@ -119,7 +142,8 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de Imagens",
     id: 12,
-    visibleMenu: false,
+    visibleMenu: true,
+    category: menuCategory.Images,
   },
   {
     path: "/detalhe-imagem/:marca/:id",
@@ -142,7 +166,14 @@ export const routes: RoutesList[] = [
     title: "Busca de imagens",
     id: 15,
     visibleMenu: true,
-    roles: [UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERSTORE, UserRoles.MANAGERAGENCY, UserRoles.MANAGERPHOTO]
+    roles: [
+      UserRoles.ADMIN,
+      UserRoles.DISTRICTMANAGER,
+      UserRoles.MANAGERSTORE,
+      UserRoles.MANAGERAGENCY,
+      UserRoles.MANAGERPHOTO,
+    ],
+    category: menuCategory.Images,
   },
   {
     path: "/cadastro-categoria/:marca",
@@ -150,7 +181,8 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro categoria",
     id: 16,
-    visibleMenu: false,
+    visibleMenu: true,
+    category: menuCategory.BrandRegister,
   },
   {
     path: "/cadastro-produto/:marca",
@@ -158,7 +190,8 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro produto",
     id: 17,
-    visibleMenu: false,
+    visibleMenu: true,
+    category: menuCategory.BrandRegister,
   },
   {
     path: "/busca-artes/:marca",
@@ -167,7 +200,14 @@ export const routes: RoutesList[] = [
     title: "Busca de artes",
     id: 18,
     visibleMenu: true,
-    roles: [UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERSTORE, UserRoles.MANAGERAGENCY, UserRoles.MANAGERPHOTO]
+    roles: [
+      UserRoles.ADMIN,
+      UserRoles.DISTRICTMANAGER,
+      UserRoles.MANAGERSTORE,
+      UserRoles.MANAGERAGENCY,
+      UserRoles.MANAGERPHOTO,
+    ],
+    category: menuCategory.Art,
   },
   {
     path: "/detalhe-arte/:marca/:id",
@@ -183,7 +223,8 @@ export const routes: RoutesList[] = [
     title: "Cadastro de Eventos",
     id: 20,
     visibleMenu: true,
-    roles: [UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERSTORE]
+    roles: [UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERSTORE],
+    category: menuCategory.Events,
   },
   {
     path: "/busca-evento/:marca",
@@ -192,7 +233,14 @@ export const routes: RoutesList[] = [
     title: "Busca de Eventos",
     id: 21,
     visibleMenu: true,
-    roles: [UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERAGENCY, UserRoles.MANAGERPHOTO, UserRoles.MANAGERSTORE]
+    roles: [
+      UserRoles.ADMIN,
+      UserRoles.DISTRICTMANAGER,
+      UserRoles.MANAGERAGENCY,
+      UserRoles.MANAGERPHOTO,
+      UserRoles.MANAGERSTORE,
+    ],
+    category: menuCategory.Events,
   },
   {
     path: "/pedido/:marca",
@@ -200,8 +248,8 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Fazer pedido",
     id: 22,
-    visibleMenu: true,
-    roles: [UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERSTORE]
+    visibleMenu: false,
+    roles: [UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERSTORE],
   },
   {
     path: "/pedido/:marca/lista",
@@ -209,8 +257,12 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Lista de pedidos",
     id: 23,
-    visibleMenu: true,
-    roles: [UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERAGENCY]
+    visibleMenu: false,
+    roles: [
+      UserRoles.ADMIN,
+      UserRoles.DISTRICTMANAGER,
+      UserRoles.MANAGERAGENCY,
+    ],
   },
   {
     path: "/pedido/:marca/:id",
@@ -226,7 +278,12 @@ export const routes: RoutesList[] = [
     isPublic: true,
     title: "Cadastro de fornecedor",
     id: 25,
-    visibleMenu: true,
-    roles: [UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERPHOTO, UserRoles.MANAGERAGENCY]
+    visibleMenu: false,
+    roles: [
+      UserRoles.ADMIN,
+      UserRoles.DISTRICTMANAGER,
+      UserRoles.MANAGERPHOTO,
+      UserRoles.MANAGERAGENCY,
+    ],
   },
 ];

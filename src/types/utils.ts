@@ -1,4 +1,5 @@
 import { UserRoles } from "../enums/UserRoles";
+import { menuCategory } from "../utils";
 
 export interface RoutesList {
   path: string;
@@ -9,4 +10,5 @@ export interface RoutesList {
   id: number;
   visibleMenu?: boolean;
   roles?: UserRoles[];
+  category?: menuCategory; 
 }
