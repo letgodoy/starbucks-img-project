@@ -87,7 +87,7 @@ export const CadastroImagens = () => {
         mutateAsync(image).then(res => {
           console.log(res)
           setOpenSuccess("Imagem salva com sucesso")
-        }).catch(error => alert("erro: " + error))
+        })
       } else {
         setOpenError("Algo de errado aconteceu. Tente novamente")
       }

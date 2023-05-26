@@ -103,7 +103,7 @@ export const SideMenu = () => {
   };
 
 
-  return <Paper elevation={3} sx={{ color: "white", height: "100%", margin: 2, borderRadius: 2, padding: 2, background: "linear-gradient(142deg, #0a0a0a 0%, #202020 100%)", overflow: 'auto' }}>
+  return <Paper elevation={3} sx={{ color: "white", height: "100%", borderRadius: 2, padding: 2, background: "linear-gradient(142deg, #0a0a0a 0%, #202020 100%)", overflow: 'auto' }}>
     <Box display="flex" alignItems="center" justifyContent={"center"} gap={1} >
       <Box component="img" src={LogoDark} alt="Southrock HUB" width="2rem" />
       <Typography component="h6" fontWeight="medium">

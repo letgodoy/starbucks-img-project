@@ -37,6 +37,7 @@ export const CadastroArte = () => {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
+
     try {
       if (!marca) throw "Não foi possível selecionar a marca"
 
@@ -82,9 +83,9 @@ export const CadastroArte = () => {
           mutateAsync(art).then((res: any) => {
             setOpenSuccess("Cadastrado com sucesso.")
             event.currentTarget.reset()
-          }).catch((error: string) => {
-            console.warn("erro: " + error)
-            setOpenError("Erro ao salvar. Tente novamente.")
+            for (let key of event.currentTarget.keys()) {
+              event.currentTarget.delete(key);
+            }
           })
         } else {
           setOpenError("Algo de errado aconteceu. Tente novamente")
@@ -217,7 +218,7 @@ export const CadastroArte = () => {
             {
               files && <div>
                 <ul style={{ listStyle: 'none', padding: '0' }}>
-                  {files.map((file) => <li style={{ width: '100%', padding: '8px 16px', border: `1px solid ${colors.grey[500]}`, borderRadius: 8, margin: '8px 0' }}><span>{file.name}</span></li>)}
+                  {files.map((file, i) => <li key={i} style={{ width: '100%', padding: '8px 16px', border: `1px solid ${colors.grey[500]}`, borderRadius: 8, margin: '8px 0' }}><span>{file.name}</span></li>)}
                 </ul>
               </div>
             }

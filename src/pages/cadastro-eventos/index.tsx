@@ -72,9 +72,6 @@ export const CadastroEventos = () => {
           mutateAsync(evento).then((res: any) => {
             setOpenSuccess("Cadastrado com sucesso.")
             event.currentTarget.reset()
-          }).catch((error: string) => {
-            console.warn("erro: " + error)
-            setOpenError("Erro ao salvar. Tente novamente.")
           })
         } else {
           setOpenError("Algo de errado aconteceu. Tente novamente")
