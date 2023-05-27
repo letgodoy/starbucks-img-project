@@ -1,4 +1,4 @@
-import { AlertContext, CompanyForm, Layout } from "@components";
+import { AlertContext, CompanyForm, Layout, checkBrand } from "@components";
 import { useCreateAgency } from "@dataAccess";
 import { Box, Grid, Typography } from "@elements";
 import { IAgency } from "@types";
@@ -8,6 +8,7 @@ import { UserRoles } from "../../enums/UserRoles";
 import { useValidateUserRole } from "../../hooks/useValidateUserRole";
 
 export const CadastroAgencia = ({ params }: any) => {
+  checkBrand()
   const canCreate = useValidateUserRole([UserRoles.ADMIN]);
 
   const navigate = useNavigate();

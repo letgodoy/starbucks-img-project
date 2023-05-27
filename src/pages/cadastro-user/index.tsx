@@ -1,4 +1,4 @@
-import { AlertContext, AuthContext, Layout } from "@components";
+import { AlertContext, AuthContext, Layout, checkBrand } from "@components";
 import { useCreateUser, useGetAgencies, useGetPhotographers, useGetStores } from "@dataAccess";
 import { Box, Button, Grid, Loading, MaskedInput, TextInput, Typography } from "@elements";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
@@ -13,6 +13,8 @@ import { userTypeFilteredByRole } from "../../utils/userTypeFilteredByRole";
 export const CadastroUser = ({ params }: any) => {
   const canCreate = useValidateUserRole([UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERAGENCY, UserRoles.MANAGERPHOTO, UserRoles.MANAGERSTORE, UserRoles.OPERATIONMANAGER]);
 
+  checkBrand()
+  
   const navigate = useNavigate();
   const { mutateAsync, isLoading } = useCreateUser()
   const { data: listStores } = useGetStores()

@@ -1,6 +1,7 @@
 import { AlertContext, AuthContext, checkBrand, Layout } from "@components";
 import { useGetImageByID, useUpdateImage } from "@dataAccess";
 import { Attribute, Box, Button, Grid, Typography } from "@elements";
+import { Chip } from "@mui/material";
 import { IImage } from "@types";
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
@@ -94,7 +95,15 @@ export const ImgDetail = () => {
           <Attribute label="Produto" value={data?.product.name} />
           <Attribute label="Ano" value={data?.year} />
           <Attribute label="SKU" value={data?.sku} />
-          <Attribute label="Tags" value={data?.tags} />
+          <Attribute label="Tags">
+            {data?.tags.map((tag: string) => (
+              <Chip
+                key={tag}
+                label={tag}
+                style={{ margin: '0.5rem' }}
+              />
+            ))}
+          </Attribute>
           <Attribute label="Formato" value={data?.format} />
           <Attribute label="Categoria" value={data?.category.name} />
           <Attribute label="Data do carregamento" value={new Date(data?.createdAt).toLocaleString('pt-BR')} />

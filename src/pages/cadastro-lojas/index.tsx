@@ -1,4 +1,4 @@
-import { AlertContext, CompanyForm, Layout } from "@components";
+import { AlertContext, CompanyForm, Layout, checkBrand } from "@components";
 import { useCreateStore } from "@dataAccess";
 import { Box, Grid, Typography } from "@elements";
 import { IStore } from "@types";
@@ -11,6 +11,8 @@ export const CadastroLoja = ({ params }: any) => {
   const canCreate = useValidateUserRole([UserRoles.ADMIN, UserRoles.DISTRICTMANAGER]);
 
   const navigate = useNavigate();
+
+  checkBrand()
 
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 

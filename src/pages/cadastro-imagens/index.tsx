@@ -175,7 +175,7 @@ export const CadastroImagens = () => {
               autoFocus
             />
             <TagsInput
-              selectedTags={handleSelecetedTags}
+              setTags={handleSelecetedTags}
               fullWidth
               variant="outlined"
               id="tags"

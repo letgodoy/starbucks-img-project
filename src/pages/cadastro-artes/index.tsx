@@ -188,7 +188,7 @@ export const CadastroArte = () => {
               required
             />
             <TagsInput
-              selectedTags={handleSelecetedTags}
+              setTags={handleSelecetedTags}
               fullWidth
               variant="outlined"
               id="tags"

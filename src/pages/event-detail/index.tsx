@@ -2,6 +2,7 @@ import { AlertContext, AuthContext, checkBrand, Layout } from "@components";
 import { useGetEventByID, useUpdateEvent, zipFile } from "@dataAccess";
 import { Attribute, Box, Button, Grid, Loading, Typography } from "@elements";
 import { Masonry } from "@mui/lab";
+import { Chip } from "@mui/material";
 import { IEvent, IStorageImage } from "@types";
 import { useContext, useState } from "react";
 import Lightbox from "react-awesome-lightbox";
@@ -145,7 +146,15 @@ export const EventDetail = () => {
           <Attribute label="Nome" value={data?.name} />
           <Attribute label="Descrição" value={data?.description} />
           <Attribute label="Ano" value={data?.year} />
-          <Attribute label="Tags" value={data?.tags} />
+          <Attribute label="Tags">
+            {data?.tags.map((tag: string) => (
+              <Chip
+                key={tag}
+                label={tag}
+                style={{ margin: '0.5rem' }}
+              />
+            ))}
+          </Attribute>
           <Attribute label="Data do carregamento" value={new Date(data?.createdAt).toLocaleString('pt-BR')} />
           <Attribute label="Autor" value={data?.createdBy?.name} />
           {data?.approvedBy?.name ? <Attribute label="Aprovado por" value={data?.approvedBy?.name} /> : null}

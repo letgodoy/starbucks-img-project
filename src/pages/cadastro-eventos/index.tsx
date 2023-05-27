@@ -144,7 +144,7 @@ export const CadastroEventos = () => {
               required
             />
             <TagsInput
-              selectedTags={handleSelecetedTags}
+              setTags={handleSelecetedTags}
               fullWidth
               variant="outlined"
               id="tags"

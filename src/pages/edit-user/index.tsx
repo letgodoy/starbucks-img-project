@@ -2,7 +2,7 @@ import { Button, FormControl, Grid, InputLabel, MenuItem, Select, Typography } f
 import { Box } from "@mui/system"
 import { Dispatch, ReactElement, SetStateAction, useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { AlertContext, AuthContext, Layout } from "../../components"
+import { AlertContext, AuthContext, Layout, checkBrand } from "../../components"
 import { useEditUser, useFindUser, useGetAgencies, useGetPhotographers, useGetStores } from "../../dataAccess"
 import { Loading, MaskedInput, TextInput } from "../../elements"
 import { UserRoles } from "../../enums/UserRoles"
@@ -17,6 +17,8 @@ export const EditUser = () => {
   const navigate = useNavigate();
 
   const params = useParams();
+
+  checkBrand()
 
   const { data: selectedUser, status } = useFindUser(params.id);
 

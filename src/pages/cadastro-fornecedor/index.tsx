@@ -1,4 +1,4 @@
-import { AlertContext, CompanyForm, Layout } from "@components";
+import { AlertContext, CompanyForm, Layout, checkBrand } from "@components";
 import { useCreateProvider } from "@dataAccess";
 import { Box, Button, Checkbox, Grid, TextInput, Typography } from "@elements";
 import { FormControl, FormControlLabel, Modal } from "@mui/material";
@@ -14,6 +14,8 @@ export const CadastroFornecedor = ({ params }: any) => {
   const canCreate = useValidateUserRole([UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERAGENCY]);
 
   const navigate = useNavigate();
+
+  checkBrand()
 
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 

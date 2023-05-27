@@ -1,115 +1,67 @@
 import Chip from "@mui/material/Chip";
 import { TextFieldProps } from "@mui/material/TextField";
 import Downshift from "downshift";
-import { FC, useEffect, useState } from "react";
+import { FC, SetStateAction, useEffect, useState } from "react";
 import { TextInput } from "../textinput";
 
 export const TagsInput: FC<TextFieldProps & {
-  selectedTags: (item: Array<string>) => void,
+  setTags: (item: Array<string>) => void,
   tags: Array<string>,
 }> = (props) => {
 
-  const { selectedTags, placeholder, tags, ...other } = props;
+  const { setTags, tags } = props;
 
-  const [inputValue, setInputValue] = useState("");
-  const [selectedItem, setSelectedItem] = useState<Array<string>>(tags);
+  const [tagInput, setTagInput] = useState(''); // Estado para o valor do input de tag
+
+  const handleTagInputChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+    setTagInput(event.target.value);
+  };
+
+  const handleTagInputKeyDown = (event: { key: string; preventDefault: () => void; }) => {
+    if (event.key === 'Enter' || event.key === ';') {
+      event.preventDefault();
+      addTag();
+    }
+  };
+
+  const addTag = () => {
+    if (tagInput.trim() !== '') {
+      setTags([...tags, tagInput.trim()]);
+      setTagInput('');
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    const updatedTags = tags.filter((tag) => tag !== tagToRemove);
+    setTags(updatedTags);
+  };
 
   // useEffect(() => {
   //   setSelectedItem(tags);
   // }, [tags]);
 
-  useEffect(() => {
-    selectedTags(selectedItem);
-  }, [selectedItem, selectedTags]);
-
-  const handleKeyDown = (event: any) => {
-    event.preventDefault()
-    if (event.key === "Enter") {
-      event.preventDefault()
-
-      const newSelectedItem = [...selectedItem];
-      const duplicatedValues = newSelectedItem.indexOf(
-        event.target.value.trim()
-      );
-
-      if (duplicatedValues !== -1) {
-        setInputValue("");
-        return;
-      }
-      if (!event.target.value.replace(/\s/g, "").length) return;
-
-      newSelectedItem.push(event.target.value.trim());
-      setSelectedItem(newSelectedItem);
-      setInputValue("");
-    }
-    if (
-      selectedItem.length &&
-      !inputValue.length &&
-      event.key === "Backspace"
-    ) {
-      event.preventDefault()
-      setSelectedItem(selectedItem.slice(0, selectedItem.length - 1));
-    }
-  }
-
-  const handleChange = (item: any) => {
-    let newSelectedItem = [...selectedItem];
-    if (newSelectedItem.indexOf(item) === -1) {
-      newSelectedItem = [...newSelectedItem, item];
-    }
-    setInputValue("");
-    setSelectedItem(newSelectedItem);
-  }
-
-  const handleDelete = (item: any) => () => {
-    const newSelectedItem = [...selectedItem];
-    newSelectedItem.splice(newSelectedItem.indexOf(item), 1);
-    setSelectedItem(newSelectedItem);
-  };
-
-  const handleInputChange = (event: any) => {
-    event.preventDefault()
-    setInputValue(event.target.value);
-  }
+  // useEffect(() => {
+  //   selectedTags(selectedItem);
+  // }, [selectedItem, selectedTags]);
 
   return (
-    <Downshift
-      id="downshift-multiple"
-      inputValue={inputValue}
-      onChange={handleChange}
-      selectedItem={selectedItem}
-    >
-      {({ getInputProps, getRootProps }: any) => {
-        const { onBlur, onChange, onFocus, ...inputProps } = getInputProps({
-          onKeyDown: handleKeyDown,
-          placeholder
-        });
-        return (
-          <TextInput
-            sx={{ marginY: 2 }}
-            {...getRootProps({}, { suppressRefError: true })}
-            InputProps={{
-              startAdornment: selectedItem.map((item) => (
-                <Chip
-                  key={item}
-                  tabIndex={-1}
-                  label={item}
-                  style={{ marginLeft: 3, marginRight: 3 }}
-                  onDelete={handleDelete(item)}
-                />
-              )),
-              onBlur,
-              onChange: (event: any) => {
-                handleInputChange(event);
-                onChange(event);
-              },
-              onFocus
-            }}
-            {...other}
-            {...inputProps}
-          />
-        );
-      }}
-    </Downshift>
+    <>
+      <TextInput
+        label="Tags"
+        value={tagInput}
+        onChange={handleTagInputChange}
+        onKeyDown={handleTagInputKeyDown}
+        {...props}
+      />
+      {tags.map((tag) => (
+        <Chip
+          key={tag}
+          label={tag}
+          onDelete={() => removeTag(tag)}
+          style={{ margin: '0.5rem' }}
+        />
+      ))}
+    </>
+
   );
 }

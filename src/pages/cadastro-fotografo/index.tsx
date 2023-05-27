@@ -1,4 +1,4 @@
-import { AlertContext, CompanyForm, Layout } from "@components";
+import { AlertContext, CompanyForm, Layout, checkBrand } from "@components";
 import { useCreatePhotographer } from "@dataAccess";
 import { Box, Grid, Typography } from "@elements";
 import { IPhotographer } from "@types";
@@ -11,6 +11,8 @@ export const CadastroFotografo = ({ params }: any) => {
   const canCreate = useValidateUserRole([UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERAGENCY]);
 
   const navigate = useNavigate();
+
+  checkBrand()
 
   const { setOpenSuccess, setOpenError } = useContext(AlertContext)
 

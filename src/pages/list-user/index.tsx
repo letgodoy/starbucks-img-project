@@ -3,7 +3,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import PlayIcon from '@mui/icons-material/PlayCircleOutline';
 import { Box, Button, IconButton, Skeleton, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
-import { Layout } from "../../components";
+import { Layout, checkBrand } from "../../components";
 import { useGetAllUsers, useToggleBlockUser } from "../../dataAccess";
 import { UserRoles } from '../../enums/UserRoles';
 import { useValidateUserRole } from '../../hooks/useValidateUserRole';
@@ -12,6 +12,8 @@ import { useValidateUserRole } from '../../hooks/useValidateUserRole';
 export const ListUser = ({ params }: any) => {
   const canCreate = useValidateUserRole([UserRoles.ADMIN, UserRoles.DISTRICTMANAGER, UserRoles.MANAGERAGENCY, UserRoles.MANAGERPHOTO, UserRoles.MANAGERSTORE, UserRoles.OPERATIONMANAGER]);
 
+  checkBrand()
+  
   const navigate = useNavigate();
   const { data, status: getUserStatus } = useGetAllUsers();
   const { mutateAsync, status: toggleBlockStatus } = useToggleBlockUser();

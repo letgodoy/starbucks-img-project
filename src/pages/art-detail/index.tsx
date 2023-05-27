@@ -3,6 +3,7 @@ import { useGetArtByID, useUpdateArt, zipFile } from "@dataAccess";
 import { Attribute, Box, Button, Grid, Loading, Typography } from "@elements";
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
+import { Chip } from "@mui/material";
 import { IArt, IStorageImage } from "@types";
 import { useContext, useState } from "react";
 import Lightbox from "react-awesome-lightbox";
@@ -160,7 +161,15 @@ export const ArtDetail = () => {
           <Attribute label="Tipo" value={data?.type} />
           <Attribute label="Ano" value={data?.year} />
           <Attribute label="Especificação" value={data?.specification} />
-          <Attribute label="Tags" value={data?.tags} />
+          <Attribute label="Tags">
+            {data?.tags.map((tag: string) => (
+              <Chip
+                key={tag}
+                label={tag}
+                style={{ margin: '0.5rem' }}
+              />
+            ))}
+          </Attribute>
           <Attribute label="Formato" value={data?.format} />
           <Attribute label="Campanha" value={data?.campaign.name} />
           <Attribute label="Data do carregamento" value={new Date(data?.createdAt).toLocaleString('pt-BR')} />
